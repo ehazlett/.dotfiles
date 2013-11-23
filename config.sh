@@ -10,6 +10,7 @@ else
     make && make install
     echo '/usr/local/bin/fish' | tee -a /etc/shells
     chsh -s /usr/local/bin/fish $USER_NAME
+    rm -rf /home/$USER_NAME/fish-*
 fi 
 
 cd /home/$USER_NAME
@@ -23,6 +24,7 @@ else
     ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge
     make
     make install
+    rm -rf /home/$USER_NAME/vim
 fi
 
 cd /home/$USER_NAME
@@ -62,3 +64,5 @@ sysctl -p /etc/sysctl.conf
 chown -R $USER_NAME:$USER_NAME /home/$USER_NAME
 groupadd docker
 usermod -G docker -a $USER_NAME
+
+rm -rf /home/$USER_NAME/setup.sh
