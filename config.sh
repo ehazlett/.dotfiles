@@ -9,7 +9,7 @@ else
     ./configure --prefix=/usr/local
     make && make install
     echo '/usr/local/bin/fish' | tee -a /etc/shells
-    chsh -s /usr/local/bin/fish
+    chsh -s /usr/local/bin/fish $USER_NAME
 fi 
 
 cd /home/$USER_NAME
