@@ -1,3 +1,5 @@
 Host github.com
     IdentityFile ~/Dropbox/keys/vcs_ehazlett
 
+Host dev
+    IdentityFile ~/Dropbox/keys/home_ehazlett
