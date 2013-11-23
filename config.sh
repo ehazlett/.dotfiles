@@ -55,6 +55,10 @@ else
 fi
 cd /home/$USER_NAME
 
+# ip forwarding
+echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf
+
 chown -R $USER_NAME:$USER_NAME /home/$USER_NAME
 groupadd docker
-
+usermod -G docker -a $USER_NAME
