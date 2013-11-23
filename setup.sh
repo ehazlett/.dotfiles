@@ -28,6 +28,10 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     tmux \
     ctags \
 
+export USER_NAME=$USER_NAME
+
+cd /home/$USER_NAME
+
 git clone https://github.com/ehazlett/.dotfiles
 cd .dotfiles
 
