@@ -7,3 +7,6 @@
 [submodule "vim/bundle/puppet-syntax.vim"]
 	path = vim/bundle/puppet-syntax.vim
 	url = https://github.com/puppetlabs/puppet-syntax-vim
+[submodule "vim/bundle/vim-colors-solarized.vim"]
+	path = vim/bundle/vim-colors-solarized.vim
+	url = https://github.com/altercation/vim-colors-solarized.git
