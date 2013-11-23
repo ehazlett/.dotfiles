@@ -34,5 +34,6 @@ cd /home/$USER_NAME
 
 git clone https://github.com/ehazlett/.dotfiles
 cd .dotfiles
+git submodule update --init
 
 /bin/bash config.sh
