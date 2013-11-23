@@ -20,3 +20,4 @@ colorscheme solarized
 syntax on
 filetype plugin indent on
 let NERDTreeIgnore = ['\.pyc$']
+set backspace=indent,eol,start
