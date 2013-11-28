@@ -27,6 +27,8 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     socat \
     tmux \
     ctags \
+    libsqlite3-dev \
+    libdevmapper-dev \
 
 export USER_NAME=$USER_NAME
 
