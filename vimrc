@@ -2,7 +2,6 @@ execute pathogen#infect()
 set cursorline
 set encoding=utf-8
 set modelines=0
-set autoindent
 set showmode
 set showcmd
 set shell=/bin/bash

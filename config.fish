@@ -10,12 +10,12 @@ if set -q ITERM_PROFILE
 else
     set -x EDITOR vim
     set -x GOPATH ~/.go
+    set PATH $PATH /usr/local/go/bin
     set -x JAVA_HOME /usr/lib/jvm/java-6-openjdk-amd64
     set -x EC2_HOME /opt/aws/ec2
     set -x EC2_AMITOOL_HOME /opt/aws/ec2_ami_tools
     set -x AWS_AUTO_SCALING_HOME /opt/aws/as
     set -x TERM screen-256color
-    set -x GOPATH ~/.go
     alias tmux "tmux -2"
     alias vimdark="gsed -i 's/background=light/background=dark/g' ~/.vimrc"
     alias vimlight="gsed -i 's/background=dark/background=light/g' ~/.vimrc"
