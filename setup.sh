@@ -14,6 +14,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     autoconf \
     gawk \
     libncurses5-dev \
+    libssl-dev \
     mercurial \
     aufs-tools \
     libbz2-dev \

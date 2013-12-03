@@ -1,4 +1,5 @@
 execute pathogen#infect()
+set autoindent
 set cursorline
 set encoding=utf-8
 set modelines=0
@@ -17,6 +18,6 @@ let g:solarized_termtrans = 1
 set background=dark
 colorscheme solarized
 syntax on
-filetype plugin indent on
+"filetype plugin indent on
 let NERDTreeIgnore = ['\.pyc$']
 set backspace=indent,eol,start
