@@ -1,6 +1,7 @@
 [user]
     name = Evan Hazlett
     email = ejhazlett@gmail.com
+    signingkey = 96146526
 
 [color]
     ui = true
