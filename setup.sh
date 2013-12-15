@@ -30,6 +30,8 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ctags \
     libsqlite3-dev \
     libdevmapper-dev \
+    rng-tools \
+    s3cmd \
 
 export USER_NAME=$USER_NAME
 
