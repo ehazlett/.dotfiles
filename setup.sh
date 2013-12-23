@@ -32,6 +32,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libdevmapper-dev \
     rng-tools \
     s3cmd \
+    apache2-utils \
 
 export USER_NAME=$USER_NAME
 

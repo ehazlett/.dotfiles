@@ -3,3 +3,6 @@ Host github.com
 
 Host dev
     IdentityFile ~/Dropbox/keys/home_ehazlett
+
+Host 10.1.1.5
+    IdentityFile ~/Dropbox/keys/home_ehazlett
