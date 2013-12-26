@@ -1,8 +1,8 @@
 Host github.com
-    IdentityFile ~/Dropbox/keys/vcs_ehazlett
+    IdentityFile ~/Sync/home/keys/vcs_ehazlett
 
 Host dev
-    IdentityFile ~/Dropbox/keys/home_ehazlett
+    IdentityFile ~/Sync/home/keys/home_ehazlett
 
 Host 10.1.1.5
-    IdentityFile ~/Dropbox/keys/home_ehazlett
+    IdentityFile ~/Sync/home/keys/home_ehazlett
