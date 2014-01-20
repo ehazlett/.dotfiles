@@ -5,7 +5,7 @@
 " Install in ~/.vim/autoload (or ~\vimfiles\autoload).
 "
 " For management of individually installed plugins in ~/.vim/bundle (or
-" ~\vimfiles\bundle), adding `execute pathogen#infect()` to the top of your
+" ~\vimfiles\bundle), adding `call pathogen#infect()` to the top of your
 " .vimrc is the only other setup necessary.
 "
 " The API is documented inline below.  For maximum ease of reading,
@@ -17,9 +17,11 @@ endif
 let g:loaded_pathogen = 1
 
 function! s:warn(msg)
-  echohl WarningMsg
-  echomsg a:msg
-  echohl NONE
+  if &verbose
+    echohl WarningMsg
+    echomsg a:msg
+    echohl NONE
+  endif
 endfunction
 
 " Point of entry for basic default usage.  Give a relative path to invoke
@@ -186,13 +188,13 @@ function! pathogen#incubate(...) abort " {{{1
   for dir in pathogen#split(&rtp)
     if dir =~# '\<after$'
       if name =~# '{}$'
-        let list +=  filter(pathogen#glob_directories(substitute(dir,'after$',name[0:-3],'').'*'.sep.'after'), '!pathogen#is_disabled(v:val[0:-7])') + [dir]
+        let list +=  filter(pathogen#glob_directories(substitute(dir,'after$',name[0:-3],'').'*[^~]'.sep.'after'), '!pathogen#is_disabled(v:val[0:-7])') + [dir]
       else
         let list += [dir, substitute(dir, 'after$', '', '') . name . sep . 'after']
       endif
     else
       if name =~# '{}$'
-        let list +=  [dir] + filter(pathogen#glob_directories(dir.sep.name[0:-3].'*'), '!pathogen#is_disabled(v:val)')
+        let list +=  [dir] + filter(pathogen#glob_directories(dir.sep.name[0:-3].'*[^~]'), '!pathogen#is_disabled(v:val)')
       else
         let list += [dir . sep . name, dir]
       endif
@@ -221,7 +223,7 @@ function! pathogen#helptags() abort " {{{1
   for glob in pathogen#split(&rtp)
     for dir in split(glob(glob), "\n")
       if (dir.sep)[0 : strlen($VIMRUNTIME)] !=# $VIMRUNTIME.sep && filewritable(dir.sep.'doc') == 2 && !empty(filter(split(glob(dir.sep.'doc'.sep.'*'),"\n>"),'!isdirectory(v:val)')) && (!filereadable(dir.sep.'doc'.sep.'tags') || filewritable(dir.sep.'doc'.sep.'tags'))
-        silent! execute 'helptags' pathogen#fnameescape(dir.'/doc')
+        helptags `=dir.'/doc'`
       endif
     endfor
   endfor
