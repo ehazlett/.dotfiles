@@ -10,7 +10,7 @@ if set -q ITERM_PROFILE
 else
     set -x EDITOR vim
     set -x GOPATH ~/.go
-    set PATH $PATH /usr/local/go/bin
+    set PATH $PATH /usr/local/go/bin /opt/nodejs/bin
     set -x JAVA_HOME /usr/lib/jvm/java-6-openjdk-amd64
     set -x EC2_HOME /opt/aws/ec2
     set -x EC2_AMITOOL_HOME /opt/aws/ec2_ami_tools
