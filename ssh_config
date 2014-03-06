@@ -1,8 +1,16 @@
 Host github.com
     IdentityFile ~/Sync/home/keys/vcs_ehazlett
 
+Host rhcloud.com
+    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+
 Host dev
     IdentityFile ~/Sync/home/keys/home_ehazlett
 
 Host 10.1.1.5
     IdentityFile ~/Sync/home/keys/home_ehazlett
+
+Host push
+    User vcs_ehazlett
+    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+    Port 2222

@@ -33,6 +33,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     rng-tools \
     s3cmd \
     apache2-utils \
+    libcurl4-openssl-dev \
 
 export USER_NAME=$USER_NAME
 
