@@ -3,6 +3,9 @@
     email = ejhazlett@gmail.com
     signingkey = 96146526
 
+[github]
+    user = ehazlett
+
 [color]
     ui = true
 

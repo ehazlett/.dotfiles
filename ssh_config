@@ -1,6 +1,9 @@
 Host github.com
     IdentityFile ~/Sync/home/keys/vcs_ehazlett
 
+Host gist.github.com
+    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+
 Host rhcloud.com
     IdentityFile ~/Sync/home/keys/vcs_ehazlett
 
@@ -14,3 +17,6 @@ Host push
     User vcs_ehazlett
     IdentityFile ~/Sync/home/keys/vcs_ehazlett
     Port 2222
+
+Host home.ejh.arcus.io
+    IdentityFile ~/Sync/home/keys/vcs_ehazlett
