@@ -1,5 +1,5 @@
 execute pathogen#infect()
-"set autoindent
+autocmd BufWritePre *.go Fmt
 set cursorline
 set encoding=utf-8
 set modelines=0

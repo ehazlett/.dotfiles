@@ -34,6 +34,7 @@ alias sshamara='ssh -i ~/Dropbox/keys/ehazlett_pculture '
 alias sandbox='ssh -o StrictHostKeyChecking=no -i ~/.sandbox/key -l sandbox '
 alias o 'open'
 alias s3backup "s3cmd -c ~/Dropbox/vitasso/aws/s3cfg.vitasso sync ~/ s3://ejh-backup/ --rexclude '^Dropbox*' --rexclude '.dropbox*' --rexclude '.vagrant*' --rexclude '.virtualenv*' --rexclude '.Trash*'"
+alias goprecommit "mkdir -p .git/hooks > /dev/null ;and wget https://raw.github.com/edsrzf/gofmt-git-hook/master/fmt-check --quiet -O .git/hooks/pre-commit ;and chmod +x .git/hooks/pre-commit"
 
 function ag
     curl -H 'Accept: application/json' $argv | python -m json.tool
