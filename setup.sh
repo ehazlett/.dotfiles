@@ -41,7 +41,10 @@ if [ -e "/usr/bin/yum" ] ; then
 	yum -y install \
 		kernel-devel \
 		gcc \
+		gcc-c++ \
 		make \
+		dyninst \
+		elfutils-libs \
 		python-devel \
 		setuptools \
 		gawk \
