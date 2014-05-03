@@ -23,6 +23,7 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    lxc \
 	    gettext \
 	    htop \
+	    tmux \
 	    wget \
 	    sysstat \
 	    curl \
@@ -53,6 +54,7 @@ if [ -e "/usr/bin/yum" ] ; then
 		mercurial \
 		bzip2-devel \
 		readline-devel \
+	        tmux \
 		gettext \
 		htop \
 		wget \
