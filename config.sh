@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 cd /home/$USER_NAME
 if [ -d "/usr/local/bin/fish" ]
 then
