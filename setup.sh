@@ -20,7 +20,6 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    aufs-tools \
 	    libbz2-dev \
 	    libreadline-dev \
-	    lxc \
 	    gettext \
 	    htop \
 	    tmux \
