@@ -1,4 +1,19 @@
-execute pathogen#infect()
+set nocompatible
+filetype off
+set shell=/bin/bash
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'gmarik/vundle'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'scrooloose/nerdtree'
+Plugin 'Lokaltog/vim-powerline'
+Plugin 'kien/ctrlp.vim'
+
+call vundle#end()
+filetype plugin indent on
+
 autocmd BufWritePre *.go Fmt
 set cursorline
 set encoding=utf-8
@@ -18,7 +33,6 @@ let g:solarized_termtrans = 1
 set background=dark
 colorscheme solarized
 syntax on
-filetype plugin indent on
 let NERDTreeIgnore = ['\.pyc$']
 set backspace=indent,eol,start
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc
