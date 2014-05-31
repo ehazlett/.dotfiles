@@ -10,6 +10,7 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Lokaltog/vim-powerline'
 Plugin 'kien/ctrlp.vim'
+Plugin 'rodjek/vim-puppet'
 
 call vundle#end()
 filetype plugin indent on
