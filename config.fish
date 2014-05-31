@@ -46,5 +46,5 @@ end
 eval (test -e ~/Sync/home/keys/ehazlett-privkey.asc; and gpg --import ~/Sync/home/keys/ehazlett-privkey.asc)
 
 function d
-    docker run -h $argv[1] -it -v ~/Sync:/home/dev/Sync --name $argv[1] -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox fish
+    docker run -h $argv[1] -it -v ~/Sync:/home/dev/Sync --name $argv[1] -v /var/run/docker.sock:/var/run/docker.sock $argv[2..(count $argv)] ehazlett/devbox fish
 end
