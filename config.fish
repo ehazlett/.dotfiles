@@ -40,3 +40,4 @@ function ag
     curl -H 'Accept: application/json' $argv | python -m json.tool
 end
 
+eval (test -e ~/Sync/home/keys/ehazlett-privkey.asc; and gpg --import ~/Sync/home/keys/ehazlett-privkey.asc)

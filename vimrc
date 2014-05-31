@@ -29,10 +29,10 @@ set expandtab
 set nohlsearch
 set nu
 set cc=80
-let g:solarized_termtrans = 1
 set background=dark
-colorscheme solarized
 syntax on
 let NERDTreeIgnore = ['\.pyc$']
 set backspace=indent,eol,start
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc
+colorscheme solarized
+let g:solarized_termtrans = 1
