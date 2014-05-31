@@ -81,3 +81,4 @@ run go get github.com/tools/godep
 
 run chown -R dev:dev $HOME/
 user dev
+cmd ["/usr/local/bin/fish"]
