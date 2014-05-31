@@ -43,8 +43,14 @@ function ag
     curl -H 'Accept: application/json' $argv | python -m json.tool
 end
 
-eval (test -e ~/Sync/home/keys/ehazlett-privkey.asc; and gpg --import ~/Sync/home/keys/ehazlett-privkey.asc)
+if test -e /.dockerinit
+    eval (test -e ~/Sync/home/keys/ehazlett-privkey.asc; and gpg --import ~/Sync/home/keys/ehazlett-privkey.asc)
+end
 
 function d
-    docker run -h $argv[1] -it -v ~/Sync:/home/dev/Sync --name $argv[1] -v /var/run/docker.sock:/var/run/docker.sock $argv[2..(count $argv)] ehazlett/devbox fish
+    if math "1<" (count $argv) > /dev/null
+        docker run -h $argv[1] -it -v ~/Sync:/home/dev/Sync --name $argv[1] -v /var/run/docker.sock:/var/run/docker.sock $argv[2..(count $argv)] ehazlett/devbox fish
+    else
+        docker run -h $argv[1] -it -v ~/Sync:/home/dev/Sync --name $argv[1] -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox fish
+    end
 end

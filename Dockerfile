@@ -7,6 +7,8 @@ run apt-get install -y \
     gcc \
     git-core \
     make \
+    bc \
+    man-db \
     python \
     python-dev \
     autoconf \
@@ -23,6 +25,7 @@ run apt-get install -y \
     wget \
     sysstat \
     curl \
+    sudo \
     socat \
     ctags \
     libsqlite3-dev \
@@ -33,6 +36,7 @@ run apt-get install -y \
     libcurl4-openssl-dev
 
 run useradd dev
+run echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # vim
 run hg clone https://vim.googlecode.com/hg/ /tmp/vim
