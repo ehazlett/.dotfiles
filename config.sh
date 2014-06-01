@@ -34,7 +34,7 @@ if [ -d "/usr/local/bin/go" ]
 then
     echo "Go already installed..."
 else 
-    wget http://go.googlecode.com/files/go1.2.2.linux-amd64.tar.gz -O /tmp/go.tar.gz
+    wget http://go.googlecode.com/files/go1.2.1.linux-amd64.tar.gz -O /tmp/go.tar.gz
     tar -C /usr/local -xvf /tmp/go.tar.gz
 fi
 cd /home/$USER_NAME
