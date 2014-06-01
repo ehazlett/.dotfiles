@@ -7,6 +7,7 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	DEBIAN_FRONTEND=noninteractive apt-get install -y \
 	    build-essential \
 	    gcc \
+	    bc \
 	    git-core \
 	    make \
 	    python \
@@ -72,6 +73,7 @@ cd /home/$USER_NAME
 
 git clone https://github.com/ehazlett/.dotfiles
 cd .dotfiles
-git submodule update --init
+git submodule init
+git submodule update --recursive
 
 /bin/bash config.sh
