@@ -11,6 +11,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'Lokaltog/vim-powerline'
 Plugin 'kien/ctrlp.vim'
 Plugin 'rodjek/vim-puppet'
+Plugin 'jnwhiteh/vim-golang'
 
 call vundle#end()
 filetype plugin indent on
