@@ -36,10 +36,12 @@ run apt-get install -y \
     apache2-utils \
     libcurl4-openssl-dev
 
+# base config
 run useradd dev
 run groupadd docker
 run usermod -aG docker dev
 run echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
+run echo "US/Eastern" > /etc/timezone
 
 # vim
 run hg clone https://vim.googlecode.com/hg/ /tmp/vim
