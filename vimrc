@@ -39,3 +39,4 @@ set backspace=indent,eol,start
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc
 colorscheme solarized
 let g:solarized_termtrans = 1
+autocmd vimenter * if !argc() | NERDTree | endif
