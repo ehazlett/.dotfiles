@@ -87,6 +87,10 @@ env PATH /usr/local/go/bin:$GOPATH/bin:$PATH
 # go tools
 run go get github.com/tools/godep
 
+# latest docker binary
+run wget https://get.docker.io/builds/Linux/x86_64/docker-latest -O /usr/local/bin/docker
+run chmod +x /usr/local/bin/docker
+
 run chown -R dev:dev $HOME/
 user dev
 cmd ["/usr/local/bin/fish"]
