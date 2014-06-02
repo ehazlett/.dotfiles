@@ -2,7 +2,7 @@ from ubuntu:14.04
 maintainer evan hazlett <ejhazlett@gmail.com>
 run apt-get update
 env DEBIAN_FRONTEND noninteractive
-run apt-get install -y \
+run apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
     dnsutils \
@@ -42,6 +42,7 @@ run groupadd docker
 run usermod -aG docker dev
 run echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 run echo "US/Eastern" > /etc/timezone
+run dpkg-reconfigure locales && locale-gen C.UTF-8 && /usr/sbin/update-locale LANG=C.UTF-8
 
 # vim
 run hg clone https://vim.googlecode.com/hg/ /tmp/vim
@@ -59,6 +60,7 @@ run tar -C /usr/local -xvf /tmp/go.tar.gz
 
 workdir /home/dev
 env HOME /home/dev
+env LC_ALL C.UTF-8
 add . $HOME/.dotfiles
 run (cd $HOME/.dotfiles && git submodule init)
 run (cd $HOME/.dotfiles && git submodule update --recursive)
