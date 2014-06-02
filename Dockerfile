@@ -5,6 +5,7 @@ env DEBIAN_FRONTEND noninteractive
 run apt-get install -y \
     build-essential \
     gcc \
+    dnsutils \
     git-core \
     make \
     bc \
@@ -36,6 +37,8 @@ run apt-get install -y \
     libcurl4-openssl-dev
 
 run useradd dev
+run groupadd docker
+run usermod -aG docker dev
 run echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # vim
@@ -71,6 +74,7 @@ run ln -sf $HOME/.dotfiles/gitconfig $HOME/.gitconfig
 run ln -sf $HOME/.dotfiles/ssh_config $HOME/.ssh/config
 run chown dev:dev $HOME/.ssh/config
 run chmod 600 $HOME/.ssh/config
+run ln -sf $HOME/.dotfiles/known_hosts $HOME/.ssh/known_hosts
 run ln -sf $HOME/.dotfiles/tmux.conf $HOME/.tmux.conf
 run ln -sf $HOME/.dotfiles/config.fish $HOME/.config/fish/config.fish
 run mkdir -p $HOME/dev/gocode

@@ -44,7 +44,7 @@ function ag
 end
 
 if test -e /.dockerinit
-    eval (test -e ~/Sync/home/keys/ehazlett-privkey.asc; and gpg --import ~/Sync/home/keys/ehazlett-privkey.asc)
+    eval (test -e ~/Sync/home/keys/ehazlett-privkey.asc; and gpg --import ~/Sync/home/keys/ehazlett-privkey.asc > /dev/null 2>&1)
 end
 
 function d
@@ -52,5 +52,14 @@ function d
         docker run -h $argv[1] -it -v ~/Sync:/home/dev/Sync --name $argv[1] -v /var/run/docker.sock:/var/run/docker.sock $argv[2..(count $argv)] ehazlett/devbox fish
     else
         docker run -h $argv[1] -it -v ~/Sync:/home/dev/Sync --name $argv[1] -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox fish
+    end
+end
+
+function get_docker
+    if test -e /.dockerinit
+        wget bit.ly/docker-latest -O /tmp/docker
+        chmod +x /tmp/docker
+        sudo mv /tmp/docker /usr/local/bin/docker
+        rm /tmp/docker
     end
 end
