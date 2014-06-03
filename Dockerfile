@@ -39,7 +39,7 @@ run apt-get install -y \
 # base config
 run useradd dev
 run echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
-run echo "US/Eastern" > /etc/timezone
+run cp /usr/share/zoneinfo/America/Indianapolis /etc/localtime
 run dpkg-reconfigure locales
 run locale-gen en_US.UTF-8
 run /usr/sbin/update-locale LANG=en_US.UTF-8
