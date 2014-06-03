@@ -38,8 +38,6 @@ run apt-get install -y --no-install-recommends \
 
 # base config
 run useradd dev
-run groupadd docker
-run usermod -aG docker dev
 run echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 run echo "US/Eastern" > /etc/timezone
 run dpkg-reconfigure locales && locale-gen C.UTF-8 && /usr/sbin/update-locale LANG=C.UTF-8
