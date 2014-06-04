@@ -12,6 +12,7 @@ run apt-get install -y \
     man-db \
     python \
     python-dev \
+    python-setuptools \
     autoconf \
     gawk \
     libncurses5-dev \
@@ -57,6 +58,9 @@ run chsh -s /usr/local/bin/fish dev
 # go
 run wget https://storage.googleapis.com/golang/go1.2.2.linux-amd64.tar.gz -O /tmp/go.tar.gz
 run tar -C /usr/local -xvf /tmp/go.tar.gz
+
+# python
+run easy_install pip
 
 workdir /home/dev
 env HOME /home/dev
