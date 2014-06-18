@@ -77,3 +77,4 @@ git submodule init
 git submodule update --recursive
 
 /bin/bash config.sh
+

@@ -99,3 +99,4 @@ run chmod +x /usr/local/bin/docker
 run chown -R dev:dev $HOME/
 user dev
 cmd ["/usr/bin/tmux"]
+
