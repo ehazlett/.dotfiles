@@ -56,7 +56,7 @@ run echo '/usr/local/bin/fish' | tee -a /etc/shells
 run chsh -s /usr/local/bin/fish dev
 
 # go
-run wget https://storage.googleapis.com/golang/go1.2.2.linux-amd64.tar.gz -O /tmp/go.tar.gz
+run wget https://storage.googleapis.com/golang/go1.3.linux-amd64.tar.gz -O /tmp/go.tar.gz
 run tar -C /usr/local -xvf /tmp/go.tar.gz
 
 workdir /home/dev
