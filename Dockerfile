@@ -9,6 +9,7 @@ run apt-get install -y \
     git-core \
     make \
     bc \
+    bzr \
     man-db \
     python \
     python-dev \

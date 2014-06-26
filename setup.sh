@@ -8,6 +8,7 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    build-essential \
 	    gcc \
 	    bc \
+	    bzr \
 	    git-core \
 	    make \
 	    python \
