@@ -1,4 +1,4 @@
-from ubuntu:14.04
+from debian:jessie
 maintainer evan hazlett <ejhazlett@gmail.com>
 run apt-get update
 env DEBIAN_FRONTEND noninteractive
@@ -11,6 +11,7 @@ run apt-get install -y \
     bc \
     bzr \
     man-db \
+    locales \
     python \
     python-dev \
     python-setuptools \
@@ -42,9 +43,10 @@ run apt-get install -y \
 run useradd dev
 run echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 run cp /usr/share/zoneinfo/America/Indianapolis /etc/localtime
-run dpkg-reconfigure locales
-run locale-gen en_US.UTF-8
-run /usr/sbin/update-locale LANG=en_US.UTF-8
+run dpkg-reconfigure locales && \
+    locale-gen C.UTF-8 && \
+    /usr/sbin/update-locale LANG=C.UTF-8
+env LC_ALL C.UTF-8
 
 # vim
 run hg clone https://vim.googlecode.com/hg/ /tmp/vim
