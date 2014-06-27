@@ -1,4 +1,4 @@
-from debian:jessie
+from ubuntu:14.04
 maintainer evan hazlett <ejhazlett@gmail.com>
 run apt-get update
 env DEBIAN_FRONTEND noninteractive
@@ -44,9 +44,9 @@ run useradd dev
 run echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 run cp /usr/share/zoneinfo/America/Indianapolis /etc/localtime
 run dpkg-reconfigure locales && \
-    locale-gen C.UTF-8 && \
-    /usr/sbin/update-locale LANG=C.UTF-8
-env LC_ALL C.UTF-8
+    locale-gen en_US.UTF-8 && \
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+env LC_ALL en_US.UTF-8
 
 # vim
 run hg clone https://vim.googlecode.com/hg/ /tmp/vim
