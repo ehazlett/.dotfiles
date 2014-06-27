@@ -13,6 +13,9 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'rodjek/vim-puppet'
 Plugin 'jnwhiteh/vim-golang'
 Plugin 'jiangmiao/auto-pairs'
+Plugin 'scrooloose/syntastic'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
 
 call vundle#end()
 filetype plugin indent on
