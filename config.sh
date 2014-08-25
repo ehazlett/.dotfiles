@@ -58,6 +58,12 @@ else
         ln -s /home/$USER_NAME/.dotfiles/gitignore_global /home/$USER_NAME/.gitignore_global
         ln -s /home/$USER_NAME/.dotfiles/config.fish /home/$USER_NAME/.config/fish/config.fish
     fi
+    # temporarily remove custom scheme to prevent vim launch errors before vundle run
+    sed -i 's/^colorscheme.*//g' $HOME/.dotfiles/vimrc
+    # vim plugins
+    vim +PluginInstall +qall
+    # restore vimrc
+    cd $HOME/.dotfiles && git checkout vimrc
 fi
 cd /home/$USER_NAME
 
