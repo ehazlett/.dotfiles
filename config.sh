@@ -64,6 +64,9 @@ else
     vim +PluginInstall +qall
     # restore vimrc
     cd $HOME/.dotfiles && git checkout vimrc
+    # install nvm
+    cd $HOME && git clone https://github.com/Alex7Kom/nvm-fish.git .nvm
+    echo "test -s /home/dev/.nvm-fish/nvm.fish; and source /home/dev/.nvm-fish/nvm.fish" >> $HOME/.config/fish/config.fish
 fi
 cd /home/$USER_NAME
 

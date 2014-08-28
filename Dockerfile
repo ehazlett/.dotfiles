@@ -95,6 +95,10 @@ env PATH /usr/local/go/bin:$GOPATH/bin:$PATH
 # go tools
 run go get github.com/tools/godep
 
+# nvm
+run cd $HOME && git clone https://github.com/Alex7Kom/nvm-fish.git .nvm
+run echo "test -s /home/dev/.nvm-fish/nvm.fish; and source /home/dev/.nvm-fish/nvm.fish" >> $HOME/.config/fish/config.fish
+
 # latest docker binary
 run wget https://get.docker.io/builds/Linux/x86_64/docker-latest -O /usr/local/bin/docker
 run chmod +x /usr/local/bin/docker
