@@ -107,6 +107,8 @@ RUN cd $HOME && git clone https://github.com/Alex7Kom/nvm-fish.git .nvm && \
 RUN wget https://get.docker.io/builds/Linux/x86_64/docker-latest -O /usr/local/bin/docker && \
     chmod +x /usr/local/bin/docker
 
-RUN chown -R dev:dev $HOME/
+RUN chown -R dev:dev $HOME && \
+    groupadd -g 1002 docker && \
+    usermod -aG docker dev
 USER dev
 CMD ["/usr/local/bin/fish"]
