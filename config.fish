@@ -68,3 +68,4 @@ function clean_docker_images
     docker images | grep "<none>" | awk '{ print $3;  }' | xargs docker rmi
 end
 
+test -s /home/dev/.nvm/nvm.fish; and source /home/dev/.nvm/nvm.fish
