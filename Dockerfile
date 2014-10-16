@@ -63,7 +63,7 @@ RUN (cd /tmp && wget http://fishshell.com/files/2.1.0/fish-2.1.0.tar.gz && \
     chsh -s /usr/local/bin/fish dev)
 
 # go
-RUN wget https://storage.googleapis.com/golang/go1.3.2.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
+RUN wget https://storage.googleapis.com/golang/go1.3.3.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
     tar -C /usr/local -xvf /tmp/go.tar.gz && rm /tmp/go.tar.gz
 
 WORKDIR /home/dev
