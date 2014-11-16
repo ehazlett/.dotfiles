@@ -53,12 +53,12 @@ RUN hg clone https://vim.googlecode.com/hg/ /tmp/vim
 RUN (cd /tmp/vim && ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge && make install)
 
 # fish shell
-RUN (cd /tmp && wget http://fishshell.com/files/2.1.0/fish-2.1.0.tar.gz && \
-    tar zxf fish-2.1.0.tar.gz && \
-    cd fish-2.1.0 && \
+RUN (cd /tmp && wget http://fishshell.com/files/2.1.1/fish-2.1.1.tar.gz && \
+    tar zxf fish-2.1.1.tar.gz && \
+    cd fish-2.1.1 && \
     ./configure --prefix=/usr/local && \
     make install && \
-    rm /tmp/fish-2.1.0.tar.gz && \
+    rm /tmp/fish-2.1.1.tar.gz && \
     echo '/usr/local/bin/fish' | tee -a /etc/shells && \
     chsh -s /usr/local/bin/fish dev)
 
