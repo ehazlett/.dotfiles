@@ -5,8 +5,8 @@ if [ -d "/usr/local/bin/fish" ]
 then
     echo "Fish already installed..."
 else
-    wget http://fishshell.com/files/2.1.0/fish-2.1.0.tar.gz
-    tar -zxf fish-2.1.0.tar.gz && cd fish-2.1.0
+    wget http://fishshell.com/files/2.1.1/fish-2.1.1.tar.gz
+    tar -zxf fish-2.1.1.tar.gz && cd fish-2.1.1
     ./configure --prefix=/usr/local
     make && make install
     echo '/usr/local/bin/fish' | tee -a /etc/shells
@@ -30,11 +30,11 @@ fi
 
 cd /home/$USER_NAME
 
-if [ -d "/usr/local/bin/go" ]
+if [ -d "/usr/local/go/bin/go" ]
 then
     echo "Go already installed..."
 else 
-    wget https://storage.googleapis.com/golang/go1.3.1.linux-amd64.tar.gz -O /tmp/go.tar.gz
+    wget https://storage.googleapis.com/golang/go1.3.3.linux-amd64.tar.gz -O /tmp/go.tar.gz
     tar -C /usr/local -xvf /tmp/go.tar.gz
 fi
 cd /home/$USER_NAME
@@ -48,15 +48,15 @@ else
     mkdir -p .config/fish
 
     rm -rf /home/$USER_NAME/.vim
-    ln -s /home/$USER_NAME/.dotfiles/vim /home/$USER_NAME/.vim
-    ln -s /home/$USER_NAME/.dotfiles/vimrc /home/$USER_NAME/.vimrc
-    ln -s /home/$USER_NAME/.dotfiles/tmux.conf /home/$USER_NAME/.tmux.conf
+    ln -sf /home/$USER_NAME/.dotfiles/vim /home/$USER_NAME/.vim
+    ln -sf /home/$USER_NAME/.dotfiles/vimrc /home/$USER_NAME/.vimrc
+    ln -sf /home/$USER_NAME/.dotfiles/tmux.conf /home/$USER_NAME/.tmux.conf
     # my specific settings
     if [ $USER_NAME == "ehazlett" ]; then
-        ln -s /home/$USER_NAME/.dotfiles/ssh_config /home/$USER_NAME/.ssh/config
-        ln -s /home/$USER_NAME/.dotfiles/gitconfig /home/$USER_NAME/.gitconfig
-        ln -s /home/$USER_NAME/.dotfiles/gitignore_global /home/$USER_NAME/.gitignore_global
-        ln -s /home/$USER_NAME/.dotfiles/config.fish /home/$USER_NAME/.config/fish/config.fish
+        ln -sf /home/$USER_NAME/.dotfiles/ssh_config /home/$USER_NAME/.ssh/config
+        ln -sf /home/$USER_NAME/.dotfiles/gitconfig /home/$USER_NAME/.gitconfig
+        ln -sf /home/$USER_NAME/.dotfiles/gitignore_global /home/$USER_NAME/.gitignore_global
+        ln -sf /home/$USER_NAME/.dotfiles/config.fish /home/$USER_NAME/.config/fish/config.fish
     fi
     # temporarily remove custom scheme to prevent vim launch errors before vundle run
     sed -i 's/^colorscheme.*//g' $HOME/.dotfiles/vimrc
