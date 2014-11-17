@@ -69,8 +69,8 @@ if [ -e "/usr/bin/yum" ] ; then
 fi
 
 export USER_NAME=$USER_NAME
-
-cd /home/$USER_NAME
+export HOME=/home/$USER_NAME
+cd $HOME
 
 git clone https://github.com/ehazlett/.dotfiles
 cd .dotfiles
