@@ -7,6 +7,7 @@ call vundle#begin()
 
 Plugin 'gmarik/vundle'
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'w0ng/vim-hybrid'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Lokaltog/vim-powerline'
 Plugin 'kien/ctrlp.vim'
@@ -37,9 +38,8 @@ set nu
 set cc=80
 set background=dark
 syntax on
+colorscheme hybrid
 let NERDTreeIgnore = ['\.pyc$']
 set backspace=indent,eol,start
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc
-colorscheme solarized
-let g:solarized_termtrans = 1
 autocmd vimenter * if !argc() | NERDTree | endif

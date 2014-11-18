@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
+USER_NAME=${1:-ehazlett}
+export HOME=/home/$USER_NAME
 cd /home/$USER_NAME
-if [ -d "/usr/local/bin/fish" ]
+if [ -e "/usr/local/bin/fish" ]
 then
     echo "Fish already installed..."
 else
