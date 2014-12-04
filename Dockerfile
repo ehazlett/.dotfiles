@@ -108,7 +108,9 @@ RUN wget https://get.docker.io/builds/Linux/x86_64/docker-latest -O /usr/local/b
     chmod +x /usr/local/bin/docker
 
 RUN chown -R dev:dev $HOME && \
+    groupadd -g 999 vboxsf && \
     groupadd -g 1002 docker && \
+    usermod -aG vboxsf dev
     usermod -aG docker dev
 USER dev
 CMD ["/usr/local/bin/fish"]
