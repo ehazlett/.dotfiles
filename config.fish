@@ -71,4 +71,8 @@ function clean_docker_images
     docker images | grep "<none>" | awk '{ print $3;  }' | xargs docker rmi
 end
 
+function vm_ip
+    VBoxManage guestproperty get $argv[1] /VirtualBox/GuestInfo/Net/1/V4/IP | awk '{ print $2;  }'
+end
+
 test -s /home/dev/.nvm/nvm.fish; and source /home/dev/.nvm/nvm.fish

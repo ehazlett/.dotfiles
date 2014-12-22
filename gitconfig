@@ -17,3 +17,5 @@
 
 [push]
     default = current
+[core]
+	excludesfile = /Users/ehazlett/.gitignore_global
