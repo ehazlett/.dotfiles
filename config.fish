@@ -75,4 +75,4 @@ function vm_ip
     VBoxManage guestproperty get $argv[1] /VirtualBox/GuestInfo/Net/1/V4/IP | awk '{ print $2;  }'
 end
 
-test -s /home/dev/.nvm/nvm.fish; and source /home/dev/.nvm/nvm.fish
+test -s $HOME/.nvm/nvm.fish; and source $HOME/.nvm/nvm.fish
