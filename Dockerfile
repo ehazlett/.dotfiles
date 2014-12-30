@@ -100,8 +100,7 @@ RUN go get github.com/tools/godep && \
     go get code.google.com/p/go.tools/cmd/present
 
 # nvm
-RUN cd $HOME && git clone https://github.com/Alex7Kom/nvm-fish.git .nvm && \
-    echo "test -s /home/dev/.nvm/nvm.fish; and source /home/dev/.nvm/nvm.fish" >> $HOME/.config/fish/config.fish
+RUN cd $HOME && git clone https://github.com/Alex7Kom/nvm-fish.git .nvm
 
 # latest docker binary
 RUN wget https://get.docker.io/builds/Linux/x86_64/docker-latest -O /usr/local/bin/docker && \
