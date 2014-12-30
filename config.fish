@@ -1,5 +1,6 @@
 if set -q ITERM_PROFILE
     set -x PATH /usr/local/bin $PATH
+    set -x PATH $PATH /usr/local/go/bin
     set -x PATH $PATH /usr/local/Cellar
     set -x PATH $PATH /usr/local/share/npm/bin
     set -x PATH $PATH $HOME/bin
