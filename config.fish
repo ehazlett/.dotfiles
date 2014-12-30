@@ -3,8 +3,10 @@ if set -q ITERM_PROFILE
     set -x PATH $PATH /usr/local/go/bin
     set -x PATH $PATH /usr/local/Cellar
     set -x PATH $PATH /usr/local/share/npm/bin
+    set -x PATH $PATH /usr/local/Cellar/htop-osx/0.8.2.2/bin
     set -x PATH $PATH $HOME/bin
     set -x GOPATH ~/dev/gocode
+    set -x GOROOT /usr/local/go
     set -x PATH $PATH $GOPATH/bin
     #set -x DOCKER_HOST tcp://(prlctl exec docker ip addr show eth0 | grep 'inet\s' | awk '{ print $2;  }' | cut -d '/' -f1):2375
     set -x DOCKER_HOST tcp://(VBoxManage guestproperty get docker /VirtualBox/GuestInfo/Net/1/V4/IP | awk '{ print $2; }'):2375
