@@ -1,3 +1,9 @@
 #!/bin/bash
-FREE=`df -h | grep disk1 | awk '{ print $4;  }'`
-echo -e "/: $FREE"
+if [ -f "/etc/redhat-release" ]; then
+    ROOT_DISK=`df -h | grep root | awk '{ print $5; }'`
+    HOME_DISK=`df -h | grep home | awk '{ print $5;  }'`
+else
+    ROOT_DISK=`df -h | grep disk1 | awk '{ print $4; }'`
+fi
+
+echo -e "/: $ROOT_DISK ~: $HOME_DISK" 

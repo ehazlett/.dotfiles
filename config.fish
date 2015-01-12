@@ -14,6 +14,7 @@ if set -q ITERM_PROFILE
 else
     set -x EDITOR vim
     set -x GOPATH ~/dev/gocode
+    set -x PATH ~/bin $PATH
     set -x PATH $PATH $GOPATH/bin
     set -x PATH $PATH /usr/local/go/bin /opt/nodejs/bin
     set -x JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
