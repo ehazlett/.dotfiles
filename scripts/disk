@@ -6,4 +6,13 @@ else
     ROOT_DISK=`df -h | grep disk1 | awk '{ print $4; }'`
 fi
 
-echo -e "/:$ROOT_DISK ~:$HOME_DISK" 
+INFO=""
+if [ ! -z "$ROOT_DISK" ]; then
+    INFO="/:$ROOT_DISK"
+fi
+
+if [ ! -z "$HOME_DISK" ]; then
+    INFO="$INFO ~:$HOME_DISK"
+fi
+
+echo -e $INFO

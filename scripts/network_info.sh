@@ -9,10 +9,8 @@ else
     SPEED=`$AIRPORT -I | grep lastTxRate | cut -d':' -f2 | tr -d " "`
 fi
 
-echo $SSID
-
 if [ -z "$SSID" ]; then
     exit 1
 fi
 
-echo "W: $SSID @ $SPEED mbps"
+echo "$SSID @ $SPEED mbps"
