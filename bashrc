@@ -10,6 +10,9 @@ export PS1="\[$(tput setaf 7)\]\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(t
 
 if [ ! -z "$ITERM_PROFILE" ]; then
     export CLICOLOR=1
+    if [ -f $(brew --prefix)/etc/bash_completion  ]; then
+        source $(brew --prefix)/etc/bash_completion
+    fi
 fi
 
 export GOROOT=/usr/local/go
