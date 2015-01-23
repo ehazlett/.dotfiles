@@ -23,5 +23,5 @@ function set_wifi() {
     fi
 
     sudo wpa_supplicant -B -iwlan0 -c ~/.wpa-$1.conf
-    sudo dhclient wlan0
+    sudo dhclient wlan0 &
 }
