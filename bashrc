@@ -5,6 +5,11 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
+# source completion
+if [ -f /etc/bash_completion ]; then
+    source /etc/bash_completion
+fi
+
 # prompt
 export PS1="\[$(tput setaf 7)\]\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
 
