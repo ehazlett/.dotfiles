@@ -28,3 +28,5 @@
 ! white
 *color7: #707880
 *color15: #C5C8C6
+
+! rxvt.scrollBar: false
