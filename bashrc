@@ -15,6 +15,9 @@ export PS1="\[$(tput setaf 7)\]\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(t
 
 if [ ! -z "$ITERM_PROFILE" ]; then
     export CLICOLOR=1
+else
+    eval "`dircolors -b`"
+    alias ls="ls --color=auto"
 fi
 
 export EDITOR=vim
@@ -60,8 +63,10 @@ function switch_graphics() {
     fi
 }
 
-# The next line updates PATH for the Google Cloud SDK.
-source "$HOME/google-cloud-sdk/path.bash.inc"
-
-# The next line enables bash completion for gcloud.
-source "$HOME/google-cloud-sdk/completion.bash.inc"
+if [ -e $HOME/google-cloud-sdk ]; then
+    # The next line updates PATH for the Google Cloud SDK.
+    source "$HOME/google-cloud-sdk/path.bash.inc"
+    
+    # The next line enables bash completion for gcloud.
+    source "$HOME/google-cloud-sdk/completion.bash.inc"
+fi
