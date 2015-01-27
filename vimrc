@@ -38,8 +38,12 @@ set nu
 set cc=80
 set background=dark
 syntax on
+let g:hybrid_use_Xresources = 1
 colorscheme hybrid
 let NERDTreeIgnore = ['\.pyc$']
 set backspace=indent,eol,start
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc
 autocmd vimenter * if !argc() | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+highlight ColorColumn guibg=lightgrey ctermbg=lightgrey
+highlight Directory guifg=#ff0000 ctermfg=blue
