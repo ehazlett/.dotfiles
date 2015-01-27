@@ -19,6 +19,12 @@ if [ ! -z "$ITERM_PROFILE" ]; then
         source $(brew --prefix)/etc/bash_completion
     fi
 else
+    # set keyboard repeat rate
+    if [ ! -z "$DISPLAY" ]; then
+        xset r rate 200 40
+        xrandr --dpi 150
+    fi
+
     eval "`dircolors -b`"
     alias ls="ls --color=auto"
 fi
@@ -27,11 +33,6 @@ export EDITOR=vim
 export GOROOT=/usr/local/go
 export GOPATH=~/dev/gocode
 export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin
-
-# set keyboard repeat rate
-if [ ! -z "$DISPLAY" ]; then
-    xset r rate 200 40
-fi
 
 function set_wifi() {
     if [ -z "$1" ]; then
