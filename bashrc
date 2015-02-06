@@ -73,7 +73,8 @@ function switch_graphics() {
 }
 
 function randomstr() {
-    echo `date +%s | sha256sum | base64 | head -c 32 ; echo`
+    LEN=${1:-32}
+    echo `date +%s | sha256sum | base64 | head -c $LEN; echo`
 }
 
 if [ -e $HOME/google-cloud-sdk ]; then
