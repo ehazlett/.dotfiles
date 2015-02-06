@@ -1,4 +1,5 @@
 # .bashrc
+#set -o vi
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -34,6 +35,10 @@ export GOROOT=/usr/local/go
 export GOPATH=~/dev/gocode
 export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin
 
+if [ -e "$HOME/.nvm" ]; then
+    source $HOME/.nvm/nvm.sh
+fi
+
 function set_wifi() {
     if [ -z "$1" ]; then
         echo "Usage: $0 <name>"
@@ -65,6 +70,10 @@ function switch_graphics() {
         sudo update-initramfs -u > /dev/null
         echo "Updated.  Please reboot."
     fi
+}
+
+function randomstr() {
+    echo `date +%s | sha256sum | base64 | head -c 32 ; echo`
 }
 
 if [ -e $HOME/google-cloud-sdk ]; then
