@@ -1,5 +1,8 @@
 # .bashrc
 #set -o vi
+if [ -e "$HOME/Sync/home/scripts/vm.sh" ]; then
+    source $HOME/Sync/home/scripts/vm.sh
+fi
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
