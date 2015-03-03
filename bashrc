@@ -87,3 +87,11 @@ if [ -e $HOME/google-cloud-sdk ]; then
     # The next line enables bash completion for gcloud.
     source "$HOME/google-cloud-sdk/completion.bash.inc"
 fi
+
+function rainbowstream() {
+    docker run -ti --rm \
+        -v $HOME/Sync/home/config/rainbowstream/.rainbow_oauth:/root/.rainbow_oauth \
+        -v $HOME/Sync/home/config/rainbowstream/.rainbow_config.json:/root/.rainbow_config.json \
+        --name rainbowstream \
+        jess/rainbowstream
+}

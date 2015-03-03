@@ -18,4 +18,4 @@
 [push]
     default = current
 [core]
-	excludesfile = /home/ehazlett/.gitignore_global
+	excludesfile = /Users/ehazlett/.gitignore_global
