@@ -5,7 +5,7 @@ if [ $UID -ne 0 ]; then
     exit 1
 fi
 
-BLDIR=/sys/class/backlight/acpi_video0
+BLDIR=/sys/class/backlight/intel_backlight
 GMDIR=/sys/class/backlight/gmux_backlight
 if [[ ! -d $BLDIR ]]; then
     if [[ -d $GMDIR ]]; then

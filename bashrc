@@ -42,7 +42,7 @@ if [ -e "$HOME/.nvm" ]; then
     source $HOME/.nvm/nvm.sh
 fi
 
-function set_wifi() {
+set_wifi() {
     if [ -z "$1" ]; then
         echo "Usage: $0 <name>"
         return
@@ -54,7 +54,7 @@ function set_wifi() {
     sudo dhclient wlan0
 }
 
-function switch_graphics() {
+switch_graphics() {
     echo "Activating..."
     updated="0"
     if [ "$1" = "nvidia" ]; then
@@ -75,7 +75,7 @@ function switch_graphics() {
     fi
 }
 
-function randomstr() {
+randomstr() {
     LEN=${1:-32}
     echo `date +%s | sha256sum | base64 | head -c $LEN; echo`
 }
@@ -88,10 +88,14 @@ if [ -e $HOME/google-cloud-sdk ]; then
     source "$HOME/google-cloud-sdk/completion.bash.inc"
 fi
 
-function rainbowstream() {
+rainbowstream() {
     docker run -ti --rm \
         -v $HOME/Sync/home/config/rainbowstream/.rainbow_oauth:/root/.rainbow_oauth \
         -v $HOME/Sync/home/config/rainbowstream/.rainbow_config.json:/root/.rainbow_config.json \
         --name rainbowstream \
         jess/rainbowstream
+}
+
+rebuild_dkms() {
+    ls /var/lib/initramfs-tools | sudo xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
 }
