@@ -99,3 +99,7 @@ rainbowstream() {
 rebuild_dkms() {
     ls /var/lib/initramfs-tools | sudo xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
 }
+
+machine_env() {
+    source ~/Sync/home/machine/test_env.sh
+}
