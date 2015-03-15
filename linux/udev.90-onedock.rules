@@ -1,0 +1,1 @@
+KERNEL=="hidraw*", ATTRS{idVendor}=="2109", ATTRS{idProduct}=="2812", RUN+="/usr/local/bin/keyboard-i3-switch"
