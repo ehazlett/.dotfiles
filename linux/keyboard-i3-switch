@@ -26,6 +26,6 @@ for USR in `find /home -maxdepth 1 -exec basename {} \; | tail -n +2`; do
 	USER_ID=`id -u $USR`
         SOCKET=`ls /run/user/$USER_ID/i3/ipc-socket.*`
 	log "reloading socket $SOCKET for user $USER_ID"
-        i3-msg -s $SOCKET reload
+        i3-msg -s $SOCKET reload > /dev/null
     fi
 done
