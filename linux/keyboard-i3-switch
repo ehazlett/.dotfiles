@@ -12,7 +12,7 @@ for USR in `find /home -maxdepth 1 -exec basename {} \; | tail -n +2`; do
     log "checking for $CFG"
 
     if [ -e "$CFG" ]; then
-        udevadm info -a /dev/hidraw3 > /dev/null 2>&1
+        udevadm info -a /dev/hidraw0 | grep HHKB > /dev/null 2>&1
         STATUS=$? 
         if [ "$STATUS" = "0" ]; then
             log "setting config for mod4"
