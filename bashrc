@@ -103,3 +103,7 @@ rebuild_dkms() {
 machine_env() {
     source ~/Sync/home/machine/test_env.sh
 }
+
+reset_wallpaper() {
+    feh --bg-scale ~/Sync/home/wallpaper/wallpaper.jpg
+}
