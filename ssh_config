@@ -1,6 +1,9 @@
 Host github.com
     IdentityFile ~/Sync/home/keys/vcs_ehazlett
 
+Host localhost
+    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+
 Host bitbucket.org
     IdentityFile ~/Sync/home/keys/vcs_ehazlett
 

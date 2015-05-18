@@ -52,6 +52,8 @@ set_wifi() {
     sudo pkill dhclient
     sudo wpa_supplicant -B -iwlan0 -c ~/.wpa-$1.conf
     sudo dhclient wlan0
+    echo "nameserver 8.8.8.8
+nameserver 8.8.4.4" | sudo tee /etc/resolv.conf
 }
 
 switch_graphics() {
@@ -106,4 +108,23 @@ machine_env() {
 
 reset_wallpaper() {
     feh --bg-scale ~/Sync/home/wallpaper/wallpaper.jpg
+}
+
+start_shared_dev() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        NAME=shared-dev
+    fi
+    docker run -ti \
+        --name $NAME \
+        -d \
+        -v ~/.tmux.conf:/home/dev/.tmux.conf:ro \
+        -v ~/.ssh:/home/dev/.ssh:ro \
+        -v ~/.vim:/home/dev/.vim:ro \
+        tmate
+
+    # wait until ready
+    sleep 3
+
+    docker logs $NAME
 }
