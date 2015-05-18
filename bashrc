@@ -15,7 +15,7 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 # prompt
-export PS1="\[$(tput setaf 7)\]\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
+export PS1="\[$(tput setaf 7)\]\h:\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
 
 if [ ! -z "$ITERM_PROFILE" ]; then
     export CLICOLOR=1
@@ -127,4 +127,9 @@ start_shared_dev() {
     sleep 3
 
     docker logs $NAME
+}
+
+dev() {
+    CMD=${2:-bash}
+    docker run -ti --restart=always --hostname=$1 --name=$1 -v ~/Sync:/home/dev/Sync -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox $CMD
 }
