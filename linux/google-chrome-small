@@ -1,2 +1,2 @@
 #!/bin/bash
-google-chrome --force-device-scale-factor=.1
+google-chrome --force-device-scale-factor=.15
