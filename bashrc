@@ -107,3 +107,11 @@ machine_env() {
 reset_wallpaper() {
     feh --bg-scale ~/Sync/home/wallpaper/wallpaper.jpg
 }
+
+if [ -e "/boot/grub/x86_64-efi/appleldr.mod" ]; then
+    synclient TapButton1=1
+    synclient TapButton2=2
+    synclient TapButton3=3
+    synclient TapAndDragGesture=1
+    synclient PalmDetect=1
+fi
