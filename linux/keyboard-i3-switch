@@ -17,10 +17,20 @@ for USR in `find /home -maxdepth 1 -exec basename {} \; | tail -n +2`; do
         if [ "$STATUS" != "0" ]; then
             log "setting config for mod1"
             sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
+            continue
+        fi
+
+        # check hidraw1 in case something is on 0; i.e. dock
+        INFO1=`udevadm info -a /dev/hidraw1`
+        STATUS=$? 
+        if [ "$STATUS" != "0" ]; then
+            log "setting config for mod1"
+            sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
         fi
 
         HHKB=`echo $INFO | grep HHKB`
-        if [ ! -z "$HHKB" ]; then
+        HHKB1=`echo $INFO1 | grep HHKB`
+        if [ ! -z "$HHKB" ] || [ ! -z "$HHKB1" ]; then
             log "setting config for mod4"
             sed -i 's/\$mod Mod.*/\$mod Mod4/g' $CFG
         else
