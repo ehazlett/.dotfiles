@@ -17,7 +17,6 @@ for USR in `find /home -maxdepth 1 -exec basename {} \; | tail -n +2`; do
         if [ "$STATUS" != "0" ]; then
             log "setting config for mod1"
             sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
-            continue
         fi
 
         # check hidraw1 in case something is on 0; i.e. dock
@@ -39,9 +38,10 @@ for USR in `find /home -maxdepth 1 -exec basename {} \; | tail -n +2`; do
         fi
 
         # reload i3
-	USER_ID=`id -u $USR`
+        USER_ID=`id -u $USR`
         SOCKET=`ls /run/user/$USER_ID/i3/ipc-socket.*`
-	log "reloading socket $SOCKET for user $USER_ID"
+        log "reloading socket $SOCKET for user $USER_ID"
         i3-msg -s $SOCKET reload > /dev/null
     fi
 done
+
