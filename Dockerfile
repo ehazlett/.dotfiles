@@ -4,6 +4,7 @@ RUN apt-get update
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get install -y \
     build-essential \
+    bash-completion \
     gcc \
     dnsutils \
     git-core \
@@ -101,4 +102,5 @@ RUN chown -R dev:dev $HOME && \
     usermod -aG vboxsf dev && \
     usermod -aG docker dev
 USER dev
+VOLUME /home/dev
 CMD ["bash"]
