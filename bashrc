@@ -42,6 +42,10 @@ if [ -e "$HOME/.nvm" ]; then
     source $HOME/.nvm/nvm.sh
 fi
 
+# custom delete word
+stty werase undef
+bind '"\C-w":backward-kill-word'
+
 set_wifi() {
     if [ -z "$1" ]; then
         echo "Usage: $0 <name>"
