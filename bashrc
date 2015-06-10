@@ -110,8 +110,8 @@ machine_env() {
     source ~/Sync/home/machine/test_env.sh
 }
 
-reset_wallpaper() {
-    feh --bg-scale ~/Sync/home/wallpaper/wallpaper.jpg
+set_wallpaper() {
+    feh --bg-scale $HOME/Sync/home/wallpaper/$1
 }
 
 start_shared_dev() {
