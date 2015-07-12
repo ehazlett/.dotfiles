@@ -38,6 +38,10 @@ export GOROOT=/usr/local/go
 export GOPATH=~/dev/gocode
 export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin
 
+if [ -e "/opt/VirtualBox" ]; then
+    export PATH=$PATH:/opt/VirtualBox
+fi
+
 if [ -e "$HOME/.nvm" ]; then
     source $HOME/.nvm/nvm.sh
 fi
