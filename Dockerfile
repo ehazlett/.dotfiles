@@ -59,7 +59,7 @@ RUN wget https://storage.googleapis.com/golang/go1.3.3.linux-amd64.tar.gz -O /tm
 
 WORKDIR /home/dev
 ENV HOME /home/dev
-#ENV LC_ALL en_US.UTF-8
+ENV SHELL /bin/bash
 COPY . $HOME/.dotfiles
 RUN (cd $HOME/.dotfiles && git submodule init && git submodule update --recursive)
 

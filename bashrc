@@ -115,7 +115,7 @@ machine_env() {
 }
 
 set_wallpaper() {
-    feh --bg-scale $HOME/Sync/home/wallpaper/$1
+    feh --bg-scale $1
 }
 
 start_shared_dev() {
