@@ -32,6 +32,7 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    ctags \
 	    libsqlite3-dev \
 	    libdevmapper-dev \
+            fonts-inconsolata \
 	    rng-tools \
 	    s3cmd \
 	    apache2-utils \

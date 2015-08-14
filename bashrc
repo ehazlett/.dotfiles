@@ -59,6 +59,7 @@ set_wifi() {
     sudo pkill wpa_supplicant
     sudo pkill dhclient
     sudo wpa_supplicant -B -iwlan0 -c ~/.wpa-$1.conf
+    sudo dhclient -r
     sudo dhclient wlan0
     echo "nameserver 8.8.8.8
 nameserver 8.8.4.4" | sudo tee /etc/resolv.conf

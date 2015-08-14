@@ -1,0 +1,591 @@
+#!/bin/bash
+# bash wrappers for docker run commands
+# from the wonderfully amazing jfrazelle :D (https://github.com/jfrazelle/dotfiles/blob/master/.dockerfunc)
+
+# 
+# Helper Functions
+#
+dcleanup(){
+    docker rm $(docker ps --filter status=exited -q 2>/dev/null) 2>/dev/null
+    docker rmi $(docker images --filter dangling=true -q 2>/dev/null) 2>/dev/null
+
+}
+del_stopped(){
+    local name=$1
+    local state=$(docker inspect --format "{{.State.Running}}" $name 2>/dev/null)
+
+    if [[ "$state" == "false"  ]]; then
+        docker rm $name
+    fi
+
+}
+relies_on(){
+    local containers=$@
+
+    for container in $containers; do
+        local state=$(docker inspect --format "{{.State.Running}}" $container 2>/dev/null)
+
+        if [[ "$state" == "false"  ]] || [[ "$state" == ""  ]]; then
+            echo "$container is not running, starting it for you."
+            $container
+        fi
+    done
+
+}
+
+# 
+# Container Aliases
+#
+apt_file(){
+    docker run --rm -it \
+        --name apt-file \
+        jess/apt-file
+
+}
+alias apt-file="apt_file"
+aws(){
+    docker run -t --rm \
+        -v $HOME/.aws:/root/.aws \
+        --log-driver none \
+        --name aws \
+        jess/awscli "$@"
+
+}
+cadvisor(){
+    docker run -d \
+        -v /:/rootfs:ro \
+        -v /var/run:/var/run:rw \
+        -v /sys:/sys:ro  \
+        -v /var/lib/docker/:/var/lib/docker:ro \
+        -p 1212:8080 \
+        --name cadvisor \
+        google/cadvisor
+
+    browser-exec "http://127.0.0.1:1212"
+
+}
+chrome(){
+    del_stopped chrome
+
+    docker run -d \
+        --memory 5gb \
+        --net host \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -v $HOME/Downloads:/root/Downloads \
+        -v $HOME/Pictures:/root/Pictures \
+        -v $HOME/Torrents:/root/Torrents \
+        -v $HOME/.chrome:/data \
+        --device /dev/snd \
+        --device /dev/dri \
+        --device /dev/video0 \
+        --name chrome \
+        jess/chrome --user-data-dir=/data --force-device-scale-factor=1 "$@"
+
+    # exit current shell
+    exit 0
+
+}
+cloudapp(){
+    docker run -t --rm \
+        -v $HOME/pics/$@:/root/$@ \
+        --log-driver none \
+        jess/cloudapp "$@"
+
+}
+documentserver(){
+    del_stopped documentserver
+
+    docker run --rm -it \
+        -p 1234:80 \
+        -v $HOME/slides:/slides \
+        --name documentserver \
+        onlyoffice/documentserver
+
+    browser-exec "http://127.0.0.1:1234/"
+
+}
+firefox(){
+    del_stopped firefox
+
+    docker run -d \
+        --memory 2gb \
+        --net host \
+        --cpuset-cpus 0 \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -v $HOME/.firefox/cache:/root/.cache/mozilla \
+        -v $HOME/.firefox/mozilla:/root/.mozilla \
+        -v $HOME/Downloads:/root/Downloads \
+        -v $HOME/Pictures:/root/Pictures \
+        -v $HOME/Torrents:/root/Torrents \
+        -e DISPLAY=unix$DISPLAY \
+        -e GDK_SCALE \
+        -e GDK_DPI_SCALE \
+        --device /dev/snd \
+        --device /dev/dri \
+        --name firefox \
+        jess/firefox "$@"
+
+    # exit current shell
+    exit 0
+
+}
+gcalcli(){
+    docker run --rm -it \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v $HOME/.gcalcli/home:/home/gcalcli/home \
+        -v $HOME/.gcalcli/work/oauth:/home/gcalcli/.gcalcli_oauth \
+        -v $HOME/.gcalcli/work/gcalclirc:/home/gcalcli/.gcalclirc \
+        --name gcalcli \
+        jess/gcalcli "$@"
+
+}
+gimp(){
+    del_stopped gimp
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -v $HOME/Pictures:/root/Pictures \
+        -v $HOME/.gtkrc:/root/.gtkrc \
+        -e GDK_SCALE \
+        -e GDK_DPI_SCALE \
+        --name gimp \
+        jess/gimp
+
+}
+hollywood(){
+    docker run --rm -it \
+        --name hollywood \
+        jess/hollywood
+
+}
+htop(){
+    docker run --rm -it \
+        --pid host \
+        --name htop \
+        jess/htop
+
+}
+http(){
+    docker run -t --rm \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        --log-driver none \
+        jess/httpie "$@"
+
+}
+imagemin(){
+    local image=$1
+    docker run --rm -it \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v $HOME/Pictures:/root/Pictures \
+        jess/imagemin /root/Pictures/${image} "> /root/Pictures/${image}.edited"
+
+}
+irssi(){
+    del_stopped irssi
+    relies_on notify_osd
+
+    docker run --rm -it \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /etc/machine-id:/etc/machine-id:ro \
+        -v /var/run/dbus:/var/run/dbus \
+        -v /var/run/user/$(id -u):/var/run/user/$(id -u) \
+        -e TERM \
+        -e XAUTHORITY \
+        -e DBUS_SESSION_BUS_ADDRESS \
+        -e HOME \
+        -v /etc/passwd:/etc/passwd:ro \
+        -v /etc/group:/etc/group:ro \
+        -u $(whoami) -w "$HOME" \
+        -v $HOME/.Xauthority:$HOME/.Xauthority \
+        -v $HOME/.irssi:$HOME/.irssi \
+        --read-only \
+        --name irssi \
+        jess/irssi
+
+}
+kernel_builder(){
+    docker run --rm -it \
+        -v /usr/src:/usr/src \
+        --name kernel-builder \
+        jess/kernel-builder
+
+}
+libreoffice(){
+    del_stopped libreoffice
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -v $HOME/slides:/root/slides \
+        -e GDK_SCALE \
+        -e GDK_DPI_SCALE \
+        --name libreoffice \
+        jess/libreoffice
+
+}
+lynx(){
+    docker run --rm -it \
+        --name lynx \
+        jess/lynx "$@"
+
+}
+mpd(){
+    del_stopped mpd
+
+    # adding cap sys_admin so I can use nfs mount
+    # the container runs as a unpriviledged user mpd
+    docker run -d \
+        --device /dev/snd \
+        --cap-add SYS_ADMIN \
+        -e MPD_HOST=/var/lib/mpd/socket \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /etc/exports:/etc/exports:ro \
+        -v $HOME/.mpd:/var/lib/mpd \
+        -v $HOME/.mpd.conf:/etc/mpd.conf \
+        --name mpd \
+        jess/mpd
+
+}
+mutt(){
+    # subshell so we dont overwrite variables
+    (
+    local account=$1
+
+    if [[ "$account" == "docker"  ]]; then
+        GMAIL=$GMAIL2
+        GMAIL_NAME=$GMAIL2_NAME
+        GMAIL_PASS=$GMAIL2_PASS
+        GMAIL_FROM=$GMAIL2_FROM
+    fi
+
+    docker run -it --rm \
+        -e GMAIL \
+        -e GMAIL_NAME \
+        -e GMAIL_PASS \
+        -e GMAIL_FROM \
+        -v $HOME/.gnupg:/home/user/.gnupg \
+        -v /etc/localtime:/etc/localtime:ro \
+        --name mutt${account} \
+        jess/mutt
+    
+    )
+
+}
+ncmpc(){
+    del_stopped ncmpc
+
+    docker run --rm -it \
+        -v $HOME/.mpd/socket:/var/run/mpd/socket \
+        -e MPD_HOST=/var/run/mpd/socket \
+        --name ncmpc \
+        jess/ncmpc "$@"
+
+}
+nes(){
+    del_stopped nes
+    local game=$1
+
+    docker run -d \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        --device /dev/dri \
+        --device /dev/snd \
+        --name nes \
+        jess/nes /games/${game}.rom
+
+}
+notify_osd(){
+    del_stopped notify-osd
+
+    docker run -d \
+        -v /etc/machine-id:/etc/machine-id:ro \
+        -v /var/run/dbus:/var/run/dbus \
+        -v /var/run/user/$(id -u):/var/run/user/$(id -u) \
+        -v /etc/localtime:/etc/localtime:ro \
+        -e XAUTHORITY \
+        -e DBUS_SESSION_BUS_ADDRESS \
+        -v /etc/passwd:/etc/passwd:ro \
+        -v /etc/group:/etc/group:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -u $(whoami) -w "$HOME" \
+        -v $HOME/.Xauthority:$HOME/.Xauthority \
+        -v $HOME/.cache/dconf:$HOME/.cache/dconf \
+        --name notify_osd \
+        jess/notify-osd
+
+}
+pandoc(){
+    local file=${@: -1}
+    local lfile=$(readlink -m "$(pwd)/${file}")
+    local rfile=$(readlink -m "/$(basename $file)")
+    local args=${@:1:${#@}-1}
+
+    set -x
+    docker run --rm \
+        -v ${lfile}:${rfile} \
+        -v /tmp:/tmp \
+        --name pandoc \
+        jess/pandoc ${args} ${rfile}
+    set +x
+
+}
+pms(){
+    del_stopped pms
+
+    docker run --rm -it \
+        -v $HOME/.mpd/socket:/var/run/mpd/socket \
+        -e MPD_HOST=/var/run/mpd/socket \
+        --name pms \
+        jess/pms "$@"
+
+}
+pulseaudio(){
+    del_stopped pulseaudio
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime \
+        --device /dev/snd \
+        -p 4713:4713 \
+        --restart always \
+        --name pulseaudio \
+        jess/pulseaudio
+
+}
+rainbowstream(){
+    docker run -it --rm \
+        -v /etc/localtime:/etc/localtime \
+        -v $HOME/.rainbow_oauth:/root/.rainbow_oauth \
+        -v $HOME/.rainbow_config.json:/root/.rainbow_config.json \
+        --name rainbowstream \
+        jess/rainbowstream
+
+}
+remmina(){
+    del_stopped remmina
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -e GDK_SCALE \
+        -e GDK_DPI_SCALE \
+        -v $HOME/.remmina:/root/.remmina \
+        --name remmina \
+        jess/remmina
+
+}
+reviewed(){
+    docker run -t --rm \
+        -e IDT_USERNAME \
+        -e IDT_PASSWORD \
+        -e IDT_ADDRESS \
+        jess/idonethis "reviewed #${1}"
+
+}
+skype(){
+    del_stopped skype
+    relies_on pulseaudio
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        --link pulseaudio:pulseaudio \
+        -e PULSE_SERVER=pulseaudio \
+        --device /dev/video0 \
+        --name skype \
+        jess/skype
+
+}
+slack(){
+    del_stopped slack
+
+    docker run -d \
+        -v /etc/machine-id:/etc/machine-id:ro \
+        -v /var/run/dbus:/var/run/dbus \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        --device /dev/snd \
+        --name slack \
+        jess/slack
+
+}
+spotify(){
+    del_stopped spotify
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -e QT_DEVICE_PIXEL_RATIO \
+        --device /dev/snd \
+        -v $HOME/.spotify/config:/home/spotify/.config/spotify \
+        -v $HOME/.spotify/cache:/home/spotify/.cache/spotify \
+        --name spotify \
+        jess/spotify
+
+}
+steam(){
+    del_stopped steam
+    relies_on pulseaudio
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /etc/machine-id:/etc/machine-id:ro \
+        -v /var/run/dbus:/var/run/dbus \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -v $HOME/.steam:/home/steam \
+        -e DISPLAY=unix$DISPLAY \
+        --link pulseaudio:pulseaudio \
+        -e PULSE_SERVER=pulseaudio \
+        --device /dev/dri \
+        --name steam \
+        jess/steam
+
+}
+t(){
+    docker run -t --rm \
+        -v $HOME/.trc:/root/.trc \
+        --log-driver none \
+        jess/t "$@"
+
+}
+termboy(){
+    del_stopped termboy
+    local game=$1
+
+    docker run --rm -it \
+        --device /dev/snd \
+        --name termboy \
+        jess/nes /games/${game}.rom
+
+}
+tor(){
+    del_stopped tor
+
+    docker run -d \
+        --net host \
+        --name tor \
+        jess/tor
+
+    # set up the redirect iptables rules
+    sudo tor-ips
+
+    # validate we are running through tor
+    browser-exec "https://check.torproject.org/"
+
+}
+torbrowser(){
+    del_stopped torbrowser
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -e GDK_SCALE \
+        -e GDK_DPI_SCALE \
+        --device /dev/snd \
+        --name torbrowser \
+        jess/tor-browser
+
+    # exit current shell
+    exit 0
+
+}
+transmission(){
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v $HOME/Torrents:/transmission/download \
+        -v $HOME/.transmission:/transmission/config \
+        -p 9091:9091 \
+        -p 51413:51413 \
+        -p 51413:51413/udp \
+        --name transmission \
+        jess/transmission
+
+    browser-exec "http://127.0.0.1:9091/transmission"
+
+}
+virtualbox(){
+    del_stopped virtualbox
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix  \
+        -e DISPLAY=unix$DISPLAY \
+        -e GDK_SCALE \
+        -e GDK_DPI_SCALE \
+        --name virtualbox \
+        --net host \
+        -v "$HOME/.vbox/vms:/root/VirtualBox VMs" \
+        -v $HOME/.vbox/config:/root/.config/VirtualBox \
+        --privileged \
+        jess/virtualbox
+
+}
+visualstudio(){
+    del_stopped visualstudio
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix  \
+        -e DISPLAY=unix$DISPLAY \
+        --name visualstudio \
+        jess/visualstudio
+
+}
+vlc(){
+    del_stopped vlc
+    relies_on pulseaudio
+
+    docker run -d \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix$DISPLAY \
+        -e GDK_SCALE \
+        -e GDK_DPI_SCALE \
+        -e QT_DEVICE_PIXEL_RATIO \
+        --link pulseaudio:pulseaudio \
+        -e PULSE_SERVER=pulseaudio \
+        -v $HOME/Torrents:/home/vlc/Torrents \
+        --device /dev/dri \
+        --name vlc \
+        jess/vlc
+
+}
+
+###
+### Awesome sauce by @jpetazzo
+###
+command_not_found_handle () {
+    # Check if there is a container image with that name
+    if ! docker inspect --format '{{ .Author  }}' "$1" >&/dev/null ; then
+        echo "$0: $1: command not found"
+        return
+    fi
+
+    # Check that it's really the name of the image, not a prefix
+    if docker inspect --format '{{ .Id  }}' "$1" | grep -q "^$1" ; then
+        echo "$0: $1: command not found"
+        return
+    fi
+
+    docker run -ti -u $(whoami) -w "$HOME" \
+        $(env | cut -d= -f1 | awk '{print "-e", $1}') \
+        --device /dev/snd \
+        -v /etc/passwd:/etc/passwd:ro \
+        -v /etc/group:/etc/group:ro \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v /home:/home \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        "jess/$@"
+
+}
