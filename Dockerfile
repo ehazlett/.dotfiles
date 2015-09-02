@@ -41,7 +41,8 @@ RUN apt-get install -y \
     libcurl4-openssl-dev
 
 # base config
-RUN useradd dev
+ENV CONTAINER_USER ehazlett
+RUN useradd $CONTAINER_USER
 RUN echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN cp /usr/share/zoneinfo/America/Indianapolis /etc/localtime
 #    dpkg-reconfigure locales && \
@@ -54,11 +55,11 @@ RUN hg clone https://vim.googlecode.com/hg/ /tmp/vim
 RUN (cd /tmp/vim && ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge && make install)
 
 # go
-RUN wget https://storage.googleapis.com/golang/go1.3.3.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
+RUN wget https://storage.googleapis.com/golang/go1.5.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
     tar -C /usr/local -xvf /tmp/go.tar.gz && rm /tmp/go.tar.gz
 
-WORKDIR /home/dev
-ENV HOME /home/dev
+WORKDIR /home/$CONTAINER_USER
+ENV HOME /home/$CONTAINER_USER
 ENV SHELL /bin/bash
 COPY . $HOME/.dotfiles
 RUN (cd $HOME/.dotfiles && git submodule init && git submodule update --recursive)
@@ -74,11 +75,11 @@ RUN mkdir -p $HOME/.ssh && \
 RUN (cd $HOME/.dotfiles && git checkout vimrc && \
     ln -sf $HOME/.dotfiles/gitconfig $HOME/.gitconfig && \
     ln -sf $HOME/.dotfiles/ssh_config $HOME/.ssh/config && \
-    chown dev:dev $HOME/.ssh/config && \
+    chown $CONTAINER_USER:$CONTAINER_USER $HOME/.ssh/config && \
     chmod 600 $HOME/.ssh/config && \
     ln -sf $HOME/.dotfiles/known_hosts $HOME/.ssh/known_hosts && \
     ln -sf $HOME/.dotfiles/tmux.conf $HOME/.tmux.conf && \
-    mkdir -p $HOME/dev/gocode)
+    mkdir -p $HOME/$CONTAINER_USER/gocode)
 
 # go config
 ENV GOROOT /usr/local/go
@@ -96,11 +97,14 @@ RUN cd $HOME && git clone https://github.com/creationix/nvm .nvm
 RUN wget https://get.docker.io/builds/Linux/x86_64/docker-latest -O /usr/local/bin/docker && \
     chmod +x /usr/local/bin/docker
 
-RUN chown -R dev:dev $HOME && \
+# perms
+RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
     groupadd -g 999 vboxsf && \
     groupadd -g 1002 docker && \
-    usermod -aG vboxsf dev && \
-    usermod -aG docker dev
-USER dev
-VOLUME /home/dev
+    usermod -aG vboxsf $CONTAINER_USER && \
+    usermod -aG docker $CONTAINER_USER
+
+# user
+USER $CONTAINER_USER
+VOLUME /home/$CONTAINER_USER
 CMD ["bash"]
