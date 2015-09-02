@@ -78,8 +78,7 @@ RUN (cd $HOME/.dotfiles && git checkout vimrc && \
     chown $CONTAINER_USER:$CONTAINER_USER $HOME/.ssh/config && \
     chmod 600 $HOME/.ssh/config && \
     ln -sf $HOME/.dotfiles/known_hosts $HOME/.ssh/known_hosts && \
-    ln -sf $HOME/.dotfiles/tmux.conf $HOME/.tmux.conf && \
-    mkdir -p $HOME/$CONTAINER_USER/gocode)
+    ln -sf $HOME/.dotfiles/tmux.conf $HOME/.tmux.conf)
 
 # go config
 ENV GOROOT /usr/local/go
