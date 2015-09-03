@@ -9,8 +9,6 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-source docker.sh
-
 # source completion
 if [ -f /etc/bash_completion ]; then
     source /etc/bash_completion
@@ -148,4 +146,14 @@ dev() {
 
 set_title() {
     echo -en "\033]0;$1\a"
+}
+
+# docker
+lastpass() {
+    echo $@
+    docker run -ti --rm \
+        -v $HOME/Sync/home/config/lastpass:/root/.lpass \
+        --log-driver none \
+        --entrypoint /bin/bash \
+        ehazlett/lastpass-cli -l
 }
