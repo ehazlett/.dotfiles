@@ -141,7 +141,7 @@ start_shared_dev() {
 dev() {
     CMD=${2:-/bin/bash}
     set_title "dev : $1"
-    docker run -ti --restart=always --hostname=$1 --name=$1 -v ~/Sync:/home/ehazlett/Sync -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox $CMD
+    docker run -ti --restart=always --hostname=$1 --name=dev-$1 -v ~/Sync:/home/ehazlett/Sync -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox $CMD
 }
 
 set_title() {
