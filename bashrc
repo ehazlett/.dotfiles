@@ -9,6 +9,8 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
+source docker.sh
+
 # source completion
 if [ -f /etc/bash_completion ]; then
     source /etc/bash_completion
