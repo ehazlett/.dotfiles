@@ -15,7 +15,11 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 # prompt
-export PS1="\[$(tput setaf 7)\]\h:\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
+if [ ! -z "$PROJECT" ]; then
+    export PS1="\[$(tput setaf 7)\]$PROJECT:\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
+else 
+    export PS1="\[$(tput setaf 7)\]\h:\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
+fi
 
 if [ ! -z "$ITERM_PROFILE" ]; then
     export CLICOLOR=1
@@ -141,7 +145,7 @@ start_shared_dev() {
 dev() {
     CMD=${2:-/bin/bash}
     set_title "dev : $1"
-    docker run -ti --restart=always --hostname=$1 --name=dev-$1 -v ~/Sync:/home/ehazlett/Sync -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox $CMD
+    docker run -ti --restart=always -e PROJECT=$1 --net=host --name=dev-$1 -v ~/Sync:/home/ehazlett/Sync -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox $CMD
 }
 
 set_title() {
