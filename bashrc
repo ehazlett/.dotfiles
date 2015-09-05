@@ -161,3 +161,26 @@ lastpass() {
         --entrypoint /bin/bash \
         ehazlett/lastpass-cli -l
 }
+
+stream_twitch() {
+     INRES="1920x1080"
+     OUTRES="1920x1080"
+     FPS="15"
+     GOP="30" # i-frame interval, should be double of FPS, 
+     GOPMIN="15" # min i-frame interval, should be equal to fps, 
+     THREADS="2"
+     CBR="1000k" # constant bitrate (should be between 1000k - 3000k)
+     QUALITY="libx264-ultrafast"  # one of the many FFMPEG preset
+     AUDIO_RATE="44100"
+     STREAM_KEY="$TWITCH_KEY"
+     AUDIO="-acodec libmp3lame -ar $AUDIO_RATE"
+     if [ ! -z "$DISABLE_AUDIO" ]; then
+         AUDIO="$AUDIO -af \"volume=0.0\""
+     fi
+     SERVER="live-ord" # twitch server in Chicago, see http://bashtech.net/twitch/ingest.php for list
+     
+     ffmpeg -f x11grab -s "$INRES" -r "$FPS" -i :0.0 -f alsa -i pulse -f flv -ac 2 \
+       -vcodec libx264 -g $GOP -keyint_min $GOPMIN -b:v $CBR -minrate $CBR -maxrate $CBR -pix_fmt yuv420p\
+       -s $OUTRES $AUDIO -threads $THREADS -strict normal \
+       -bufsize $CBR "rtmp://$SERVER.twitch.tv/app/$STREAM_KEY"
+ }
