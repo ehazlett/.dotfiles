@@ -145,7 +145,13 @@ start_shared_dev() {
 dev() {
     CMD=${2:-/bin/bash}
     set_title "dev : $1"
-    docker run -ti --restart=always -e PROJECT=$1 --net=host --name=dev-$1 -v ~/Sync:/home/ehazlett/Sync -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox $CMD
+    local name=dev-$1
+    docker inspect $name > /dev/null 2>&1
+    if [ $? = 0 ]; then
+        docker attach $name
+    else
+        docker run -ti --restart=always -e PROJECT=$1 --net=host --name=$name -v ~/Sync:/home/ehazlett/Sync -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox $CMD
+    fi
 }
 
 set_title() {
@@ -163,24 +169,28 @@ lastpass() {
 }
 
 stream_twitch() {
-     INRES="1920x1080"
-     OUTRES="1920x1080"
-     FPS="15"
-     GOP="30" # i-frame interval, should be double of FPS, 
-     GOPMIN="15" # min i-frame interval, should be equal to fps, 
-     THREADS="2"
-     CBR="1000k" # constant bitrate (should be between 1000k - 3000k)
-     QUALITY="libx264-ultrafast"  # one of the many FFMPEG preset
-     AUDIO_RATE="44100"
-     STREAM_KEY="$TWITCH_KEY"
-     AUDIO="-acodec libmp3lame -ar $AUDIO_RATE"
-     if [ ! -z "$DISABLE_AUDIO" ]; then
-         AUDIO="$AUDIO -af \"volume=0.0\""
-     fi
-     SERVER="live-ord" # twitch server in Chicago, see http://bashtech.net/twitch/ingest.php for list
-     
-     ffmpeg -f x11grab -s "$INRES" -r "$FPS" -i :0.0 -f alsa -i pulse -f flv -ac 2 \
-       -vcodec libx264 -g $GOP -keyint_min $GOPMIN -b:v $CBR -minrate $CBR -maxrate $CBR -pix_fmt yuv420p\
-       -s $OUTRES $AUDIO -threads $THREADS -strict normal \
-       -bufsize $CBR "rtmp://$SERVER.twitch.tv/app/$STREAM_KEY"
- }
+    INRES="1920x1080"
+    OUTRES="1920x1080"
+    FPS="15"
+    GOP="30" # i-frame interval, should be double of FPS, 
+    GOPMIN="15" # min i-frame interval, should be equal to fps, 
+    THREADS="2"
+    CBR="1000k" # constant bitrate (should be between 1000k - 3000k)
+    QUALITY="libx264-ultrafast"  # one of the many FFMPEG preset
+    AUDIO_RATE="44100"
+    STREAM_KEY="$TWITCH_KEY"
+    AUDIO="-acodec libmp3lame -ar $AUDIO_RATE"
+    if [ ! -z "$DISABLE_AUDIO" ]; then
+        AUDIO="$AUDIO -af \"volume=0.0\""
+    fi
+    SERVER="live-ord" # twitch server in Chicago, see http://bashtech.net/twitch/ingest.php for list
+    
+    ffmpeg -f x11grab -s "$INRES" -r "$FPS" -i :0.0 -f alsa -i pulse -f flv -ac 2 \
+      -vcodec libx264 -g $GOP -keyint_min $GOPMIN -b:v $CBR -minrate $CBR -maxrate $CBR -pix_fmt yuv420p\
+      -s $OUTRES $AUDIO -threads $THREADS -strict normal \
+      -bufsize $CBR "rtmp://$SERVER.twitch.tv/app/$STREAM_KEY"
+}
+
+photobooth() {
+     fswebcam -r 1280x720 --jpeg 100 -D 1 --no-shadow --no-timestamp --no-overlay --no-banner ~/Sync/media/photo_booth/$(date +%Y-%m-%d_%H%M%S).jpg
+}
