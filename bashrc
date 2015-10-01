@@ -53,6 +53,7 @@ fi
 # custom delete word
 stty werase undef
 bind '"\C-w":backward-kill-word'
+bind '"\C-k":history-search-backward'
 
 set_wifi() {
     if [ -z "$1" ]; then
