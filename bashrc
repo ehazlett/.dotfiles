@@ -54,6 +54,7 @@ fi
 stty werase undef
 bind '"\C-w":backward-kill-word'
 bind '"\C-k":history-search-backward'
+bind '"\C-j":history-search-forward'
 
 set_wifi() {
     if [ -z "$1" ]; then
@@ -93,7 +94,7 @@ switch_graphics() {
 
 randomstr() {
     LEN=${1:-32}
-    echo `date +%s | sha256sum | base64 | head -c $LEN; echo`
+    echo `date +%s%N | sha256sum | base64 | head -c $LEN; echo`
 }
 
 if [ -e $HOME/google-cloud-sdk ]; then

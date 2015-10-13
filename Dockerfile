@@ -51,7 +51,7 @@ RUN cp /usr/share/zoneinfo/America/Indianapolis /etc/localtime
 #ENV LC_ALL en_US.UTF-8
 
 # vim
-RUN hg clone https://vim.googlecode.com/hg/ /tmp/vim
+RUN git clone https://github.com/vim/vim /tmp/vim
 RUN (cd /tmp/vim && ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge && make install)
 
 # go
@@ -105,5 +105,4 @@ RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
 
 # user
 USER $CONTAINER_USER
-VOLUME /home/$CONTAINER_USER
 CMD ["bash"]
