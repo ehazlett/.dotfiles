@@ -62,11 +62,16 @@ set_wifi() {
         return
     fi
 
+    local device="wlan0"
+    if [ ! -z "$2" ]; then
+        device="$2"
+    fi
+
     sudo pkill wpa_supplicant
     sudo pkill dhclient
-    sudo wpa_supplicant -B -iwlan0 -c ~/.wpa-$1.conf
+    sudo wpa_supplicant -B -i$device -c ~/.wpa-$1.conf
     sudo dhclient -r
-    sudo dhclient wlan0
+    sudo dhclient $device
 }
 
 switch_graphics() {
