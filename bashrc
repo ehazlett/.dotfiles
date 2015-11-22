@@ -38,7 +38,10 @@ else
 fi
 
 # caps to control
-setxkbmap -option ctrl:nocaps
+XKB=$(which setxkbmap)
+if [ ! -z "$XKB" ]; then
+    $XKB -option ctrl:nocaps
+fi
 
 export EDITOR=vim
 export GOROOT=/usr/local/go
