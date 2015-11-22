@@ -37,6 +37,9 @@ else
     alias ls="ls --color=auto"
 fi
 
+# caps to control
+setxkbmap -option ctrl:nocaps
+
 export EDITOR=vim
 export GOROOT=/usr/local/go
 export GOPATH=~/dev/gocode
