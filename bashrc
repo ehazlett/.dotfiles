@@ -30,7 +30,7 @@ else
     # set keyboard repeat rate
     if [ ! -z "$DISPLAY" ]; then
         xset r rate 200 40
-        xrandr --dpi 150
+        xrandr --dpi 160 > /dev/null 2>&1
     fi
 
     eval "`dircolors -b`"
