@@ -101,7 +101,8 @@ RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
     groupadd -g 999 vboxsf && \
     groupadd -g 1002 docker && \
     usermod -aG vboxsf $CONTAINER_USER && \
-    usermod -aG docker $CONTAINER_USER
+    usermod -aG docker $CONTAINER_USER && \
+    usermod -aG users $CONTAINER_USER
 
 # user
 USER $CONTAINER_USER
