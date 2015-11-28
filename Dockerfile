@@ -37,6 +37,8 @@ RUN apt-get install -y \
     libdevmapper-dev \
     rng-tools \
     s3cmd \
+    libapparmor1 \
+    libseccomp2 \
     apache2-utils \
     libcurl4-openssl-dev
 
