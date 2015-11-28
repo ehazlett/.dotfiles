@@ -5,6 +5,7 @@ set shell=/bin/bash
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'gmarik/vundle'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'w0ng/vim-hybrid'
@@ -19,9 +20,11 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
 
 call vundle#end()
+
 filetype plugin indent on
 
 autocmd BufWritePre *.go Fmt
+set t_Co=256
 set cursorline
 set encoding=utf-8
 set modelines=0
