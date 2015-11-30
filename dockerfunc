@@ -83,9 +83,6 @@ chrome(){
         --name chrome \
         jess/chrome --user-data-dir=/data --force-device-scale-factor=1 "$@"
 
-    # exit current shell
-    exit 0
-
 }
 cloudapp(){
     docker run -t --rm \
@@ -127,9 +124,6 @@ firefox(){
         --device /dev/dri \
         --name firefox \
         jess/firefox "$@"
-
-    # exit current shell
-    exit 0
 
 }
 gcalcli(){
@@ -495,9 +489,6 @@ torbrowser(){
         --device /dev/snd \
         --name torbrowser \
         jess/tor-browser
-
-    # exit current shell
-    exit 0
 
 }
 transmission(){
