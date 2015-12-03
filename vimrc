@@ -18,6 +18,7 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
+Plugin 'nanotech/jellybeans.vim'
 
 call vundle#end()
 
@@ -42,7 +43,8 @@ set cc=80
 set background=dark
 syntax on
 let g:hybrid_use_Xresources = 1
-colorscheme hybrid
+"colorscheme hybrid
+colorscheme jellybeans
 let NERDTreeIgnore = ['\.pyc$']
 set backspace=indent,eol,start
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc

@@ -209,3 +209,7 @@ photobooth() {
 generate_mac() {
     printf 'DE:AD:BE:EF:%02X:%02X\n' $((RANDOM%256)) $((RANDOM%256))
 }
+
+chrome() {
+    google-chrome --high-dpi-support=1 --force-device-scale-factor=1
+}
