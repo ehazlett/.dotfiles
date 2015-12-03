@@ -161,7 +161,7 @@ dev() {
     if [ $? = 0 ]; then
         docker attach $name
     else
-        docker run -ti --restart=always -e PROJECT=$1 -v $(which docker):/usr/local/bin/docker --net=host --name=$name -v ~/Sync:/home/ehazlett/Sync -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox $CMD
+        docker run -ti --restart=always -e PROJECT=$1 -v $(which docker):/usr/local/bin/docker -v $HOME/.vim:/home/ehazlett/.vim -v $HOME/.vimrc:/home/ehazlett/.vimrc --net=host --name=$name -v ~/Sync:/home/ehazlett/Sync -v /var/run/docker.sock:/var/run/docker.sock ehazlett/devbox $CMD
     fi
 }
 
