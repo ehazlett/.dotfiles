@@ -208,3 +208,4 @@ exec synclient TapButton1=1 &
 exec synclient TapButton2=2 &
 exec synclient TapButton3=3 &
 exec synclient PalmDetect=1 &
+exec feh --bg-scale ~/Sync/home/wallpaper/current &
