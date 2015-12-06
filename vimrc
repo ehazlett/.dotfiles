@@ -43,8 +43,8 @@ set cc=80
 set background=dark
 syntax on
 let g:hybrid_use_Xresources = 1
-"colorscheme hybrid
-colorscheme jellybeans
+colorscheme hybrid
+"colorscheme jellybeans
 let NERDTreeIgnore = ['\.pyc$']
 set backspace=indent,eol,start
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc
