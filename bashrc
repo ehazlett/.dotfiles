@@ -165,9 +165,6 @@ dev() {
             -e PROJECT=$1 \
             --net=host \
             --name=$name \
-            -v $(which docker):/usr/local/bin/docker \
-            -v $(which docker-compose):/usr/local/bin/docker-compose \
-            -v $(which docker-machine):/usr/local/bin/docker-machine \
             -v $HOME/.vim:/home/ehazlett/.vim \
             -v $HOME/.vimrc:/home/ehazlett/.vimrc \
             -v $HOME/.bashrc:/home/ehazlett/.bashrc \
