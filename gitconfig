@@ -14,6 +14,7 @@
     st = status
     pull = pull --ff-only
     merge = merge --no-ff
+	appraise = !/home/ehazlett/dev/gocode/bin/git-appraise
 
 [push]
     default = current
