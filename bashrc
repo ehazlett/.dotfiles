@@ -35,12 +35,12 @@ else
 
     eval "`dircolors -b`"
     alias ls="ls --color=auto"
-fi
 
-# caps to control
-XKB=$(which setxkbmap)
-if [ ! -z "$XKB" ]; then
-    $XKB -option ctrl:nocaps
+    # caps to control
+    XKB=$(which setxkbmap)
+    if [ ! -z "$XKB" ]; then
+        $XKB -option ctrl:nocaps
+    fi
 fi
 
 export EDITOR=vim
