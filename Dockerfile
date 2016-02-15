@@ -1,8 +1,7 @@
 FROM debian:jessie
 MAINTAINER evan hazlett <ejhazlett@gmail.com>
-RUN apt-get update
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     build-essential \
     bash-completion \
     gcc \
@@ -48,10 +47,6 @@ ENV CONTAINER_USER ehazlett
 RUN useradd $CONTAINER_USER
 RUN echo "ALL            ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN cp /usr/share/zoneinfo/America/Indianapolis /etc/localtime
-#    dpkg-reconfigure locales && \
-#    locale-gen en_US.UTF-8 && \
-#    /usr/sbin/update-locale LANG=en_US
-#ENV LC_ALL en_US.UTF-8
 
 # vim
 RUN git clone https://github.com/vim/vim /tmp/vim
@@ -108,9 +103,9 @@ RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
     usermod -aG docker $CONTAINER_USER && \
     usermod -aG users $CONTAINER_USER
 
-ENV DOCKER_VERSION 1.9.1
-ENV MACHINE_VERSION v0.5.0
-ENV COMPOSE_VERSION 1.5.1
+ENV DOCKER_VERSION 1.10.0
+ENV MACHINE_VERSION v0.6.0
+ENV COMPOSE_VERSION 1.6.0
 
 RUN curl -sL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION} > /usr/local/bin/docker && \
     chmod +x /usr/local/bin/docker && \
