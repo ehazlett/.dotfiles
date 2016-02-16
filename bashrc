@@ -168,7 +168,7 @@ dev() {
             -v $HOME/.vim:/home/ehazlett/.vim \
             -v $HOME/.vimrc:/home/ehazlett/.vimrc \
             -v $HOME/.bashrc:/home/ehazlett/.bashrc \
-            -v $HOME/.ssh/ssh_config:/home/ehazlett/.ssh/config \
+            -v $HOME/.ssh/config:/home/ehazlett/.ssh/config \
             -v ~/Sync:/home/ehazlett/Sync \
             -v /var/run/docker.sock:/var/run/docker.sock \
             ehazlett/devbox $CMD
