@@ -1,6 +1,10 @@
 Host *
     UseRoaming no
 
+Host vcs.evanhazlett.com
+    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+    Port 10022
+
 Host github.com
     IdentityFile ~/Sync/home/keys/vcs_ehazlett
     Hostname ssh.github.com
