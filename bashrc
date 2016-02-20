@@ -223,3 +223,7 @@ generate_mac() {
 chrome() {
     google-chrome --high-dpi-support=1 --force-device-scale-factor=1
 }
+
+docker-machine() {
+    PATH=$HOME/.docker-machine-plugins:$PATH /usr/local/bin/docker-machine "$@"
+}
