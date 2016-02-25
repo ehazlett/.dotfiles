@@ -126,10 +126,6 @@ rebuild_dkms() {
     ls /var/lib/initramfs-tools | sudo xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
 }
 
-machine_env() {
-    source ~/Sync/home/machine/test_env.sh
-}
-
 set_wallpaper() {
     feh --bg-scale $1
 }
@@ -171,6 +167,29 @@ dev() {
             -v $HOME/.ssh/config:/home/ehazlett/.ssh/config \
             -v ~/Sync:/home/ehazlett/Sync \
             -v /var/run/docker.sock:/var/run/docker.sock \
+            ehazlett/devbox $CMD
+    fi
+}
+
+macdev() {
+    CMD=${2:-/bin/bash}
+    set_title "dev : $1"
+    local name=dev-$1
+    docker inspect $name > /dev/null 2>&1
+    if [ $? = 0 ]; then
+        docker attach $name
+    else
+        docker run -ti --restart=always \
+            -e PROJECT=$1 \
+            --net=host \
+            --name=$name \
+            -v $HOME/.vim:/home/ehazlett/.vim \
+            -v $HOME/.vimrc:/home/ehazlett/.vimrc \
+            -v $HOME/.bashrc:/home/ehazlett/.bashrc \
+            -v $HOME/.ssh/config:/home/ehazlett/.ssh/config \
+            -v ~/Sync:/home/ehazlett/Sync \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            --group-add staff \
             ehazlett/devbox $CMD
     fi
 }
