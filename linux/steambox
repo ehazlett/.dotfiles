@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ "$(cat /sys/class/tty/tty0/active)" = "tty7" ]; then
+    sudo chvt 1
+else
+    sudo chvt 7
+fi
