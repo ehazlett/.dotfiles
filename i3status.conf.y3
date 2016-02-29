@@ -15,9 +15,7 @@ general {
 }
 
 order += "disk /"
-order += "disk /mnt/storage"
-order += "disk /mnt/docker"
-order += "wireless wlan0"
+order += "wireless wlp2s0"
 order += "ethernet eth0"
 order += "path_exists VPN"
 order += "volume master"
@@ -25,7 +23,7 @@ order += "battery 1"
 order += "load"
 order += "tztime local"
 
-wireless wlan0 {
+wireless wlp2s0 {
         #format_up = "W: (%quality at %essid %bitrate) %ip"
         format_up = "W: (%quality at %essid) %ip"
         format_down = "W: down"
@@ -64,12 +62,4 @@ volume master {
 
 disk "/" {
         format = "/: %avail"
-}
-
-disk "/mnt/storage" {
-        format = "/mnt/storage: %avail"
-}
-
-disk "/mnt/docker" {
-        format = "/mnt/docker: %avail"
 }
