@@ -110,10 +110,9 @@ ENV COMPOSE_VERSION 1.6.0
 
 RUN curl -sL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION} > /usr/local/bin/docker && \
     chmod +x /usr/local/bin/docker && \
-    curl -L https://github.com/docker/machine/releases/download/v0.5.0/docker-machine_linux-amd64.zip >machine.zip && \
-    unzip machine.zip && \
-    rm machine.zip && \
-    mv docker-machine* /usr/local/bin && \
+    curl -L https://github.com/docker/machine/releases/download/v0.6.0/docker-machine-`uname -s`-`uname -m` > /usr/local/bin/docker-machine && \
+    chmod +x /usr/local/bin/docker-machine && \
+    ln -sf /usr/local/bin/docker-machine /usr/local/bin/machine && \
     curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
 

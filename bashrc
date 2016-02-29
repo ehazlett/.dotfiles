@@ -166,6 +166,7 @@ dev() {
             -v $HOME/.bashrc:/home/ehazlett/.bashrc \
             -v $HOME/.ssh/config:/home/ehazlett/.ssh/config \
             -v ~/Sync:/home/ehazlett/Sync \
+            -v ~/.docker:/home/ehazlett/.docker \
             -v /var/run/docker.sock:/var/run/docker.sock \
             ehazlett/devbox $CMD
     fi
@@ -188,6 +189,7 @@ macdev() {
             -v $HOME/.bashrc:/home/ehazlett/.bashrc \
             -v $HOME/.ssh/config:/home/ehazlett/.ssh/config \
             -v ~/Sync:/home/ehazlett/Sync \
+            -v ~/.docker:/home/ehazlett/.docker \
             -v /var/run/docker.sock:/var/run/docker.sock \
             --group-add staff \
             ehazlett/devbox $CMD
