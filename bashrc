@@ -153,6 +153,7 @@ dev() {
     CMD=${2:-/bin/bash}
     set_title "dev : $1"
     local name=dev-$1
+    local dockergroup=$(cat /etc/group | grep docker | cut -d':' -f3)
     docker inspect $name > /dev/null 2>&1
     if [ $? = 0 ]; then
         docker attach $name
@@ -168,6 +169,7 @@ dev() {
             -v ~/Sync:/home/ehazlett/Sync \
             -v ~/.docker:/home/ehazlett/.docker \
             -v /var/run/docker.sock:/var/run/docker.sock \
+            -u $(whoami):$dockergroup \
             ehazlett/devbox $CMD
     fi
 }
