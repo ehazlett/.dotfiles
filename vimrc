@@ -12,7 +12,7 @@ Plugin 'w0ng/vim-hybrid'
 Plugin 'scrooloose/nerdtree'
 Plugin 'kien/ctrlp.vim'
 Plugin 'rodjek/vim-puppet'
-Plugin 'Blackrush/vim-gocode'
+Plugin 'fatih/vim-go'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
@@ -25,7 +25,6 @@ call vundle#end()
 
 filetype plugin indent on
 
-autocmd BufWritePre *.go Fmt
 set t_Co=256
 set cursorline
 set encoding=utf-8
@@ -53,3 +52,4 @@ autocmd vimenter * if !argc() | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 highlight ColorColumn guibg=lightgrey ctermbg=lightgrey
 highlight Directory guifg=#ff0000 ctermfg=blue
+let g:airline_theme='hybridline'

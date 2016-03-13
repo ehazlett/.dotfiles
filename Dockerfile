@@ -87,6 +87,7 @@ ENV PATH /usr/local/go/bin:$GOPATH/bin:$PATH
 # go tools
 RUN go get github.com/tools/godep && \
     go get golang.org/x/tools/present && \
+    go get github.com/golang/lint/golint && \
     go get github.com/google/git-appraise/git-appraise
 
 # nvm
