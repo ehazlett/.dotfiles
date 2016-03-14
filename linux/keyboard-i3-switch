@@ -7,41 +7,48 @@ log() {
 
 log "detected event.  checking config."
 
+reload(){
+    # reload i3
+    USER_ID=`id -u $USR`
+    SOCKET=`ls /run/user/$USER_ID/i3/ipc-socket.*`
+    log "reloading socket $SOCKET for user $USER_ID"
+    i3-msg -s $SOCKET reload > /dev/null
+}
+
 for USR in `find /home -maxdepth 1 -exec basename {} \; | tail -n +2`; do
     CFG="/home/$USR/.i3/config"
     log "checking for $CFG"
 
     if [ -e "$CFG" ]; then
-        INFO=`udevadm info -a /dev/hidraw0`
-        STATUS=$? 
-        if [ "$STATUS" != "0" ]; then
-            log "setting config for mod1"
-            sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
-        fi
+        for hid in 1 2 3 4; do
+            INFO=`udevadm info -a /dev/hidraw$hid`
+            STATUS=$? 
+            if [ "$STATUS" != "0" ]; then
+                log "setting config for mod1"
+                sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
+            fi
 
-        # check hidraw1 in case something is on 0; i.e. dock
-        INFO1=`udevadm info -a /dev/hidraw1`
-        STATUS=$? 
-        if [ "$STATUS" != "0" ]; then
-            log "setting config for mod1"
-            sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
-        fi
+            # check hidraw1 in case something is on 0; i.e. dock
+            INFO1=`udevadm info -a /dev/hidraw1`
+            STATUS=$? 
+            if [ "$STATUS" != "0" ]; then
+                log "setting config for mod1"
+                sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
+            fi
 
-        HHKB=`echo $INFO | grep HHKB`
-        HHKB1=`echo $INFO1 | grep HHKB`
-        if [ ! -z "$HHKB" ] || [ ! -z "$HHKB1" ]; then
-            log "setting config for mod4"
-            sed -i 's/\$mod Mod.*/\$mod Mod4/g' $CFG
-        else
-            log "setting config for mod1"
-            sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
-        fi
-
-        # reload i3
-        USER_ID=`id -u $USR`
-        SOCKET=`ls /run/user/$USER_ID/i3/ipc-socket.*`
-        log "reloading socket $SOCKET for user $USER_ID"
-        i3-msg -s $SOCKET reload > /dev/null
+            HHKB=`echo $INFO | grep HHKB`
+            HHKB1=`echo $INFO1 | grep HHKB`
+            if [ ! -z "$HHKB" ] || [ ! -z "$HHKB1" ]; then
+                log "setting config for mod4"
+                sed -i 's/\$mod Mod.*/\$mod Mod4/g' $CFG
+                reload
+                break
+            else
+                log "setting config for mod1"
+                sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
+                reload
+            fi
+        done
     fi
 done
 
