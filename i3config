@@ -197,7 +197,6 @@ bindsym $mod+Control+Shift+l exec xscreensaver-command -lock
 bindsym $mod+Control+Shift+k focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, kill
 
 exec if [ -e ~/.Xresources ]; then xrdb -merge ~/.Xresources; fi
-exec mopidy &
 exec dconf write /org/gnome/settings-daemon/plugins/cursor/active false
 exec gnome-keyring-daemon
 exec /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
