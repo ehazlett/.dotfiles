@@ -94,8 +94,9 @@ RUN go get github.com/tools/godep && \
 RUN cd $HOME && git clone https://github.com/creationix/nvm .nvm
 
 # latest docker binary
-RUN wget https://get.docker.io/builds/Linux/x86_64/docker-latest -O /usr/local/bin/docker && \
-    chmod +x /usr/local/bin/docker
+RUN curl -sSL https://get.docker.com/builds/Linux/x86_64/docker-latest.tgz -o /tmp/docker-latest.tgz && \
+    tar zxf /tmp/docker-latest.tgz -C /usr/local/bin --strip 1 && \
+    rm -rf /tmp/docker-latest.tgz
 
 # perms
 RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
@@ -105,13 +106,11 @@ RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
     usermod -aG docker $CONTAINER_USER && \
     usermod -aG users $CONTAINER_USER
 
-ENV DOCKER_VERSION 1.10.2
-ENV MACHINE_VERSION v0.6.0
-ENV COMPOSE_VERSION 1.6.0
+ENV MACHINE_VERSION v0.7.0
+ENV COMPOSE_VERSION 1.7.0
 
-RUN curl -sL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION} > /usr/local/bin/docker && \
-    chmod +x /usr/local/bin/docker && \
-    curl -L https://github.com/docker/machine/releases/download/v0.6.0/docker-machine-`uname -s`-`uname -m` > /usr/local/bin/docker-machine && \
+# docker tooling
+RUN curl -L https://github.com/docker/machine/releases/download/v0.6.0/docker-machine-`uname -s`-`uname -m` > /usr/local/bin/docker-machine && \
     chmod +x /usr/local/bin/docker-machine && \
     ln -sf /usr/local/bin/docker-machine /usr/local/bin/machine && \
     curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
