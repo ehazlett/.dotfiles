@@ -235,6 +235,15 @@ stream_twitch() {
       -bufsize $CBR "rtmp://$SERVER.twitch.tv/app/$STREAM_KEY"
 }
 
+stream_desktop() {
+    INRES=${INRES:-$(xrandr | grep '*' | awk '{ print $1;  }')}
+    OUTRES=${OUTRES:-1280x1024}
+    PORT=${PORT:-1234}
+    echo "Streaming on :$PORT (in: $INRES out: $OUTRES)"
+    sleep 1
+    ffmpeg -f x11grab -s $INRES -r 30 -i :0.0+0,0 -vcodec libx264 -preset ultrafast -s $OUTRES -threads 0 -f mpegts - | vlc -I dummy - --sout "#std{access=http,mux=ts,dst=:$PORT}"
+}
+
 photobooth() {
      fswebcam -r 1280x720 --jpeg 100 -D 1 --no-shadow --no-timestamp --no-overlay --no-banner ~/Sync/media/photo_booth/$(date +%Y-%m-%d_%H%M%S).jpg
 }
