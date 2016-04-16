@@ -15,7 +15,7 @@ reload(){
     i3-msg -s $SOCKET reload > /dev/null
 }
 
-for USR in `find /home -maxdepth 1 -exec basename {} \; | tail -n +2`; do
+for USR in `find /home/ -maxdepth 1 -exec basename {} \; | tail -n +2`; do
     CFG="/home/$USR/.i3/config"
     log "checking for $CFG"
 
