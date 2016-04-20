@@ -10,7 +10,7 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 #set $mod Mod4
-set $mod Mod1
+set $mod Mod4
 
 set $color_light_blue #81a2be
 set $color_dark_blue #5f819d
@@ -193,14 +193,15 @@ bindsym XF86KbdBrightnessDown exec sudo keyboard-backlight down
 bindsym XF86MonBrightnessUp exec sudo screen-backlight up
 bindsym XF86MonBrightnessDown exec sudo screen-backlight down
 
-bindsym $mod+Control+Shift+l exec xscreensaver-command -lock
+bindsym $mod+Control+Shift+l exec i3lock -c 000000 -e
+bindsym $mod+Control+Shift+Left exec i3-msg move workspace to output left
+bindsym $mod+Control+Shift+Right exec i3-msg move workspace to output right
 bindsym $mod+Control+Shift+k focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, kill
 
 exec if [ -e ~/.Xresources ]; then xrdb -merge ~/.Xresources; fi
 exec dconf write /org/gnome/settings-daemon/plugins/cursor/active false
 exec gnome-keyring-daemon
 exec /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
-exec xscreensaver -nosplash &
 exec syndaemon -i 0.2 -K -t -d &
 # touchpad
 exec synclient TapButton1=1 &
