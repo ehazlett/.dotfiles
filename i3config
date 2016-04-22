@@ -194,8 +194,9 @@ bindsym XF86MonBrightnessUp exec sudo screen-backlight up
 bindsym XF86MonBrightnessDown exec sudo screen-backlight down
 
 bindsym $mod+Control+Shift+l exec i3lock -c 000000 -e
-bindsym $mod+Control+Shift+Left exec i3-msg move workspace to output left
-bindsym $mod+Control+Shift+Right exec i3-msg move workspace to output right
+bindsym $mod+Control+Shift+1 exec i3-msg move workspace to output eDP1
+bindsym $mod+Control+Shift+2 exec i3-msg move workspace to output DP1
+bindsym $mod+Control+Shift+3 exec i3-msg move workspace to output HDMI1
 bindsym $mod+Control+Shift+k focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, kill
 
 exec if [ -e ~/.Xresources ]; then xrdb -merge ~/.Xresources; fi
