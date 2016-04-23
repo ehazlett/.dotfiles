@@ -103,7 +103,7 @@ switch_graphics() {
 
 randomstr() {
     LEN=${1:-32}
-    echo `date +%s%N | sha256sum | base64 | head -c $LEN; echo`
+    echo `date +%s%N | sha256sum | base64 | head -c $LEN | tr '[:upper:]' '[:lower:]'; echo`
 }
 
 if [ -e $HOME/google-cloud-sdk ]; then
