@@ -149,6 +149,28 @@ start_shared_dev() {
     docker logs $NAME
 }
 
+ambassador() {
+    UPSTREAM=${1:-}
+    PORT=${2:-}
+    NET=${3:-}
+    if [ -z "$UPSTREAM" ] || [ -z "$PORT" ] || [ -z "$NET" ]; then
+        echo "Usage: <CONTAINER:PORT> <PUBLIC-PORT> <NET>"
+        return
+    fi
+
+    parts=(${UPSTREAM//:/ })
+    CONTAINER=${parts[0]}
+    CONTAINER_PORT=${parts[1]}
+
+    if [ -z "CONTAINER" ] || [ -z "$CONTAINER_PORT" ]; then
+        echo "You must specify <CONTAINER:PORT>; i.e. foo:8080"
+        return
+    fi
+
+    IP=$(docker inspect -f "{{json .NetworkSettings.Networks.${NET}.IPAddress}}" $CONTAINER | jq -r '.')
+    docker run --name ambassador-$CONTAINER-$CONTAINER_PORT -ti -d -p $PORT:$PORT --net=$NET ehazlett/ambassador -D -u $IP:$CONTAINER_PORT -l :$PORT
+}
+
 dev() {
     CMD=${2:-/bin/bash}
     set_title "dev : $1"
@@ -158,9 +180,10 @@ dev() {
     if [ $? = 0 ]; then
         docker attach $name
     else
+        docker network create $1
         docker run -ti --restart=always \
             -e PROJECT=$1 \
-            --net=host \
+            --net=$1 \
             --name=$name \
             -v $HOME/.vim:/home/ehazlett/.vim \
             -v $HOME/.vimrc:/home/ehazlett/.vimrc \
