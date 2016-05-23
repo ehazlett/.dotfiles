@@ -47,6 +47,7 @@ export EDITOR=vim
 export GOROOT=/usr/local/go
 export GOPATH=~/dev/gocode
 export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin
+export PATH=$PATH:/opt/android-studio/bin
 
 if [ -e "/opt/VirtualBox" ]; then
     export PATH=$PATH:/opt/VirtualBox
@@ -167,8 +168,8 @@ ambassador() {
         return
     fi
 
-    IP=$(docker inspect -f "{{json .NetworkSettings.Networks.${NET}.IPAddress}}" $CONTAINER | jq -r '.')
-    docker run --name ambassador-$CONTAINER-$CONTAINER_PORT -ti -d -p $PORT:$PORT --net=$NET ehazlett/ambassador -D -u $IP:$CONTAINER_PORT -l :$PORT
+    CNT_HOST=$(docker inspect -f "{{.Config.Hostname}}" $CONTAINER)
+    docker run --name ambassador-$CONTAINER-$CONTAINER_PORT -ti -d -p $PORT:$PORT --net=$NET ehazlett/ambassador -D -u $CNT_HOST:$CONTAINER_PORT -l :$PORT
 }
 
 dev() {
@@ -180,9 +181,10 @@ dev() {
     if [ $? = 0 ]; then
         docker attach $name
     else
-        docker network create $1
+        docker network create $1 > /dev/null
         docker run -ti --restart=always \
             -e PROJECT=$1 \
+            --hostname $1 \
             --net=$1 \
             --name=$name \
             -v $HOME/.vim:/home/ehazlett/.vim \
@@ -277,6 +279,22 @@ generate_mac() {
 
 chrome() {
     google-chrome --high-dpi-support=1 --force-device-scale-factor=1
+}
+
+new-project() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: new-project <username>/<project-name> (i.e. ehazlett/demo)"
+        return
+    fi
+
+    parts=(${NAME//\// })
+    USER=${parts[0]}
+    PROJECT=${parts[1]}
+    git clone git@github.com:ehazlett/project-base.git $PROJECT
+
+    find $PROJECT -type f -exec sed -i "s/ehazlett/$USER/g" {} \;
+    find $PROJECT -type f -exec sed -i "s/project-base/$PROJECT/g" {} \;
 }
 
 docker-machine() {
