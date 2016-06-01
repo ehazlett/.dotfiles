@@ -177,15 +177,20 @@ dev() {
     set_title "dev : $1"
     local name=dev-$1
     local dockergroup=$(cat /etc/group | grep docker | cut -d':' -f3)
+
+    EXTRA_ARGS=""
+    if [ ! -z "$SSH_AUTH_SOCK" ]; then
+        EXTRA_ARGS="-v $SSH_AUTH_SOCK:$SSH_AUTH_SOCK -e SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
+    fi
+
     docker inspect $name > /dev/null 2>&1
     if [ $? = 0 ]; then
         docker attach $name
     else
-        docker network create $1 > /dev/null
         docker run -ti --restart=always \
             -e PROJECT=$1 \
             --hostname $1 \
-            --net=$1 \
+            --net=host \
             --name=$name \
             -v $HOME/.vim:/home/ehazlett/.vim \
             -v $HOME/.vimrc:/home/ehazlett/.vimrc \
@@ -193,7 +198,7 @@ dev() {
             -v $HOME/.ssh/config:/home/ehazlett/.ssh/config \
             -v ~/Sync:/home/ehazlett/Sync \
             -v ~/.docker:/home/ehazlett/.docker \
-            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v /var/run/docker.sock:/var/run/docker.sock $EXTRA_ARGS \
             -u $(whoami):$dockergroup \
             ehazlett/devbox $CMD
     fi
@@ -291,10 +296,18 @@ new-project() {
     parts=(${NAME//\// })
     USER=${parts[0]}
     PROJECT=${parts[1]}
+
+    if [ -z "$PROJECT" ]; then
+        echo "Usage: new-project <username>/<project-name> (i.e. ehazlett/demo)"
+        return
+    fi
+
     git clone git@github.com:ehazlett/project-base.git $PROJECT
 
     find $PROJECT -type f -exec sed -i "s/ehazlett/$USER/g" {} \;
     find $PROJECT -type f -exec sed -i "s/project-base/$PROJECT/g" {} \;
+    mv $PROJECT/cmd/project-base $PROJECT/cmd/$PROJECT
+    echo "$PROJECT" > $PROJECT/cmd/$PROJECT/.gitignore
 }
 
 docker-machine() {

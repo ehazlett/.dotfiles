@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM ubuntu:16.04
 MAINTAINER evan hazlett <ejhazlett@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y \
@@ -54,7 +54,8 @@ RUN git clone https://github.com/vim/vim /tmp/vim
 RUN (cd /tmp/vim && ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge && make install)
 
 # go
-RUN wget https://storage.googleapis.com/golang/go1.5.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
+ENV GO_VERSION 1.6
+RUN wget https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
     tar -C /usr/local -xvf /tmp/go.tar.gz && rm /tmp/go.tar.gz
 
 WORKDIR /home/$CONTAINER_USER
@@ -101,7 +102,7 @@ RUN curl -sSL https://get.docker.com/builds/Linux/x86_64/docker-latest.tgz -o /t
 # perms
 RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
     groupadd -g 999 vboxsf && \
-    groupadd -g 1002 docker && \
+    groupadd -g 1001 docker && \
     usermod -aG vboxsf $CONTAINER_USER && \
     usermod -aG docker $CONTAINER_USER && \
     usermod -aG users $CONTAINER_USER
