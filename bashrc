@@ -324,3 +324,83 @@ godev() {
     cd $GOPATH
     PS1="\e[0;94m[$PROJECT]\e[0;0m \[\]\h:\u \[\]\e[0;32m\W\[\]>\[\]\e[0;0m "
 }
+
+vm-create() {
+    BASE=$1
+    NAME=$2
+    DISK_SIZE=$3
+    if [ -z "$BASE" ] || [ -z "$NAME" ]; then
+        echo "Usage: vm-create <base-vm-to-clone> <name> [disk_size]"
+        return
+    fi
+
+    echo " -> cloning $BASE -> $NAME"
+    o=$(virt-clone -o $BASE -n $NAME --auto-clone)
+    if [ $? != 0 ]; then
+        return
+    fi
+
+    if [ ! -z "$DISK_SIZE" ]; then
+        echo " -> resizing disk: $DISK_SIZE"
+        disk=$(virsh domblklist $NAME | grep vda | awk '{ print $2;  }')
+        o=$(sudo qemu-img resize $disk $DISK_SIZE)
+        if [ $? != 0 ]; then
+            echo " -> ERR: error resizing disk: $o"
+            return
+        fi
+    fi
+
+    echo " -> starting $NAME"
+    echo " -> waiting for instance to provision and become available..."
+    o=$(virsh start $NAME)
+    local up=""
+    while [ -z "$up" ]; do
+        up=$(virsh domifaddr $NAME | grep vnet1)
+        sleep .25
+    done
+
+    local addr=""
+    # we wait a second time for the IP in case the networking service
+    # is too fast and says the instance is up before provisioning is complete
+    while [ -z "$addr" ]; do
+        addr=$(virsh domifaddr $NAME | grep vnet1)
+        sleep .25
+    done
+
+    ipmask=$(echo $addr | awk '{ print $4; }')
+    parts=(${ipmask//\// })
+    
+    ip=${parts[0]}
+    echo " -> $NAME running"
+    echo "IP: $ip"
+}
+
+vm-connect() {
+    NAME=$1
+    USER=${2:-root}
+    if [ -z "$NAME" ]; then
+        echo "Usage: vm-connect <vm-name>"
+        return
+    fi
+
+    addr=$(virsh domifaddr $NAME | grep vnet1)
+    ipmask=$(echo $addr | awk '{ print $4; }')
+    parts=(${ipmask//\// })
+    
+    ip=${parts[0]}
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip
+}
+
+vm-delete() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: vm-delete <vm-name>"
+        return
+    fi
+
+    echo " -> stopping $NAME"
+    o=$(virsh destroy $NAME > /dev/null 2>&1)
+
+    echo " -> removing $NAME"
+    o=$(virsh undefine $NAME --remove-all-storage)
+}
