@@ -49,10 +49,6 @@ export GOPATH=~/dev/gocode
 export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin
 export PATH=$PATH:/opt/android-studio/bin
 
-if [ -e "/opt/VirtualBox" ]; then
-    export PATH=$PATH:/opt/VirtualBox
-fi
-
 if [ -e "$HOME/.nvm" ]; then
     source $HOME/.nvm/nvm.sh
 fi
@@ -335,7 +331,8 @@ vm-create() {
     fi
 
     echo " -> cloning $BASE -> $NAME"
-    o=$(virt-clone -o $BASE -n $NAME --auto-clone)
+    mac=$(printf 'DE:AD:BE:EF:%02X:%02X\n' $((RANDOM%256)) $((RANDOM%256)))
+    virt-clone -q -o $BASE -n $NAME --auto-clone -m $mac
     if [ $? != 0 ]; then
         return
     fi
@@ -355,7 +352,7 @@ vm-create() {
     o=$(virsh start $NAME)
     local up=""
     while [ -z "$up" ]; do
-        up=$(virsh domifaddr $NAME | grep vnet1)
+        up=$(virsh domifaddr $NAME | tail -2 | head -1| grep vnet)
         sleep .25
     done
 
@@ -363,7 +360,8 @@ vm-create() {
     # we wait a second time for the IP in case the networking service
     # is too fast and says the instance is up before provisioning is complete
     while [ -z "$addr" ]; do
-        addr=$(virsh domifaddr $NAME | grep vnet1)
+        # super super super hacky to get the last vnet -- ¯\_(ツ)_/¯
+        addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
         sleep .25
     done
 
@@ -373,6 +371,8 @@ vm-create() {
     ip=${parts[0]}
     echo " -> $NAME running"
     echo "IP: $ip"
+    ip=""
+    addr=""
 }
 
 vm-connect() {
@@ -383,12 +383,28 @@ vm-connect() {
         return
     fi
 
-    addr=$(virsh domifaddr $NAME | grep vnet1)
+    addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
     ipmask=$(echo $addr | awk '{ print $4; }')
     parts=(${ipmask//\// })
     
     ip=${parts[0]}
     ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip
+}
+
+vm-ip() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: vm-ip <vm-name>"
+        return
+    fi
+
+    addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
+    ipmask=$(echo $addr | awk '{ print $4; }')
+    parts=(${ipmask//\// })
+    
+    ip=${parts[0]}
+
+    echo "$ip"
 }
 
 vm-delete() {
@@ -402,5 +418,7 @@ vm-delete() {
     o=$(virsh destroy $NAME > /dev/null 2>&1)
 
     echo " -> removing $NAME"
-    o=$(virsh undefine $NAME --remove-all-storage)
+    disk_path=$(virsh domblklist $NAME | grep vda | awk '{ print $2; }')
+    o=$(virsh vol-delete $disk_path)
+    o=$(virsh undefine $NAME)
 }
