@@ -324,7 +324,8 @@ godev() {
 vm-create() {
     BASE=$1
     NAME=$2
-    DISK_SIZE=$3
+    MEM=$3
+    DISK_SIZE=$4
     if [ -z "$BASE" ] || [ -z "$NAME" ]; then
         echo "Usage: vm-create <base-vm-to-clone> <name> [disk_size]"
         return
@@ -335,6 +336,11 @@ vm-create() {
     virt-clone -q -o $BASE -n $NAME --auto-clone -m $mac
     if [ $? != 0 ]; then
         return
+    fi
+
+    if [ ! -z "$MEM" ]; then
+        echo " -> setting memory: $MEM"
+        o=$(virt-xml --edit --memory $MEM $NAME)
     fi
 
     if [ ! -z "$DISK_SIZE" ]; then
@@ -421,4 +427,8 @@ vm-delete() {
     disk_path=$(virsh domblklist $NAME | grep vda | awk '{ print $2; }')
     o=$(virsh vol-delete $disk_path)
     o=$(virsh undefine $NAME)
+}
+
+mem-free() {
+    echo $(free -m | sed 1d | head -1 | awk '{ $1 = ($7 / $2) * 100; print $1  }') %
 }
