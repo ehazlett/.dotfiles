@@ -318,7 +318,7 @@ godev() {
     mkdir -p $GOPATH/{src,bin}
     echo "Go env setup: $GOPATH"
     cd $GOPATH
-    PS1="\e[0;94m[$PROJECT]\e[0;0m \[\]\h:\u \[\]\e[0;32m\W\[\]>\[\]\e[0;0m "
+    set_title $NAME
 }
 
 vm-create() {
