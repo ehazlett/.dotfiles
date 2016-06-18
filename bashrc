@@ -327,7 +327,7 @@ vm-create() {
     MEM=$3
     DISK_SIZE=$4
     if [ -z "$BASE" ] || [ -z "$NAME" ]; then
-        echo "Usage: vm-create <base-vm-to-clone> <name> [disk_size]"
+        echo "Usage: vm-create <base-vm-to-clone> <name> [mem-in-mb] [disk_size]"
         return
     fi
 
