@@ -261,6 +261,10 @@ stream_twitch() {
       -bufsize $CBR "rtmp://$SERVER.twitch.tv/app/$STREAM_KEY"
 }
 
+battery() {
+    upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -E 'percentage|state|to\ empty'  | sed 's/ //g' | sed 's/:/: /g'
+}
+
 stream_desktop() {
     INRES=${INRES:-$(xrandr | grep '*' | awk '{ print $1;  }')}
     OUTRES=${OUTRES:-1280x1024}
