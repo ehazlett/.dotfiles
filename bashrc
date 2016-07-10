@@ -1,4 +1,6 @@
 # .bashrc
+VM_PATH=/var/data/vm
+
 #set -o vi
 if [ -e "$HOME/Sync/home/scripts/vm.sh" ]; then
     source $HOME/Sync/home/scripts/vm.sh
@@ -15,11 +17,7 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 # prompt
-if [ ! -z "$PROJECT" ]; then
-    export PS1="\[$(tput setaf 7)\]$PROJECT:\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
-else 
-    export PS1="\[$(tput setaf 7)\]\h:\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
-fi
+export PS1="\[$(tput setaf 7)\]\h:\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
 
 if [ ! -z "$ITERM_PROFILE" ]; then
     export CLICOLOR=1
@@ -48,6 +46,7 @@ export GOROOT=/usr/local/go
 export GOPATH=~/dev/gocode
 export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin
 export PATH=$PATH:/opt/android-studio/bin
+export LIBVIRT_DEFAULT_URI=qemu:///system
 
 if [ -e "$HOME/.nvm" ]; then
     source $HOME/.nvm/nvm.sh
@@ -106,7 +105,7 @@ randomstr() {
 if [ -e $HOME/google-cloud-sdk ]; then
     # The next line updates PATH for the Google Cloud SDK.
     source "$HOME/google-cloud-sdk/path.bash.inc"
-    
+
     # The next line enables bash completion for gcloud.
     source "$HOME/google-cloud-sdk/completion.bash.inc"
 fi
@@ -242,8 +241,8 @@ stream_twitch() {
     INRES="1920x1080"
     OUTRES="1920x1080"
     FPS="15"
-    GOP="30" # i-frame interval, should be double of FPS, 
-    GOPMIN="15" # min i-frame interval, should be equal to fps, 
+    GOP="30" # i-frame interval, should be double of FPS,
+    GOPMIN="15" # min i-frame interval, should be equal to fps,
     THREADS="2"
     CBR="1000k" # constant bitrate (should be between 1000k - 3000k)
     QUALITY="libx264-ultrafast"  # one of the many FFMPEG preset
@@ -254,7 +253,7 @@ stream_twitch() {
         AUDIO="$AUDIO -af \"volume=0.0\""
     fi
     SERVER="live-ord" # twitch server in Chicago, see http://bashtech.net/twitch/ingest.php for list
-    
+
     ffmpeg -f x11grab -s "$INRES" -r "$FPS" -i :0.0 -f alsa -i pulse -f flv -ac 2 \
       -vcodec libx264 -g $GOP -keyint_min $GOPMIN -b:v $CBR -minrate $CBR -maxrate $CBR -pix_fmt yuv420p\
       -s $OUTRES $AUDIO -threads $THREADS -strict normal \
@@ -263,15 +262,6 @@ stream_twitch() {
 
 battery() {
     upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -E 'percentage|state|to\ empty'  | sed 's/ //g' | sed 's/:/: /g'
-}
-
-stream_desktop() {
-    INRES=${INRES:-$(xrandr | grep '*' | awk '{ print $1;  }')}
-    OUTRES=${OUTRES:-1280x1024}
-    PORT=${PORT:-1234}
-    echo "Streaming on :$PORT (in: $INRES out: $OUTRES)"
-    sleep 1
-    ffmpeg -f x11grab -s $INRES -r 30 -i :0.0+0,0 -vcodec libx264 -preset ultrafast -s $OUTRES -threads 0 -f mpegts - | vlc -I dummy - --sout "#std{access=http,mux=ts,dst=:$PORT}"
 }
 
 photobooth() {
@@ -348,14 +338,29 @@ vm-create() {
     fi
 
     if [ ! -z "$DISK_SIZE" ]; then
-        echo " -> resizing disk: $DISK_SIZE"
-        disk=$(virsh domblklist $NAME | grep vda | awk '{ print $2;  }')
+        disk=$(virsh domblklist $NAME | grep -E "vda|hda" | awk '{ print $2;  }')
+        echo " -> resizing disk: $disk -> $DISK_SIZE"
         o=$(sudo qemu-img resize $disk $DISK_SIZE)
         if [ $? != 0 ]; then
             echo " -> ERR: error resizing disk: $o"
             return
         fi
     fi
+
+    echo " -> creating and attaching virtfs"
+    host_path=$VM_PATH/$NAME
+    mkdir -p $host_path
+
+    # set hostname in shared path
+    echo "$NAME" > $host_path/hostname
+    # user
+    echo "$USER" > $host_path/username
+    SSH_KEY=${SSH_KEY:-~/.ssh/id_rsa.pub}
+    if [ -e "$SSH_KEY" ]; then
+        cat $SSH_KEY > $host_path/ssh_key
+    fi
+
+    virt-xml --add-device --filesystem $host_path,host,type=mount,mode=passthrough $NAME > /dev/null
 
     echo " -> starting $NAME"
     echo " -> waiting for instance to provision and become available..."
@@ -377,7 +382,7 @@ vm-create() {
 
     ipmask=$(echo $addr | awk '{ print $4; }')
     parts=(${ipmask//\// })
-    
+
     ip=${parts[0]}
     echo " -> $NAME running"
     echo "IP: $ip"
@@ -387,7 +392,7 @@ vm-create() {
 
 vm-connect() {
     NAME=$1
-    USER=${2:-root}
+    USER=${2:-$USER}
     if [ -z "$NAME" ]; then
         echo "Usage: vm-connect <vm-name>"
         return
@@ -396,9 +401,25 @@ vm-connect() {
     addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
     ipmask=$(echo $addr | awk '{ print $4; }')
     parts=(${ipmask//\// })
-    
+
     ip=${parts[0]}
     ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip
+}
+
+vm-app() {
+    VM=$1
+    APP=$2
+    if [ -z "$VM" ] || [ -z "$APP" ]; then
+        echo "Usage: vm-app <vm> <app>"
+        return
+    fi
+
+    addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
+    ipmask=$(echo $addr | awk '{ print $4; }')
+    parts=(${ipmask//\// })
+    ip=${parts[0]}
+
+    ssh -X -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip -- $APP
 }
 
 vm-ip() {
@@ -411,10 +432,21 @@ vm-ip() {
     addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
     ipmask=$(echo $addr | awk '{ print $4; }')
     parts=(${ipmask//\// })
-    
+
     ip=${parts[0]}
 
     echo "$ip"
+}
+
+vm-stop() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: vm-stop <vm-name>"
+        return
+    fi
+
+    echo " -> stopping $NAME"
+    o=$(virsh destroy $NAME > /dev/null 2>&1)
 }
 
 vm-delete() {
@@ -428,11 +460,15 @@ vm-delete() {
     o=$(virsh destroy $NAME > /dev/null 2>&1)
 
     echo " -> removing $NAME"
-    disk_path=$(virsh domblklist $NAME | grep vda | awk '{ print $2; }')
+    disk_path=$(virsh domblklist $NAME | grep -E "vda|hda" | awk '{ print $2; }')
     o=$(virsh vol-delete $disk_path)
     o=$(virsh undefine $NAME)
 }
 
 mem-free() {
     echo $(free -m | sed 1d | head -1 | awk '{ $1 = ($7 / $2) * 100; print $1  }') %
+}
+
+runsteam() {
+    LD_PRELOAD='/usr/$LIB/libstdc++.so.6 /usr/$LIB/libgcc_s.so.1 /usr/$LIB/libxcb.so.1 /usr/$LIB/libgpg-error.so' steam
 }
