@@ -360,6 +360,10 @@ vm-create() {
         cat $SSH_KEY > $host_path/ssh_key
     fi
 
+    # remove existing if defined
+    virt-xml --remove-device --filesystem all $NAME > /dev/null
+
+    # add new virtfs
     virt-xml --add-device --filesystem $host_path,host,type=mount,mode=passthrough $NAME > /dev/null
 
     echo " -> starting $NAME"
@@ -463,6 +467,11 @@ vm-delete() {
     disk_path=$(virsh domblklist $NAME | grep -E "vda|hda" | awk '{ print $2; }')
     o=$(virsh vol-delete $disk_path)
     o=$(virsh undefine $NAME)
+
+    host_path=$VM_PATH/$NAME
+    if [ -e "$host_path" ]; then
+        rm -rf $host_path
+    fi
 }
 
 mem-free() {
@@ -471,4 +480,25 @@ mem-free() {
 
 runsteam() {
     LD_PRELOAD='/usr/$LIB/libstdc++.so.6 /usr/$LIB/libgcc_s.so.1 /usr/$LIB/libxcb.so.1 /usr/$LIB/libgpg-error.so' steam
+}
+
+switch_theme() {
+    color=$1
+
+    case $color in
+        dark)
+            cp -f ~/.dotfiles/xfce4-terminal.dark.terminalrc ~/.config/xfce4/terminal/terminalrc
+            sed -i 's/set background=.*/set background=dark/g' ~/.dotfiles/vimrc
+            sed -i 's/colorscheme.*/colorscheme Tomorrow-Night/g' ~/.dotfiles/vimrc
+            ;;
+        light)
+            cp -f ~/.dotfiles/xfce4-terminal.terminalrc ~/.config/xfce4/terminal/terminalrc
+            sed -i 's/set background=.*/set background=light/g' ~/.dotfiles/vimrc
+            sed -i 's/colorscheme.*/colorscheme Tomorrow/g' ~/.dotfiles/vimrc
+            ;;
+        *)
+            echo "Specify either 'dark' or 'light'"
+            return
+            ;;
+    esac
 }

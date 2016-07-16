@@ -7,7 +7,8 @@ call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'gmarik/vundle'
-Plugin 'w0ng/vim-hybrid'
+" theme
+Plugin 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdtree'
 Plugin 'kien/ctrlp.vim'
 Plugin 'fatih/vim-go'
@@ -16,6 +17,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+
 
 call vundle#end()
 
@@ -36,11 +38,14 @@ set expandtab
 set nohlsearch
 set nu
 set cc=80
-set background=dark
 syntax on
 let g:hybrid_use_Xresources = 1
-colorscheme hybrid
-"colorscheme jellybeans
+
+" theme
+set background=light
+colorscheme Tomorrow
+
+let g:airline_theme='tomorrow'
 let NERDTreeIgnore = ['\.pyc$']
 set backspace=indent,eol,start
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc
@@ -48,7 +53,6 @@ autocmd vimenter * if !argc() | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 highlight ColorColumn guibg=lightgrey ctermbg=lightgrey
 highlight Directory guifg=#ff0000 ctermfg=blue
-let g:airline_theme='hybridline'
 
 let g:syntastic_check_on_wq = 0
 autocmd BufWritePre * :%s/\s\+$//e
