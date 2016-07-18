@@ -18,12 +18,10 @@ MiscHighlightUrls=TRUE
 MiscScrollAlternateScreen=TRUE
 ScrollingLines=8192
 FontName=Ubuntu Mono 12
-
 ColorCursor=#37373b3b4141
 ColorForeground=#37373b3b4141
-ColorBackground=#ffffffffffff
-ColorPalette=#1d1d1f1f2121;#cccc66666666;#b5b5bdbd6868;#f0f0c6c67474;#8181a2a2bebe;#b2b29494bbbb;#8a8abebeb7b7;#c5c5c8c8c6c6;#969698989696;#cccc66666666;#b5b5bdbd6868;#f0f0c6c67474;#8181a2a2bebe;#b2b29494bbbb;#8a8abebeb7b7;#ffffffffffff
-
+ColorBackground=#f7bdf7bdf7bd
+ColorPalette=#1d1d1f1f2121;#cccc66666666;#b5b5bdbd6868;#f0f0c6c67474;#8181a2a2bebe;#b2b29494bbbb;#8a8abebeb7b7;#a318a318a318;#969698989696;#cccc66666666;#b5b5bdbd6868;#f0f0c6c67474;#8181a2a2bebe;#b2b29494bbbb;#8a8abebeb7b7;#ffffffffffff
 ColorSelection=#bbbbbb
 ColorSelectionUseDefault=FALSE
 ColorBold=#000000
