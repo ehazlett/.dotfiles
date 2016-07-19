@@ -315,6 +315,20 @@ godev() {
     set_title $NAME
 }
 
+wait_for_instance() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "ERR: you must specify a name"
+        return
+    fi
+    echo " -> waiting for instance to become available..."
+    local up=""
+    while [ -z "$up" ]; do
+        up=$(virsh domifaddr $NAME | tail -2 | head -1| grep vnet)
+        sleep .25
+    done
+}
+
 vm-create() {
     BASE=$1
     NAME=$2
@@ -367,13 +381,9 @@ vm-create() {
     virt-xml --add-device --filesystem $host_path,host,type=mount,mode=passthrough $NAME > /dev/null
 
     echo " -> starting $NAME"
-    echo " -> waiting for instance to provision and become available..."
     o=$(virsh start $NAME)
-    local up=""
-    while [ -z "$up" ]; do
-        up=$(virsh domifaddr $NAME | tail -2 | head -1| grep vnet)
-        sleep .25
-    done
+
+    wait_for_instance $NAME
 
     local addr=""
     # we wait a second time for the IP in case the networking service
@@ -440,6 +450,19 @@ vm-ip() {
     ip=${parts[0]}
 
     echo "$ip"
+}
+
+vm-start() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: vm-start <vm-name>"
+        return
+    fi
+
+    echo " -> starting $NAME"
+    o=$(virsh start $NAME > /dev/null 2>&1)
+
+    wait_for_instance $NAME
 }
 
 vm-stop() {
