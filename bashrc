@@ -47,6 +47,8 @@ export GOPATH=~/dev/gocode
 export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin
 export PATH=$PATH:/opt/android-studio/bin
 export LIBVIRT_DEFAULT_URI=qemu:///system
+# hdpi
+export GDK_SCALE=2
 
 if [ -e "$HOME/.nvm" ]; then
     source $HOME/.nvm/nvm.sh
