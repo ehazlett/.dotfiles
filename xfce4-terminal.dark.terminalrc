@@ -17,7 +17,7 @@ MiscTabPosition=GTK_POS_TOP
 MiscHighlightUrls=TRUE
 MiscScrollAlternateScreen=TRUE
 ScrollingLines=8192
-FontName=Ubuntu Mono 12
+FontName=Inconsolata Medium 12
 
 ColorCursor=#c5c5c8c8c6c6
 ColorForeground=#c5c5c8c8c6c6
