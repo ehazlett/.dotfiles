@@ -20,8 +20,8 @@ for USR in `find /home/ -maxdepth 1 -exec basename {} \; | tail -n +2`; do
     log "checking for $CFG"
 
     if [ -e "$CFG" ]; then
-        for hid in 0 1 2 3; do
-            INFO=`udevadm info -a /dev/hidraw$hid`
+        for hid in 0 1 2 3 4 5; do
+            INFO=`udevadm info -a /dev/hidraw$hid | grep HHKB`
             STATUS=$? 
             if [ "$STATUS" != "0" ]; then
                 log "setting config for mod1"
