@@ -526,4 +526,8 @@ switch_theme() {
             return
             ;;
     esac
+
+    # do a final touch as there is a race in the config detection where
+    # you get a bad theme and have to refresh
+    touch ~/.config/xfce4/terminal/terminalrc
 }

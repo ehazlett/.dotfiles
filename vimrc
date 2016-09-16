@@ -13,7 +13,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'kien/ctrlp.vim'
 Plugin 'fatih/vim-go'
 Plugin 'tpope/vim-surround'
-Plugin 'scrooloose/syntastic'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -42,8 +41,8 @@ syntax on
 let g:hybrid_use_Xresources = 1
 
 " theme
-set background=light
-colorscheme Tomorrow
+set background=dark
+colorscheme Tomorrow-Night
 
 let g:airline_theme='tomorrow'
 let NERDTreeIgnore = ['\.pyc$']
@@ -54,7 +53,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 highlight ColorColumn guibg=lightgrey ctermbg=lightgrey
 highlight Directory guifg=#ff0000 ctermfg=blue
 
-let g:syntastic_check_on_wq = 0
 autocmd BufWritePre * :%s/\s\+$//e
 
 au FileType go nmap <leader>r <Plug>(go-run)
@@ -75,8 +73,6 @@ let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
-
-let g:syntastic_go_checkers = ['go', 'golint', 'errcheck']
 
 " Open go doc in vertical window, horizontal, or tab
 au Filetype go nnoremap <leader>v :vsp <CR>:exe "GoDef" <CR>
