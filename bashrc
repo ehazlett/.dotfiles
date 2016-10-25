@@ -343,7 +343,7 @@ vm-create() {
 
     echo " -> cloning $BASE -> $NAME"
     mac=$(printf 'DE:AD:BE:EF:%02X:%02X\n' $((RANDOM%256)) $((RANDOM%256)))
-    virt-clone -q -o $BASE -n $NAME --auto-clone -m $mac
+    virt-clone -q -o $BASE -n $NAME --auto-clone -m $mac -f $VM_PATH/$NAME.img
     if [ $? != 0 ]; then
         return
     fi
@@ -387,14 +387,7 @@ vm-create() {
 
     wait_for_instance $NAME
 
-    local addr=""
-    # we wait a second time for the IP in case the networking service
-    # is too fast and says the instance is up before provisioning is complete
-    while [ -z "$addr" ]; do
-        # super super super hacky to get the last vnet -- ¯\_(ツ)_/¯
-        addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
-        sleep .25
-    done
+    vm_get_addr
 
     ipmask=$(echo $addr | awk '{ print $4; }')
     parts=(${ipmask//\// })
@@ -404,6 +397,16 @@ vm-create() {
     echo "IP: $ip"
     ip=""
     addr=""
+}
+
+vm_get_addr() {
+    # we wait a second time for the IP in case the networking service
+    # is too fast and says the instance is up before provisioning is complete
+    while [ -z "$addr" ]; do
+        # super super super hacky to get the last vnet -- ¯\_(ツ)_/¯
+        addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
+        sleep .25
+    done
 }
 
 vm-connect() {
@@ -529,5 +532,22 @@ switch_theme() {
 
     # do a final touch as there is a race in the config detection where
     # you get a bad theme and have to refresh
+    sleep 0.250
     touch ~/.config/xfce4/terminal/terminalrc
+}
+
+wm-vm() {
+    VM=$1
+
+    if [ -z "$VM" ]; then
+        echo "Usage: vm-vm <name>"
+        exit 1
+    fi
+
+    for i in $(seq 2 20); do
+        $(Xephyr :${i} -ac -noreset -dpi 220 -screen 3200x1800 -query $(vm-ip ${VM}))
+        if [ $? -eq 0  ]; then
+            break
+        fi
+    done
 }
