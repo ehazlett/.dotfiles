@@ -530,15 +530,6 @@ switch_theme() {
             ;;
     esac
 
-    # check for sid; if running on sid, xfce terminal is newer
-    # and scales the fonts so we resize if running on sid
-    $(grep -r "Ubuntu" /etc/lsb-release > /dev/null 2>&1)
-    if [ $? != 0 ]; then
-        sed -i 's/Medium.*/Medium 20/g' ~/.config/xfce4/terminal/terminalrc
-    else
-        sed -i 's/Medium.*/Medium 10/g' ~/.config/xfce4/terminal/terminalrc
-    fi
-
     # do a final touch as there is a race in the config detection where
     # you get a bad theme and have to refresh
     sleep 0.250
