@@ -536,7 +536,7 @@ switch_theme() {
     if [ $? != 0 ]; then
         sed -i 's/Medium.*/Medium 20/g' ~/.config/xfce4/terminal/terminalrc
     else
-        sed -i 's/Medium.*/Medium 12/g' ~/.config/xfce4/terminal/terminalrc
+        sed -i 's/Medium.*/Medium 10/g' ~/.config/xfce4/terminal/terminalrc
     fi
 
     # do a final touch as there is a race in the config detection where
