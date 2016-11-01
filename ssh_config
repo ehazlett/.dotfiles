@@ -2,29 +2,29 @@ Host *
     UseRoaming no
 
 Host git.local
-    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+    IdentityFile ~/.keys/vcs_ehazlett
     Port 10022
 
 Host vcs.evanhazlett.com
-    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+    IdentityFile ~/.keys/vcs_ehazlett
     Port 10022
 
 Host github.com
-    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+    IdentityFile ~/keys/vcs_ehazlett
     Hostname ssh.github.com
     Port 443
 
 Host git.int
-    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+    IdentityFile ~/.keys/vcs_ehazlett
 
 Host localhost
-    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+    IdentityFile ~/.keys/vcs_ehazlett
 
 Host bitbucket.org
-    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+    IdentityFile ~/.keys/vcs_ehazlett
 
 Host gist.github.com
-    IdentityFile ~/Sync/home/keys/vcs_ehazlett
+    IdentityFile ~/.keys/vcs_ehazlett
 
 Host dev
-    IdentityFile ~/Sync/home/keys/home_ehazlett
+    IdentityFile ~/.keys/home_ehazlett

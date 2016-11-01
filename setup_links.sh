@@ -8,6 +8,7 @@ done
 $(lsmod | grep qxl)
 if [ $? == 0 ]; then
     ln -sf $(pwd)/i3status.conf.vm ~/.i3status.conf
+fi
 
 VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
 
