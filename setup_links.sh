@@ -5,7 +5,7 @@ for CFG in $CONFIGS; do
     ln -sf $(pwd)/$CFG ~/.$CFG
 done
 
-$(lsmod | grep qxl)
+$(lsmod | grep "qxl" > /dev/null)
 if [ $? == 0 ]; then
     ln -sf $(pwd)/i3status.conf.vm ~/.i3status.conf
 fi
