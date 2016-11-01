@@ -545,7 +545,7 @@ wm-vm() {
     fi
 
     for i in $(seq 2 20); do
-        $(Xephyr :${i} -ac -noreset -dpi 160 -screen 3200x1800 -query $(vm-ip ${VM}))
+        $(Xephyr :${i} -ac -noreset -dpi 200 -screen 3200x1800 -query $(vm-ip ${VM}))
         if [ $? -eq 0  ]; then
             break
         fi
