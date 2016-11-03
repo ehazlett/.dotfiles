@@ -551,3 +551,13 @@ wm-vm() {
         fi
     done
 }
+
+wm-resize() {
+    $(lsmod | grep qxl > /dev/null)
+
+    if [ $? == 0  ]; then
+        xrandr --newmode "2560x1440" 311.31  2560 2744 3024 3488  1440 1441 1444 1490  -HSync +Vsync
+        xrandr --addmode Virtual-0 2560x1440
+        xrandr --output Virtual-0 --mode 2560x1440
+    fi
+}
