@@ -556,8 +556,8 @@ wm-resize() {
     mode=$1
     $(lsmod | grep qxl > /dev/null)
     if [ $? == 0  ]; then
-        xrandr --newmode "1920x1080" 172.51  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
-        xrandr --newmode "2560x1440" 311.31  2560 2744 3024 3488  1440 1441 1444 1490  -HSync +Vsync
+        xrandr --newmode "1920" 172.51  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
+        xrandr --newmode "2560" 311.31  2560 2744 3024 3488  1440 1441 1444 1490  -HSync +Vsync
         xrandr --addmode Virtual-0 1920x1080
         xrandr --addmode Virtual-0 2560x1440
 
