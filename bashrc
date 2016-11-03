@@ -26,19 +26,19 @@ if [ ! -z "$ITERM_PROFILE" ]; then
     fi
 else
     # set keyboard repeat rate
-    if [ ! -z "$DISPLAY" ]; then
-        xset r rate 200 40
-        xrandr --dpi 160 > /dev/null 2>&1
-    fi
+    #if [ ! -z "$DISPLAY" ]; then
+    #    xset r rate 200 40
+    #    xrandr --dpi 160 > /dev/null 2>&1
+    #fi
 
     eval "`dircolors -b`"
     alias ls="ls --color=auto"
 
     # caps to control
-    XKB=$(which setxkbmap)
-    if [ ! -z "$XKB" ]; then
-        $XKB -option ctrl:nocaps
-    fi
+    #XKB=$(which setxkbmap)
+    #if [ ! -z "$XKB" ]; then
+    #    $XKB -option ctrl:nocaps
+    #fi
 fi
 
 export EDITOR=vim
