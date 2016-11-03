@@ -1,0 +1,12 @@
+#!/bin/bash
+
+for FILE in /etc/hostname /etc/sysconfig/network /etc/.resized /etc/udev/rules.d/70-persistent-net.rules
+do
+    if [ -e "$FILE" ] ; then
+        rm $FILE
+    fi
+done
+
+if [ -e "/etc/sysconfig/network-scripts/ifcfg-eth0" ] ; then
+    sed -i 's/HWADDR.*//g' /etc/sysconfig/network-scripts/ifcfg-eth0
+fi

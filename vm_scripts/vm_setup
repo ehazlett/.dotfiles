@@ -1,0 +1,107 @@
+#!/bin/bash
+LOG=/var/log/vm_setup.log
+
+echo "starting provisioning service" > $LOG
+
+if [ -e "/etc/.vm_provisioned" ]; then
+	echo "machine appears provisioned (/etc/.vm_provisioned).  skipping" >> $LOG
+	exit 0
+fi
+
+# attempt to mount /host
+for i in 0 1 2 3 4; do
+	mount -t 9p -o trans-virtio host /host -oversion=9p2000.L
+	status=$?
+	if [ $status -ne 0 ]; then
+		echo "waiting to mount virtfs" >> $LOG
+		sleep 1
+	else
+		break
+	fi
+done
+
+
+# set hostname
+if [ -e "/host/hostname" ]; then
+	NAME=$(cat /host/hostname)
+else
+	NAME=`< /dev/urandom tr -dc abcdef01234567890 | head -c${1:-12};echo;`
+fi
+
+echo "hostname: $NAME"
+
+if [ $NAME = $HOSTNAME ]; then
+	echo "machine appears provisioned (name=$NAME host=$HOSTNAME).  skipping" >> $LOG
+else
+	echo "vm name: \"$NAME\"" >> $LOG
+	echo "hostname: \"$(cat /etc/hostname)\"" >> $LOG
+
+	# manual check if vm has been provisioned (in case virtfs is not used)
+	# redhat
+	if [ -e "/etc/redhat-release" ] ; then
+		echo "NETWORKING=yes" > /etc/sysconfig/network
+		echo "HOSTNAME=$NAME" >> /etc/sysconfig/network
+		hostnamectl set-hostname $NAME
+		/etc/init.d/network restart
+	# debian
+	else
+		echo $NAME > /etc/hostname
+		cat << EOF > /etc/hosts
+127.0.0.1	localhost
+127.0.1.1	$NAME
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+			hostnamectl set-hostname $NAME
+		fi
+	fi
+
+	# user account
+	if [ -e "/host/username" ]; then
+		USERNAME=$(cat /host/username)
+		echo "adding user: $USERNAME"
+		if [ ! -z "$USERNAME" ]; then
+			adduser $USERNAME
+			mkdir -p /home/$USERNAME
+			if [ -e "/host/ssh_key" ]; then
+				echo "setting ssh key"
+				mkdir -p /home/$USERNAME/.ssh
+				cat /host/ssh_key > /home/$USERNAME/.ssh/authorized_keys
+			fi
+			chown -R $USERNAME:$USERNAME /home/$USERNAME
+                        # set default password
+                        echo "$USERNAME" | passwd --stdin $USERNAME
+
+			echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+		fi
+
+	fi
+
+	# resize disk
+	echo "resizing disk" >> $LOG
+	#sh -c "/usr/local/bin/resize_disk; exit 0"
+	fdisk /dev/vda > /dev/null 2>&1 <<EOF
+d
+n
+p
+1
+
+
+a
+1
+w
+EOF
+	# set as provisioned
+	touch /etc/.vm_provisioned
+	reboot
+fi
+
+# resize
+resize2fs /dev/vda1
+
+exit 0

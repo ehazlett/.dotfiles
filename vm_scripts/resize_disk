@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# resize disk
+fdisk /dev/vda > /dev/null 2>&1 <<EOF
+d
+n
+p
+1
+
+
+a
+1
+w
+EOF

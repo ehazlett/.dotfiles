@@ -1,0 +1,9 @@
+[Unit]
+Description=VM Provisioning Service
+After=auditd.service
+
+[Service]
+ExecStart=/usr/local/bin/vm_setup
+
+[Install]
+WantedBy=network.target

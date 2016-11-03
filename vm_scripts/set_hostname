@@ -1,0 +1,29 @@
+#!/bin/bash
+NAME=`< /dev/urandom tr -dc abcdef01234567890 | head -c${1:-12};echo;`
+
+# redhat
+if [ -e "/etc/redhat-release" ] ; then
+	if [ ! -e "/etc/sysconfig/network" ] ; then
+		echo "NETWORKING=yes" > /etc/sysconfig/network
+		echo "HOSTNAME=$NAME" >> /etc/sysconfig/network
+		hostnamectl set-hostname $NAME
+		/etc/init.d/network restart
+	fi
+# debian
+else
+	if [ ! -e "/etc/hostname" ] ; then
+		echo $NAME > /etc/hostname
+		cat << EOF > /etc/hosts
+127.0.0.1	localhost
+127.0.1.1	$NAME
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+		hostnamectl set-hostname $NAME
+	fi
+fi
