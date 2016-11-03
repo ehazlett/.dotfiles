@@ -75,7 +75,7 @@ EOF
 			fi
 			chown -R $USERNAME:$USERNAME /home/$USERNAME
                         # set default password
-                        echo "$USERNAME" | passwd --stdin $USERNAME
+                        echo "$USERNAME:$USERNAME" | chpasswd
 
 			echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 		fi

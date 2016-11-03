@@ -13,10 +13,17 @@ if [ $? == 0  ]; then
 
     case $mode in
         window)
-            xrandr --output Virtual-0 --mode 1920
+            $(xrandr --output Virtual-0 --mode 1920)
+            if [ $? == 0 ]; then
+                # sometimes resolutions are detected and do not need to be added
+                xrandr --output Virtual-0 --mode 1920x1080
+            fi
             ;;
         *)
-            xrandr --output Virtual-0 --mode 2560
+            $(xrandr --output Virtual-0 --mode 2560)
+            if [ $? == 0 ]; then
+                xrandr --output Virtual-0 --mode 2560x1440
+            fi
             ;;
     esac
 fi
