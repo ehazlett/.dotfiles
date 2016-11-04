@@ -35,10 +35,10 @@ else
     alias ls="ls --color=auto"
 
     # caps to control
-    #XKB=$(which setxkbmap)
-    #if [ ! -z "$XKB" ]; then
-    #    $XKB -option ctrl:nocaps
-    #fi
+    XKB=$(which setxkbmap)
+    if [ ! -z "$XKB" ]; then
+        $XKB -option ctrl:nocaps
+    fi
 fi
 
 export EDITOR=vim
