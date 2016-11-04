@@ -388,12 +388,11 @@ vm-create() {
 
     vm_get_addr
 
-    ipmask=$(echo $addr | awk '{ print $4; }')
-    parts=(${ipmask//\// })
+    # remove existing if defined
+    virt-xml --remove-device --filesystem all $NAME > /dev/null
 
-    ip=${parts[0]}
     echo " -> $NAME running"
-    echo "IP: $ip"
+    echo "IP: $(echo $addr | awk '{ print $4; }')"
     ip=""
     addr=""
 }
