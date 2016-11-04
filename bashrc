@@ -26,10 +26,9 @@ if [ ! -z "$ITERM_PROFILE" ]; then
     fi
 else
     # set keyboard repeat rate
-    #if [ ! -z "$DISPLAY" ]; then
-    #    xset r rate 200 40
-    #    xrandr --dpi 160 > /dev/null 2>&1
-    #fi
+    if [ ! -z "$DISPLAY" ]; then
+        xset r rate 200 40
+    fi
 
     eval "`dircolors -b`"
     alias ls="ls --color=auto"
