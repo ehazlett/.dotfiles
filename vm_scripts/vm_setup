@@ -3,6 +3,9 @@ LOG=/var/log/vm_setup.log
 
 echo "starting provisioning service" > $LOG
 
+# resize
+resize2fs /dev/vda1
+
 if [ -e "/etc/.vm_provisioned" ]; then
 	echo "machine appears provisioned (/etc/.vm_provisioned).  skipping" >> $LOG
 	exit 0
@@ -100,8 +103,5 @@ EOF
 	touch /etc/.vm_provisioned
 	reboot
 fi
-
-# resize
-resize2fs /dev/vda1
 
 exit 0

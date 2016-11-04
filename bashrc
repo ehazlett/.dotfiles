@@ -550,3 +550,43 @@ wm-vm() {
         fi
     done
 }
+
+vm-update() {
+    UPGRADE=""
+    case $1 in
+        "")
+            UPGRADE="upgrade"
+            ;;
+        "dist-upgrade")
+            UPGRADE="dist-upgrade"
+            ;;
+        *)
+            echo "Usage: $0 [dist-upgrade]"
+            exit 1
+            ;;
+    esac
+    NAMES=$(virsh list --state-running --name)
+    hosts_arg=""
+    for NAME in $NAMES; do
+        if [ ! -z "$NAME" ]; then
+            ip=$(vm-ip $NAME)
+            hosts_arg="$hosts_arg --host $ip"
+        fi
+    done
+
+    slex -u root $hosts_arg apt update
+    slex -u root $hosts_arg apt -y $UPGRADE
+}
+
+vm-cmd() {
+    NAMES=$(virsh list --state-running --name)
+    hosts_arg=""
+    for NAME in $NAMES; do
+        if [ ! -z "$NAME" ]; then
+            ip=$(vm-ip $NAME)
+            hosts_arg="$hosts_arg --host $ip"
+        fi
+    done
+
+    slex -u root $hosts_arg $*
+}
