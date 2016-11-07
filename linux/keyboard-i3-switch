@@ -22,21 +22,22 @@ for USR in `find /home/ -maxdepth 1 -exec basename {} \; | tail -n +2`; do
     if [ -e "$CFG" ]; then
         for hid in 0 1 2 3 4 5; do
             INFO=`udevadm info -a /dev/hidraw$hid | grep HHKB`
-            STATUS=$? 
+            STATUS=$?
             if [ "$STATUS" != "0" ]; then
                 log "setting config for mod1"
-                sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
+                setxkbmap -layout us
             fi
 
             HHKB=`echo $INFO | grep HHKB`
             if [ ! -z "$HHKB" ]; then
                 log "setting config for mod4"
                 sed -i 's/\$mod Mod.*/\$mod Mod4/g' $CFG
+                xmodmap ~/.dotfiles/linux/xmodmap.hhkb
                 reload
                 break
             else
                 log "setting config for mod1"
-                sed -i 's/\$mod Mod.*/\$mod Mod1/g' $CFG
+                setxkbmap -layout us
                 reload
             fi
         done
