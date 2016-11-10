@@ -32,13 +32,6 @@ else
 
     eval "`dircolors -b`"
     alias ls="ls --color=auto"
-
-    # this resets current xmodmap settings; disabled for now
-    # caps to control
-    #XKB=$(which setxkbmap)
-    #if [ ! -z "$XKB" ]; then
-    #    $XKB -option ctrl:nocaps
-    #fi
 fi
 
 export EDITOR=vim
@@ -590,3 +583,26 @@ vm-cmd() {
 
     slex -u root $hosts_arg $*
 }
+
+
+set_kb() {
+    MODE=$1
+    # caps to control
+    XKB=$(which setxkbmap)
+    if [ ! -z "$XKB" ]; then
+        $XKB -layout us
+        $XKB -option ctrl:nocaps
+    fi
+
+    if [ "$MODE" = "hhkb" ] || [ -e $HOME/.hhkb ] || [ ! -z "$HHKB" ]; then
+        xmodmap -e 'clear mod1'
+        xmodmap -e 'clear mod4'
+        xmodmap -e 'keycode 133 = Alt_L Meta_L'
+        xmodmap -e 'keycode 64 = Super_L'
+        xmodmap -e 'add mod1 = Alt_L Meta_L'
+        xmodmap -e 'add mod4 = Super_L'
+    fi
+}
+
+# run the following with each session
+set_kb
