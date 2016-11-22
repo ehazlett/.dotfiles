@@ -475,7 +475,7 @@ vm-stop() {
 
 vm-delete() {
     NAMES=$*
-    if [ -z "$NAME" ]; then
+    if [ -z "$NAMES" ]; then
         echo "Usage: vm-delete <vm-name>"
         return
     fi
