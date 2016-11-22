@@ -474,24 +474,26 @@ vm-stop() {
 }
 
 vm-delete() {
-    NAME=$1
+    NAMES=$*
     if [ -z "$NAME" ]; then
         echo "Usage: vm-delete <vm-name>"
         return
     fi
 
-    echo " -> stopping $NAME"
-    o=$(virsh destroy $NAME > /dev/null 2>&1)
+    for NAME in $NAMES; do
+        echo " -> stopping $NAME"
+        o=$(virsh destroy $NAME > /dev/null 2>&1)
 
-    echo " -> removing $NAME"
-    disk_path=$(virsh domblklist $NAME | grep -E "vda|hda" | awk '{ print $2; }')
-    o=$(virsh vol-delete $disk_path)
-    o=$(virsh undefine $NAME)
+        echo " -> removing $NAME"
+        disk_path=$(virsh domblklist $NAME | grep -E "vda|hda" | awk '{ print $2; }')
+        o=$(virsh vol-delete $disk_path)
+        o=$(virsh undefine $NAME)
 
-    host_path=$VM_PATH/$NAME
-    if [ -e "$host_path" ]; then
-        rm -rf $host_path
-    fi
+        host_path=$VM_PATH/$NAME
+        if [ -e "$host_path" ]; then
+            rm -rf $host_path
+        fi
+    done
 }
 
 mem-free() {
