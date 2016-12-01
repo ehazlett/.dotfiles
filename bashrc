@@ -71,6 +71,24 @@ set_wifi() {
     sudo dhclient $device
 }
 
+start_qemu() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: $0 <name>"
+        exit 1
+    fi
+    CPUS=$2
+    if [ -z "$CPUS" ]; then
+        CPUS=1
+    fi
+    MEM=$3
+    if [ -z "$MEM" ]; then
+        MEM=512
+    fi
+    generate_mac
+    sudo nohup qemu-system-x86_64 -name $NAME -enable-kvm -net nic,model=virtio,macaddr=$MAC -net vde -drive file=~/vm/$NAME.img -m $MEM -smp cpus=$CPUS -vga qxl > /dev/null &
+}
+
 switch_graphics() {
     echo "Activating..."
     updated="0"
@@ -264,7 +282,8 @@ photobooth() {
 }
 
 generate_mac() {
-    printf 'DE:AD:BE:EF:%02X:%02X\n' $((RANDOM%256)) $((RANDOM%256))
+    MAC=$(printf '52:54:BE:EF:%02X:%02X\n' $((RANDOM%256)) $((RANDOM%256)))
+    echo $MAC
 }
 
 chrome() {
