@@ -5,11 +5,6 @@ for CFG in $CONFIGS; do
     ln -sf $(pwd)/$CFG ~/.$CFG
 done
 
-$(lsmod | grep "qxl" > /dev/null)
-if [ $? == 0 ]; then
-    ln -sf $(pwd)/i3status.conf.vm ~/.i3status.conf
-fi
-
 VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
 
 # i3
@@ -18,6 +13,16 @@ if [ "$VENDOR" = "Apple Inc." ]; then
 	ln -sf $(pwd)/i3config.macbook ~/.i3/config
 else
 	ln -sf $(pwd)/i3config ~/.i3/config
+fi
+
+rm -rf ~/.i3status.conf
+if [ "$VENDOR" = "Dell Inc." ]; then
+	ln -sf $(pwd)/i3config.macbook ~/.i3/config
+elif [ "$VENDOR" = "LENOVO" ]; then
+	ln -sf $(pwd)/i3status.conf.x1 ~/.i3status.conf
+else
+    echo "Unknown sys vendor: using generic i3status.conf"
+    ln -sf $(pwd)/i3status.conf.vm ~/.i3status.conf
 fi
 
 ln -sf $(pwd)/ssh_config ~/.ssh/config

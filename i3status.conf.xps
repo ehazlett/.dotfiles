@@ -15,14 +15,14 @@ general {
 }
 
 order += "disk /"
-order += "wireless wlp4s0"
+order += "wireless wlp58s0"
 order += "ethernet enx00e1000007d1"
 order += "volume master"
 order += "battery 0"
 order += "load"
 order += "tztime local"
 
-wireless wlp4s0 {
+wireless wlp58s0 {
         #format_up = "W: (%quality at %essid %bitrate) %ip"
         format_up = "W: (%quality at %essid) %ip"
         format_down = "W: down"
