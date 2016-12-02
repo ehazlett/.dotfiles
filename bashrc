@@ -1,9 +1,9 @@
 # .bashrc
-VM_PATH=/var/data/vm
+VM_PATH=~/vm
 
 #set -o vi
-if [ -e "$HOME/Sync/home/scripts/vm.sh" ]; then
-    source $HOME/Sync/home/scripts/vm.sh
+if [ -e "$HOME/sync/home/scripts/vm.sh" ]; then
+    source $HOME/sync/home/scripts/vm.sh
 fi
 
 # Source global definitions
@@ -410,6 +410,158 @@ vm-create() {
     addr=""
 }
 
+create-qemu() {
+    SOURCE=$1
+    NAME=$2
+    if [ -z "$NAME" ]; then
+        echo "Usage: create-qemu <source> <name> [cpus] [memory]"
+        return
+    fi
+    CPUS=$3
+    if [ -z "$CPUS" ]; then
+        CPUS=1
+    fi
+    MEM=$4
+    if [ -z "$MEM" ]; then
+        MEM=512
+    fi
+    if [ -e "$VM_PATH/$NAME.qcow2" ]; then
+        echo "ERR: $NAME exists"
+        return
+    fi
+
+    echo " -> cloning $SOURCE"
+    qemu-img convert -O qcow2 $VM_PATH/$SOURCE.qcow2 $VM_PATH/$NAME.qcow2
+
+    generate_mac > /dev/null
+
+    # virtfs
+    echo " -> configuring virtfs"
+    VIRTFS_PATH=$VM_PATH/$NAME
+    mkdir -p $VIRTFS_PATH
+    # set hostname in shared path
+    echo "$NAME" > $VIRTFS_PATH/hostname
+    # user
+    echo "$USER" > $VIRTFS_PATH/username
+    SSH_KEY=${SSH_KEY:-~/.ssh/id_rsa.pub}
+    if [ -e "$SSH_KEY" ]; then
+        cat $SSH_KEY > $VIRTFS_PATH/ssh_key
+    fi
+
+    echo " -> generating start script"
+    generate_mac > /dev/null
+    cat << EOF > $VM_PATH/$NAME.sh
+#!/usr/bin/env bash
+NAME=$NAME
+CPUS=$CPUS
+MEM=$MEM
+MAC="$MAC"
+VM_PATH=$VM_PATH
+
+CMD="qemu-system-x86_64 -name \$NAME \\
+    -enable-kvm \\
+    -net nic,model=virtio,macaddr=\$MAC \\
+    -net vde \\
+    -drive file=\$VM_PATH/\$NAME.qcow2 \\
+    -m \$MEM \\
+    -monitor unix:\$VM_PATH/\$NAME.monitor,server,nowait \\
+    -smp cpus=\$CPUS \\
+    -virtfs local,path=\$VM_PATH/\$NAME,mount_tag=host,security_model=passthrough \\
+    -vga qxl"
+
+if [ -e "\$VM_PATH/\$NAME.save" ]; then
+    SOCK=\$VM_PATH/\$NAME.monitor
+    echo " -> restoring \$NAME"
+    exec \$CMD -incoming "exec:gzip -c -d \$VM_PATH/\$NAME.save" &
+    sleep 1
+    until [ ! -z "\$complete" ]; do
+        status=\$(echo info status | socat - UNIX-CONNECT:\$SOCK)
+        echo \$status | grep -v migrate > /dev/null
+        if [ \$? = 0 ]; then
+            complete=1
+        fi
+        sleep 1
+    done
+
+    echo cont | socat - UNIX-CONNECT:\$SOCK > /dev/null
+    rm \$VM_PATH/\$NAME.save
+else
+    exec \$CMD &
+fi
+EOF
+    chmod +x $VM_PATH/$NAME.sh
+}
+
+start-qemu() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: start-qemu <name>"
+        return
+    fi
+
+    if [ ! -e "$VM_PATH/$NAME.sh" ]; then
+        echo "ERR: $NAME does not exist"
+        return
+    fi
+
+    sh $VM_PATH/$NAME.sh
+}
+
+stop-qemu() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: stop-qemu <name>"
+        return
+    fi
+
+    if [ ! -e "$VM_PATH/$NAME.monitor" ]; then
+        echo "ERR: $NAME does not have monitor socket"
+        return
+    fi
+
+    echo system_powerdown | socat - UNIX-CONNECT:$SOCK > /dev/null
+}
+
+save-qemu() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: save-qemu <name>"
+        return
+    fi
+
+    if [ ! -e "$VM_PATH/$NAME.monitor" ]; then
+        echo "ERR: $NAME does not have monitor socket"
+        return
+    fi
+
+    echo " -> saving $NAME"
+    SOCK=$VM_PATH/$NAME.monitor
+    echo stop | socat - UNIX-CONNECT:$SOCK > /dev/null
+    echo "migrate_set_speed 4096m" | socat - UNIX-CONNECT:$SOCK > /dev/null
+    echo "migrate \"exec:gzip -1 -c > $VM_PATH/$NAME.save\""  | socat - UNIX-CONNECT:$SOCK > /dev/null
+    echo quit | socat - UNIX-CONNECT:$SOCK > /dev/null
+    until [ ! -e "$SOCK" ]; do
+        sleep 1
+    done
+}
+
+delete-qemu() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: delete-qemu <name>"
+        return
+    fi
+    if [ -e "$VM_PATH/$NAME.qcow2" ]; then
+        rm -f $VM_PATH/$NAME.qcow2
+    fi
+    if [ -e "$VM_PATH/$NAME.save" ]; then
+        rm -f $VM_PATH/$NAME.save
+    fi
+    if [ -e "$VM_PATH/$NAME.sh" ]; then
+        rm -f $VM_PATH/$NAME.sh
+    fi
+}
+
 vm_get_addr() {
     # we wait a second time for the IP in case the networking service
     # is too fast and says the instance is up before provisioning is complete
@@ -428,12 +580,8 @@ vm-connect() {
         return
     fi
 
-    addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
-    ipmask=$(echo $addr | awk '{ print $4; }')
-    parts=(${ipmask//\// })
-
-    ip=${parts[0]}
-    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip
+    addr=$(host $NAME 127.0.0.1 2>/dev/null | head -1 | awk '{ print $3; }')
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$addr
 }
 
 vm-app() {
