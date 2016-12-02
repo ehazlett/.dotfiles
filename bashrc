@@ -476,7 +476,7 @@ fi
 if [ -e "\$VM_PATH/\$NAME.save" ]; then
     SOCK=\$VM_PATH/\$NAME.monitor
     echo " -> restoring \$NAME"
-    exec \$CMD -incoming "exec:gzip -c -d \$VM_PATH/\$NAME.save" &
+    exec \$CMD -incoming "exec:gzip -c -d \$VM_PATH/\$NAME.save" > /dev/null &
     sleep 1
     until [ ! -z "\$complete" ]; do
         status=\$(echo info status | socat - UNIX-CONNECT:\$SOCK)
