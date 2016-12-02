@@ -469,6 +469,10 @@ CMD="qemu-system-x86_64 -name \$NAME \\
     -virtfs local,path=\$VM_PATH/\$NAME,mount_tag=host,security_model=passthrough \\
     -vga qxl"
 
+if [ ! -z "\$NO_DISPLAY" ]; then
+    CMD="\$CMD -nographic"
+fi
+
 if [ -e "\$VM_PATH/\$NAME.save" ]; then
     SOCK=\$VM_PATH/\$NAME.monitor
     echo " -> restoring \$NAME"
@@ -504,7 +508,8 @@ start-qemu() {
         return
     fi
 
-    sh $VM_PATH/$NAME.sh
+    export NO_DISPLAY
+    $VM_PATH/$NAME.sh
 }
 
 stop-qemu() {
