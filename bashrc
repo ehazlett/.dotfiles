@@ -508,7 +508,6 @@ start-qemu() {
         return
     fi
 
-    export NO_DISPLAY
     $VM_PATH/$NAME.sh
 }
 
@@ -556,6 +555,9 @@ delete-qemu() {
         echo "Usage: delete-qemu <name>"
         return
     fi
+
+    stop-qemu $NAME > /dev/null
+
     if [ -e "$VM_PATH/$NAME.qcow2" ]; then
         rm -f $VM_PATH/$NAME.qcow2
     fi
@@ -564,6 +566,9 @@ delete-qemu() {
     fi
     if [ -e "$VM_PATH/$NAME.sh" ]; then
         rm -f $VM_PATH/$NAME.sh
+    fi
+    if [ -e "$VM_PATH/$NAME" ]; then
+        rm -rf $VM_PATH/$NAME
     fi
 }
 
