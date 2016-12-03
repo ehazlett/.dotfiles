@@ -17,7 +17,7 @@ fi
 
 rm -rf ~/.i3status.conf
 if [ "$VENDOR" = "Dell Inc." ]; then
-	ln -sf $(pwd)/i3config.macbook ~/.i3/config
+	ln -sf $(pwd)/i3status.conf.xps ~/.i3status.conf
 elif [ "$VENDOR" = "LENOVO" ]; then
 	ln -sf $(pwd)/i3status.conf.x1 ~/.i3status.conf
 else

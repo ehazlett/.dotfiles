@@ -1,5 +1,6 @@
 # .bashrc
 VM_PATH=~/vm
+VDE_NAME=vm0
 
 #set -o vi
 if [ -e "$HOME/sync/home/scripts/vm.sh" ]; then
@@ -37,7 +38,7 @@ fi
 export EDITOR=vim
 export GOROOT=/usr/local/go
 export GOPATH=~/dev/gocode
-export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin
+export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin:/usr/local/sbin
 export PATH=$PATH:/opt/android-studio/bin
 export LIBVIRT_DEFAULT_URI=qemu:///system
 # hdpi
@@ -457,11 +458,12 @@ CPUS=$CPUS
 MEM=$MEM
 MAC="$MAC"
 VM_PATH=$VM_PATH
+VDE_NAME=$VDE_NAME
 
 CMD="qemu-system-x86_64 -name \$NAME \\
     -enable-kvm \\
     -net nic,model=virtio,macaddr=\$MAC \\
-    -net vde \\
+    -net vde,sock=/var/run/vde2/\$VDE_NAME.ctl \\
     -drive file=\$VM_PATH/\$NAME.qcow2 \\
     -m \$MEM \\
     -monitor unix:\$VM_PATH/\$NAME.monitor,server,nowait \\
@@ -518,7 +520,8 @@ stop-qemu() {
         return
     fi
 
-    if [ ! -e "$VM_PATH/$NAME.monitor" ]; then
+    SOCK=$VM_PATH/$NAME.monitor
+    if [ ! -e "$SOCK" ]; then
         echo "ERR: $NAME does not have monitor socket"
         return
     fi
@@ -590,8 +593,8 @@ vm-connect() {
         return
     fi
 
-    addr=$(host $NAME 127.0.0.1 2>/dev/null | head -1 | awk '{ print $3; }')
-    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$addr
+    vm-ip
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip
 }
 
 vm-app() {
@@ -602,11 +605,7 @@ vm-app() {
         return
     fi
 
-    addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
-    ipmask=$(echo $addr | awk '{ print $4; }')
-    parts=(${ipmask//\// })
-    ip=${parts[0]}
-
+    vm-ip
     ssh -X -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip -- $APP
 }
 
@@ -617,12 +616,7 @@ vm-ip() {
         return
     fi
 
-    addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
-    ipmask=$(echo $addr | awk '{ print $4; }')
-    parts=(${ipmask//\// })
-
-    ip=${parts[0]}
-
+    ip=$(host $NAME 127.0.0.1 2>/dev/null | tail -1 | awk '{ print $4; }')
     echo "$ip"
 }
 
