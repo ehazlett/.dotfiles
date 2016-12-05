@@ -412,10 +412,11 @@ vm-create() {
 }
 
 create-qemu() {
+    set -e
     SOURCE=$1
     NAME=$2
     if [ -z "$NAME" ]; then
-        echo "Usage: create-qemu <source> <name> [cpus] [memory]"
+        echo "Usage: create-qemu <source> <name> [cpus] [memory] [disk]"
         return
     fi
     CPUS=$3
@@ -426,13 +427,17 @@ create-qemu() {
     if [ -z "$MEM" ]; then
         MEM=512
     fi
-    if [ -e "$VM_PATH/$NAME.qcow2" ]; then
-        echo "ERR: $NAME exists"
-        return
+    DISK=$5
+
+    if [ ! -e "$VM_PATH/$NAME.qcow2" ]; then
+        echo " -> cloning $SOURCE"
+        qemu-img convert -O qcow2 $VM_PATH/$SOURCE.qcow2 $VM_PATH/$NAME.qcow2
     fi
 
-    echo " -> cloning $SOURCE"
-    qemu-img convert -O qcow2 $VM_PATH/$SOURCE.qcow2 $VM_PATH/$NAME.qcow2
+    if [ ! -z "$DISK" ]; then
+        echo " -> resizing $NAME"
+        qemu-img resize $VM_PATH/$NAME.qcow2 $DISK > /dev/null
+    fi
 
     generate_mac > /dev/null
 
@@ -463,13 +468,18 @@ VDE_NAME=$VDE_NAME
 CMD="qemu-system-x86_64 -name \$NAME \\
     -enable-kvm \\
     -net nic,model=virtio,macaddr=\$MAC \\
-    -net vde,sock=/var/run/vde2/\$VDE_NAME.ctl \\
     -drive file=\$VM_PATH/\$NAME.qcow2 \\
     -m \$MEM \\
     -monitor unix:\$VM_PATH/\$NAME.monitor,server,nowait \\
     -smp cpus=\$CPUS \\
     -virtfs local,path=\$VM_PATH/\$NAME,mount_tag=host,security_model=passthrough \\
     -vga qxl"
+
+if [ -e "/var/run/vde2/\$VDE_NAME.ctl" ]; then
+    CMD="\$CMD -net vde,sock=/var/run/vde2/\$VDE_NAME.ctl"
+else
+    CMD="\$CMD -net vde,sock=/var/run/vde.ctl"
+fi
 
 if [ ! -z "\$NO_DISPLAY" ]; then
     CMD="\$CMD -nographic"
