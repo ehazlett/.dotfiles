@@ -138,7 +138,7 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Do you really want to exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -204,9 +204,5 @@ exec synclient TapButton1=1
 exec synclient TapButton2=2
 exec synclient TapButton3=3
 exec synclient PalmDetect=1
-exec feh --bg-scale ~/.wallpaper &
 
 exec if [ -e ~/.Xresources ]; then xrdb -merge ~/.Xresources; fi
-exec dconf write /org/gnome/settings-daemon/plugins/cursor/active false
-exec gnome-keyring-daemon
-exec /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &

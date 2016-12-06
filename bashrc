@@ -787,5 +787,15 @@ set_kb() {
     fi
 }
 
+set_display() {
+    xrandr --newmode "2560x1440" 311.31  2560 2744 3024 3488  1440 1441 1444 1490  -HSync +Vsync
+    xrandr --addmode eDP-1 2560x1440
+    xrandr --output eDP-1 --mode 2560x1440
+    xrandr --dpi 160
+    i3-msg reload > /dev/null
+    i3-msg restart > /dev/null
+    feh --bg-scale ~/.wallpaper
+}
+
 # run the following with each session
 set_kb
