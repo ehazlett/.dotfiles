@@ -12,6 +12,7 @@ if [ -e "/etc/.vm_provisioned" ]; then
 fi
 
 # attempt to mount /host
+mkdir -p /host
 for i in 0 1 2 3 4; do
 	mount -t 9p -o trans-virtio host /host -oversion=9p2000.L
 	status=$?

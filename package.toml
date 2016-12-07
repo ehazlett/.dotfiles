@@ -1,0 +1,75 @@
+id = "dev"
+version = "1.0"
+base = "ubuntu"
+
+[build]
+script = '''
+#!/bin/bash
+
+apt-get update
+apt-get install --no-install-recommends -y \
+    build-essential \
+    bash-completion \
+    gcc \
+    dnsutils \
+    git-core \
+    make \
+    bc \
+    jq \
+    bzr \
+    man-db \
+    locales \
+    python \
+    python-dev \
+    python-setuptools \
+    autoconf \
+    gawk \
+    libncurses5-dev \
+    libssl-dev \
+    mercurial \
+    aufs-tools \
+    libbz2-dev \
+    libreadline-dev \
+    gettext \
+    htop \
+    tmux \
+    wget \
+    sysstat \
+    curl \
+    sudo \
+    socat \
+    ctags \
+    libsqlite3-dev \
+    libdevmapper-dev \
+    rng-tools \
+    s3cmd \
+    libapparmor1 \
+    libseccomp2 \
+    apache2-utils \
+    unzip \
+    libcurl4-openssl-dev
+
+mkdir -p /home/ehazlett
+chown -R 1000:1000 /home/ehazlett
+
+pushd /home/ehazlett > /dev/null
+git clone https://github.com/ehazlett/.dotfiles
+pushd .dotfiles > /dev/null
+git submodule init
+git submodule update
+mkdir -p /home/ehazlett/.ssh /home/ehazlett/.i3
+bash .dotfiles/setup_links.sh
+popd > /dev/null
+
+sed -i 's/^colorscheme.*//g' $HOME/.dotfiles/vimrc && \
+vim +PluginInstall +qall > /dev/null 2>&1
+'''
+
+[update]
+script = '''
+#!/bin/bash
+
+apt-get update
+apt-get upgrade -y
+'''
+
