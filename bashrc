@@ -769,6 +769,17 @@ vm-update() {
     slex -u root $hosts_arg apt -y $UPGRADE
 }
 
+vm-list() {
+    IFS=$'\n' read -rd '' -a vms <<<"$(ps aux | grep qemu-system-x86_64)"
+    printf "NAME\t\tCPU\t\tMEMORY\n"
+    for vm in "${vms[@]}"; do
+        n=$(echo $vm | awk '{ print $13; }')
+        c=$(echo $vm | awk '{ print $24; }' | awk -F'=' '{ print $2; }')
+        m=$(echo $vm | awk '{ print $20; }')
+        printf "%s\t\t%s\t\t%s\n" $n $c $m
+    done
+}
+
 vm-cmd() {
     NAMES=$(virsh list --state-running --name)
     hosts_arg=""
