@@ -36,7 +36,11 @@ else
 fi
 
 export EDITOR=vim
-export GOROOT=/usr/local/go
+if [ -e "$HOME/.nix-profile/share/go" ]; then
+    export GOROOT=$HOME/.nix-profile/share/go
+else
+    export GOROOT=/usr/local/go
+fi
 export GOPATH=~/dev/gocode
 export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin:/usr/local/sbin
 export PATH=$PATH:/opt/android-studio/bin
