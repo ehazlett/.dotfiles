@@ -1,6 +1,7 @@
 # .bashrc
 VM_PATH=~/vm
 VDE_NAME=vm0
+VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
 
 #set -o vi
 if [ -e "$HOME/sync/home/scripts/vm.sh" ]; then
@@ -706,15 +707,25 @@ runsteam() {
 
 switch_theme() {
     color=$1
+    font="Inconsolata 10"
+
+    if [ "$VENDOR" = "Dell Inc." ]; then
+        font="Inconsolata 12"
+    fi
+
+    xfcetarget=~/.config/xfce4/terminal/terminalrc
+    tmpname=/tmp/terminalrc.tmp
+
+    mkdir -p $(basename $xfcetarget)
 
     case $color in
         dark)
-            cp -f ~/.dotfiles/xfce4-terminal.dark.terminalrc ~/.config/xfce4/terminal/terminalrc
+            cp -f ~/.dotfiles/xfce4-terminal.dark.terminalrc $tmpname
             sed -i 's/set background=.*/set background=dark/g' ~/.dotfiles/vimrc
             sed -i 's/colorscheme.*/colorscheme Tomorrow-Night/g' ~/.dotfiles/vimrc
             ;;
         light)
-            cp -f ~/.dotfiles/xfce4-terminal.terminalrc ~/.config/xfce4/terminal/terminalrc
+            cp -f ~/.dotfiles/xfce4-terminal.terminalrc $tmpname
             sed -i 's/set background=.*/set background=light/g' ~/.dotfiles/vimrc
             sed -i 's/colorscheme.*/colorscheme Tomorrow/g' ~/.dotfiles/vimrc
             ;;
@@ -723,6 +734,10 @@ switch_theme() {
             return
             ;;
     esac
+    # set the font based upon vendor; this is due to the different resolutions
+    # of each machine. sigh.
+    sed -i "s/FontName=.*/FontName=$font/g" $tmpname
+    mv $tmpname $xfcetarget
 
     # do a final touch as there is a race in the config detection where
     # you get a bad theme and have to refresh
