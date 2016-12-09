@@ -814,6 +814,9 @@ vm-cmd() {
 
 
 set_kb() {
+    if [ -z "$DISPLAY" ]; then
+        return
+    fi
     MODE=$1
     # caps to control
     XKB=$(which setxkbmap)
