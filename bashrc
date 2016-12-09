@@ -416,7 +416,6 @@ vm-create() {
 }
 
 create-qemu() {
-    set -e
     SOURCE=$1
     NAME=$2
     if [ -z "$NAME" ]; then
@@ -543,6 +542,22 @@ stop-qemu() {
     echo system_powerdown | socat - UNIX-CONNECT:$SOCK > /dev/null
 }
 
+quit-qemu() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: quit-qemu <name>"
+        return
+    fi
+
+    SOCK=$VM_PATH/$NAME.monitor
+    if [ ! -e "$SOCK" ]; then
+        echo "ERR: $NAME does not have monitor socket"
+        return
+    fi
+
+    echo quit | socat - UNIX-CONNECT:$SOCK > /dev/null
+}
+
 save-qemu() {
     NAME=$1
     if [ -z "$NAME" ]; then
@@ -607,7 +622,7 @@ vm-connect() {
         return
     fi
 
-    vm-ip
+    vm-ip $NAME > /dev/null
     ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip
 }
 
@@ -619,7 +634,7 @@ vm-app() {
         return
     fi
 
-    vm-ip
+    vm-ip $VM > /dev/null
     ssh -X -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip -- $APP
 }
 
@@ -630,7 +645,7 @@ vm-ip() {
         return
     fi
 
-    ip=$(host $NAME 127.0.0.1 2>/dev/null | tail -1 | awk '{ print $4; }')
+    ip=$(host $NAME 127.0.0.1 2>/dev/null | grep address | awk '{ print $4; }')
     echo "$ip"
 }
 
@@ -756,6 +771,17 @@ vm-update() {
 
     slex -u root $hosts_arg apt update
     slex -u root $hosts_arg apt -y $UPGRADE
+}
+
+vm-list() {
+    IFS=$'\n' read -rd '' -a vms <<<"$(ps aux | grep qemu-system-x86_64)"
+    printf "NAME\t\tCPU\t\tMEMORY\n"
+    for vm in "${vms[@]}"; do
+        n=$(echo $vm | awk '{ print $13; }')
+        c=$(echo $vm | awk '{ print $24; }' | awk -F'=' '{ print $2; }')
+        m=$(echo $vm | awk '{ print $20; }')
+        printf "%s\t\t%s\t\t%s\n" $n $c $m
+    done
 }
 
 vm-cmd() {
