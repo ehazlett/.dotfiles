@@ -771,12 +771,12 @@ vm-update() {
 
 vm-list() {
     IFS=$'\n' read -rd '' -a vms <<<"$(ps aux | grep qemu-system-x86_64)"
-    printf "NAME\t\tCPU\t\tMEMORY\n"
+    printf "%-15s%-10s%-10s\n" "NAME" "CPU" "MEMORY"
     for vm in "${vms[@]}"; do
         n=$(echo $vm | awk '{ print $13; }')
         c=$(echo $vm | awk '{ print $24; }' | awk -F'=' '{ print $2; }')
         m=$(echo $vm | awk '{ print $20; }')
-        printf "%s\t\t%s\t\t%s\n" $n $c $m
+        printf "%-15s%-10s%-10s\n" $n $c $m
     done
 }
 
