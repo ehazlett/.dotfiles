@@ -198,16 +198,13 @@ bindsym $mod+Control+Shift+2 exec i3-msg move workspace to output DP1
 bindsym $mod+Control+Shift+3 exec i3-msg move workspace to output HDMI1
 bindsym $mod+Control+Shift+k focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, kill
 
-# touchpad
-exec syndaemon -i 0.2 -K -t -d &
-exec synclient TapButton1=1
-exec synclient TapButton2=2
-exec synclient TapButton3=3
-exec synclient PalmDetect=1
-
-exec if [ -e ~/.Xresources ]; then xrdb -merge ~/.Xresources; fi
-
 # res
 exec xrandr --dpi 220
 exec i3-msg reload
 exec i3-msg restart
+
+exec feh --bg-scale ~/.wallpaper
+
+# touchpad
+exec ~/.dotfiles/touchpad.sh
+

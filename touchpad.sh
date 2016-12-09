@@ -1,5 +1,9 @@
 #!/bin/bash
-synclient TapButton1=1
-synclient TapButton2=2
-synclient TapButton3=3
-synclient PalmDetect=1
+VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
+if [ "$VENDOR" = "Dell Inc." ]; then
+    xinput set-prop 13 292 1
+elif [ "$VENDOR" = "LENOVO" ]; then
+    xinput set-prop 15 292 1
+else
+    echo "Unknown sys vendor ($VENDOR): skipping touchpad setup"
+fi
