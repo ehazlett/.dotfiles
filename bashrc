@@ -350,73 +350,6 @@ wait_for_instance() {
 }
 
 vm-create() {
-    BASE=$1
-    NAME=$2
-    MEM=$3
-    DISK_SIZE=$4
-    if [ -z "$BASE" ] || [ -z "$NAME" ]; then
-        echo "Usage: vm-create <base-vm-to-clone> <name> [mem-in-mb] [disk_size]"
-        return
-    fi
-
-    echo " -> cloning $BASE -> $NAME"
-    mac=$(printf 'DE:AD:BE:EF:%02X:%02X\n' $((RANDOM%256)) $((RANDOM%256)))
-    virt-clone -q -o $BASE -n $NAME --auto-clone -m $mac -f $VM_PATH/$NAME.img
-    if [ $? != 0 ]; then
-        return
-    fi
-
-    if [ ! -z "$MEM" ]; then
-        echo " -> setting memory: $MEM"
-        o=$(virt-xml --edit --memory $MEM $NAME)
-    fi
-
-    if [ ! -z "$DISK_SIZE" ]; then
-        disk=$(virsh domblklist $NAME | grep -E "vda|hda" | awk '{ print $2;  }')
-        echo " -> resizing disk: $disk -> $DISK_SIZE"
-        o=$(sudo qemu-img resize $disk $DISK_SIZE)
-        if [ $? != 0 ]; then
-            echo " -> ERR: error resizing disk: $o"
-            return
-        fi
-    fi
-
-    echo " -> creating and attaching virtfs"
-    host_path=$VM_PATH/$NAME
-    mkdir -p $host_path
-
-    # set hostname in shared path
-    echo "$NAME" > $host_path/hostname
-    # user
-    echo "$USER" > $host_path/username
-    SSH_KEY=${SSH_KEY:-~/.ssh/id_rsa.pub}
-    if [ -e "$SSH_KEY" ]; then
-        cat $SSH_KEY > $host_path/ssh_key
-    fi
-
-    # remove existing if defined
-    virt-xml --remove-device --filesystem all $NAME > /dev/null
-
-    # add new virtfs
-    virt-xml --add-device --filesystem $host_path,host,type=mount,mode=passthrough $NAME > /dev/null
-
-    echo " -> starting $NAME"
-    o=$(virsh start $NAME)
-
-    wait_for_instance $NAME
-
-    vm_get_addr
-
-    # remove existing if defined
-    virt-xml --remove-device --filesystem all $NAME > /dev/null
-
-    echo " -> $NAME running"
-    echo "IP: $(echo $addr | awk '{ print $4; }')"
-    ip=""
-    addr=""
-}
-
-create-qemu() {
     SOURCE=$1
     NAME=$2
     if [ -z "$NAME" ]; then
@@ -485,7 +418,7 @@ else
     CMD="\$CMD -net vde,sock=/var/run/vde.ctl"
 fi
 
-if [ ! -z "\$NO_DISPLAY" ]; then
+if [ -z "\$SHOW_WINDOW" ]; then
     CMD="\$CMD -nographic"
 fi
 
@@ -512,10 +445,10 @@ EOF
     chmod +x $VM_PATH/$NAME.sh
 }
 
-start-qemu() {
+vm-start() {
     NAME=$1
     if [ -z "$NAME" ]; then
-        echo "Usage: start-qemu <name>"
+        echo "Usage: vm-start <name>"
         return
     fi
 
@@ -527,10 +460,10 @@ start-qemu() {
     $VM_PATH/$NAME.sh
 }
 
-stop-qemu() {
+vm-stop() {
     NAME=$1
     if [ -z "$NAME" ]; then
-        echo "Usage: stop-qemu <name>"
+        echo "Usage: vm-stop <name>"
         return
     fi
 
@@ -543,10 +476,10 @@ stop-qemu() {
     echo system_powerdown | socat - UNIX-CONNECT:$SOCK > /dev/null
 }
 
-quit-qemu() {
+vm-kill() {
     NAME=$1
     if [ -z "$NAME" ]; then
-        echo "Usage: quit-qemu <name>"
+        echo "Usage: vm-kill <name>"
         return
     fi
 
@@ -559,10 +492,10 @@ quit-qemu() {
     echo quit | socat - UNIX-CONNECT:$SOCK > /dev/null
 }
 
-save-qemu() {
+vm-save() {
     NAME=$1
     if [ -z "$NAME" ]; then
-        echo "Usage: save-qemu <name>"
+        echo "Usage: vm-save <name>"
         return
     fi
 
@@ -582,14 +515,14 @@ save-qemu() {
     done
 }
 
-delete-qemu() {
+vm-delete() {
     NAME=$1
     if [ -z "$NAME" ]; then
-        echo "Usage: delete-qemu <name>"
+        echo "Usage: vm-delete <name>"
         return
     fi
 
-    stop-qemu $NAME > /dev/null
+    vm-kill $NAME > /dev/null
 
     if [ -e "$VM_PATH/$NAME.qcow2" ]; then
         rm -f $VM_PATH/$NAME.qcow2
@@ -603,16 +536,6 @@ delete-qemu() {
     if [ -e "$VM_PATH/$NAME" ]; then
         rm -rf $VM_PATH/$NAME
     fi
-}
-
-vm_get_addr() {
-    # we wait a second time for the IP in case the networking service
-    # is too fast and says the instance is up before provisioning is complete
-    while [ -z "$addr" ]; do
-        # super super super hacky to get the last vnet -- ¯\_(ツ)_/¯
-        addr=$(virsh domifaddr $NAME | tail -2 | head -1 | grep vnet)
-        sleep .25
-    done
 }
 
 vm-connect() {
@@ -648,53 +571,6 @@ vm-ip() {
 
     ip=$(host $NAME 127.0.0.1 2>/dev/null | grep address | awk '{ print $4; }')
     echo "$ip"
-}
-
-vm-start() {
-    NAME=$1
-    if [ -z "$NAME" ]; then
-        echo "Usage: vm-start <vm-name>"
-        return
-    fi
-
-    echo " -> starting $NAME"
-    o=$(virsh start $NAME > /dev/null 2>&1)
-
-    wait_for_instance $NAME
-}
-
-vm-stop() {
-    NAME=$1
-    if [ -z "$NAME" ]; then
-        echo "Usage: vm-stop <vm-name>"
-        return
-    fi
-
-    echo " -> stopping $NAME"
-    o=$(virsh destroy $NAME > /dev/null 2>&1)
-}
-
-vm-delete() {
-    NAMES=$*
-    if [ -z "$NAMES" ]; then
-        echo "Usage: vm-delete <vm-name>"
-        return
-    fi
-
-    for NAME in $NAMES; do
-        echo " -> stopping $NAME"
-        o=$(virsh destroy $NAME > /dev/null 2>&1)
-
-        echo " -> removing $NAME"
-        disk_path=$(virsh domblklist $NAME | grep -E "vda|hda" | awk '{ print $2; }')
-        o=$(virsh vol-delete $disk_path)
-        o=$(virsh undefine $NAME)
-
-        host_path=$VM_PATH/$NAME
-        if [ -e "$host_path" ]; then
-            rm -rf $host_path
-        fi
-    done
 }
 
 mem-free() {
@@ -790,12 +666,14 @@ vm-update() {
 
 vm-list() {
     IFS=$'\n' read -rd '' -a vms <<<"$(ps aux | grep qemu-system-x86_64)"
-    printf "%-15s%-10s%-10s" "NAME" "CPU" "MEMORY"
+    printf "%-15s%-10s%-10s\n" "NAME" "CPU" "MEMORY"
     for vm in "${vms[@]}"; do
-        n=$(echo $vm | awk '{ print $13; }')
-        c=$(echo $vm | awk '{ print $24; }' | awk -F'=' '{ print $2; }')
-        m=$(echo $vm | awk '{ print $20; }')
-        printf "%-15s%-10s%-10s\n" $n $c $m
+        n=$(echo -n $vm | awk '{ print $13; }')
+        c=$(echo -n $vm | awk '{ print $24; }' | awk -F'=' '{ print $2; }')
+        m=$(echo -n $vm | awk '{ print $20; }')
+        if [ ! -z "$n" ]; then
+            printf "%-15s%-10s%-10s\n" $n $c "$m"
+        fi
     done
 }
 
