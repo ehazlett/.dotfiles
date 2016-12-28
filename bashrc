@@ -42,7 +42,6 @@ if [ -e "$HOME/.nix-profile/share/go" ]; then
 else
     export GOROOT=/usr/local/go
 fi
-export GOPATH=~/dev/gocode
 export PATH=~/bin:$PATH:~/dev/gocode/bin:/usr/local/go/bin:/usr/local/sbin
 export PATH=$PATH:/opt/android-studio/bin
 export LIBVIRT_DEFAULT_URI=qemu:///system

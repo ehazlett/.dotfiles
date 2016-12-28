@@ -20,7 +20,7 @@ if [ $? -eq 0 ]; then
         --exclude .nvm \
         $HOMEDIR | zbackup --non-encrypted backup $BACKUP_PATH/backups/backup-$date
     rm -f $BACKUP_PATH/backups/current
-    ln -s $BACKUP_PATH/backups/backup-$date $BACKUP_PATH/current
+    ln -sf $BACKUP_PATH/backups/backup-$date $BACKUP_PATH/current
 else
     echo "backup drive not mounted; skipping"
 fi
