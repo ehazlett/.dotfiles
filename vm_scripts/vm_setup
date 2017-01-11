@@ -1,18 +1,18 @@
 #!/bin/bash
 LOG=/var/log/vm_setup.log
 
-echo "starting provisioning service" > $LOG
 
 # resize
 resize2fs /dev/vda1
 
 if [ -e "/etc/.vm_provisioned" ]; then
-	echo "machine appears provisioned (/etc/.vm_provisioned).  skipping" >> $LOG
+	echo "machine appears provisioned (/etc/.vm_provisioned).  skipping"
 	exit 0
 fi
 
+echo "starting provisioning service" > $LOG
+
 # attempt to mount /host
-mkdir -p /host
 for i in 0 1 2 3 4; do
 	mount -t 9p -o trans-virtio host /host -oversion=9p2000.L
 	status=$?
@@ -34,23 +34,20 @@ fi
 
 echo "hostname: $NAME"
 
-if [ $NAME = $HOSTNAME ]; then
-	echo "machine appears provisioned (name=$NAME host=$HOSTNAME).  skipping" >> $LOG
-else
-	echo "vm name: \"$NAME\"" >> $LOG
-	echo "hostname: \"$(cat /etc/hostname)\"" >> $LOG
+echo "vm name: \"$NAME\"" >> $LOG
+echo "hostname: \"$(cat /etc/hostname)\"" >> $LOG
 
-	# manual check if vm has been provisioned (in case virtfs is not used)
-	# redhat
-	if [ -e "/etc/redhat-release" ] ; then
-		echo "NETWORKING=yes" > /etc/sysconfig/network
-		echo "HOSTNAME=$NAME" >> /etc/sysconfig/network
-		hostnamectl set-hostname $NAME
-		/etc/init.d/network restart
-	# debian
-	else
-		echo $NAME > /etc/hostname
-		cat << EOF > /etc/hosts
+# manual check if vm has been provisioned (in case virtfs is not used)
+# redhat
+if [ -e "/etc/redhat-release" ] ; then
+	echo "NETWORKING=yes" > /etc/sysconfig/network
+	echo "HOSTNAME=$NAME" >> /etc/sysconfig/network
+	hostnamectl set-hostname $NAME
+	/etc/init.d/network restart
+# debian
+else
+	echo $NAME > /etc/hostname
+	cat << EOF > /etc/hosts
 127.0.0.1	localhost
 127.0.1.1	$NAME
 
@@ -61,35 +58,36 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
-			hostnamectl set-hostname $NAME
-		fi
-	fi
+	hostnamectl set-hostname $NAME
+fi
+# always add ssh key for root
+mkdir -p /root/.ssh
+cat /host/ssh_key > /root/.ssh/authorized_keys
 
-	# user account
-	if [ -e "/host/username" ]; then
-		USERNAME=$(cat /host/username)
-		echo "adding user: $USERNAME"
-		if [ ! -z "$USERNAME" ]; then
-			adduser $USERNAME
-			mkdir -p /home/$USERNAME
-			if [ -e "/host/ssh_key" ]; then
-				echo "setting ssh key"
-				mkdir -p /home/$USERNAME/.ssh
-				cat /host/ssh_key > /home/$USERNAME/.ssh/authorized_keys
-			fi
-			chown -R $USERNAME:$USERNAME /home/$USERNAME
-                        # set default password
-                        echo "$USERNAME:$USERNAME" | chpasswd
+# user account
+if [ -e "/host/username" ]; then
+	USERNAME=$(cat /host/username)
+        HOMEDIR="/home/$USERNAME"
+        if [ "$USERNAME" != "root" ]; then
+	    echo "adding user: $USERNAME" >> $LOG
+	    if [ ! -z "$USERNAME" ]; then
+	    	useradd -d $HOMEDIR -s /bin/bash -m $USERNAME
+	    	if [ -e "/host/ssh_key" ]; then
+	    		echo "setting ssh key"
+	    		mkdir -p $HOMEDIR/.ssh
+	    		cat /host/ssh_key > $HOMEDIR/.ssh/authorized_keys
+	    	fi
+	    	chown -R $USERNAME:$USERNAME $HOMEDIR
+                    # set default password
+                    echo "$USERNAME:$USERNAME" | chpasswd
+	    	echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+	    fi
+        fi
+fi
 
-			echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-		fi
-
-	fi
-
-	# resize disk
-	echo "resizing disk" >> $LOG
-	#sh -c "/usr/local/bin/resize_disk; exit 0"
-	fdisk /dev/vda > /dev/null 2>&1 <<EOF
+# resize disk
+echo "resizing disk" >> $LOG
+fdisk /dev/vda > /dev/null 2>&1 <<EOF
 d
 n
 p
@@ -100,9 +98,9 @@ a
 1
 w
 EOF
-	# set as provisioned
-	touch /etc/.vm_provisioned
-	reboot
-fi
+
+# set as provisioned
+touch /etc/.vm_provisioned
+reboot
 
 exit 0
