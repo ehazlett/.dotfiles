@@ -19,8 +19,7 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 # prompt
-#export PS1="\[$(tput setaf 7)\]\h:\u \[$(tput setaf 2)\]\W\[$(tput setaf 7)\]>\[$(tput sgr0)\] "
-export PS1='\[\033[01;32m\]\u@\h\[\033[0m\] \W> '
+export PS1='\u@\h \[\033[01;32m\]\W\[\033[0m\]> '
 
 if [ ! -z "$ITERM_PROFILE" ]; then
     export CLICOLOR=1
