@@ -593,8 +593,6 @@ switch_theme() {
     xfcetarget=~/.config/xfce4/terminal/terminalrc
     tmpname=/tmp/terminalrc.tmp
 
-    mkdir -p $(basename $xfcetarget)
-
     case $color in
         dark)
             cp -f ~/.dotfiles/xfce4-terminal.dark.terminalrc $tmpname

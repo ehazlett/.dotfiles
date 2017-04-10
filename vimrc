@@ -63,6 +63,10 @@ au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
 au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
 
+" proto
+au! BufNewFile,BufRead *.proto setf proto
+au FileType proto setl sw=2 sts=2 et
+
 let g:go_fmt_command = "goimports"
 
 let g:go_highlight_functions = 1

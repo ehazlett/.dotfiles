@@ -19,6 +19,11 @@ Host underland
     Hostname work.evanhazlett.com
     Port 2022
 
+Host underland.indy
+    IdentityFile ~/.keys/home_ehazlett
+    Hostname 192.168.1.85
+    Port 22
+
 Host git.int
     IdentityFile ~/.keys/vcs_ehazlett
 
