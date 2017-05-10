@@ -354,7 +354,7 @@ vm-create() {
     SOURCE=$1
     NAME=$2
     if [ -z "$NAME" ]; then
-        echo "Usage: create-qemu <source> <name> [cpus] [memory] [disk]"
+        echo "Usage: vm-create <source> <name> [cpus] [memory] [disk]"
         return
     fi
     CPUS=$3
@@ -444,6 +444,7 @@ else
 fi
 EOF
     chmod +x $VM_PATH/$NAME.sh
+    vm-start $NAME
 }
 
 vm-start() {

@@ -54,7 +54,7 @@ RUN git clone https://github.com/vim/vim /tmp/vim
 RUN (cd /tmp/vim && ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge && make install)
 
 # go
-ENV GO_VERSION 1.6
+ENV GO_VERSION 1.8.1
 RUN wget https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
     tar -C /usr/local -xvf /tmp/go.tar.gz && rm /tmp/go.tar.gz
 
@@ -107,14 +107,10 @@ RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
     usermod -aG docker $CONTAINER_USER && \
     usermod -aG users $CONTAINER_USER
 
-ENV MACHINE_VERSION v0.7.0
-ENV COMPOSE_VERSION 1.7.0
+ENV COMPOSE_VERSION 1.13.1
 
 # docker tooling
-RUN curl -L https://github.com/docker/machine/releases/download/v0.6.0/docker-machine-`uname -s`-`uname -m` > /usr/local/bin/docker-machine && \
-    chmod +x /usr/local/bin/docker-machine && \
-    ln -sf /usr/local/bin/docker-machine /usr/local/bin/machine && \
-    curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
+RUN curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
 
 # user

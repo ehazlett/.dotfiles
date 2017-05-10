@@ -1,0 +1,6 @@
+auto vm0
+iface vm0 inet static
+    address 10.255.0.1
+    netmask 255.255.255.0
+    vde2-switch -
+    post-up /sbin/iptables -t nat -A POSTROUTING -s 10.255.0.0/24 -j MASQUERADE
