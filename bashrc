@@ -571,7 +571,7 @@ vm-ip() {
         return
     fi
 
-    ip=$(host $NAME 127.0.0.1 2>/dev/null | grep address | awk '{ print $4; }')
+    ip=$(nslookup containerd 127.0.0.1 2>/dev/null | grep Address | tail -1 | awk '{ print $2;  }')
     echo "$ip"
 }
 
