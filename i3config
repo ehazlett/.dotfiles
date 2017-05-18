@@ -35,7 +35,7 @@ client.focused_inactive $color_light_gray $color_light_gray $color_dark_white
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango: Open Sans 10
-font pango: Droid Sans Regular 8
+font pango: Noto Sans 8
 # Before i3 v4.8, we used to recommend this one as the default:
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # The font above is very space-efficient, that is, it looks good, sharp and
@@ -199,9 +199,12 @@ bindsym $mod+Control+Shift+3 exec i3-msg move workspace to output HDMI-11
 bindsym $mod+Control+Shift+k focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, kill
 
 # res
-exec xrandr --dpi 220
+exec xrandr --output eDP-1 --mode 1920x1080
+exec xrandr --dpi 120
 exec i3-msg reload
 exec i3-msg restart
+
+exec xfce4-power-manager &
 
 exec feh --bg-scale ~/.wallpaper
 
