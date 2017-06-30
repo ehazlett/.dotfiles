@@ -19,3 +19,5 @@
     default = current
 [core]
     excludesfile = /home/hatter/.gitignore_global
+[gpg]
+	program = /usr/local/bin/gpg

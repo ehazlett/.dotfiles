@@ -42,6 +42,7 @@ syntax on
 let g:hybrid_use_Xresources = 1
 
 " theme
+set background=dark
 colorscheme Tomorrow
 
 let g:airline_theme='tomorrow'
