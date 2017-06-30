@@ -6,7 +6,6 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'gmarik/vundle'
 " theme
 Plugin 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdtree'
@@ -37,7 +36,7 @@ set expandtab
 set nohlsearch
 set nu
 set cc=80
-:set tenc=utf8
+set tenc=utf8
 syntax on
 let g:hybrid_use_Xresources = 1
 

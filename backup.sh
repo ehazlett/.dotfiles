@@ -14,7 +14,7 @@ sudo echo "starting backup..."
 STATUS=`mount | grep 1tb`
 if [ $? -eq 0 ]; then
     date=`date "+%Y-%m-%dT%H:%M:%S"`
-    time sudo tar c \
+    time sudo tar -vc \
         --exclude .cache \
         --exclude .dbus \
         --exclude *.swp \
@@ -23,6 +23,7 @@ if [ $? -eq 0 ]; then
         --exclude Steam \
         --exclude Android \
         --exclude media \
+        --exclude vm \
         $HOMEDIR | sudo zbackup --non-encrypted backup $BACKUP_PATH/backups/backup-$date
     sudo rm -f $BACKUP_PATH/backups/current
     sudo ln -sf $BACKUP_PATH/backups/backup-$date $BACKUP_PATH/current
