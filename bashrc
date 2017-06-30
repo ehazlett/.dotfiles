@@ -2,6 +2,7 @@
 VM_PATH=~/vm
 VDE_NAME=vm0
 OS=linux
+export GPG_TTY=$(tty)
 
 if [ ! -z "$ITERM_PROFILE" ]; then
     OS=osx
