@@ -1,7 +1,16 @@
 # .bashrc
 VM_PATH=~/vm
 VDE_NAME=vm0
-VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
+OS=linux
+export GPG_TTY=$(tty)
+
+if [ ! -z "$ITERM_PROFILE" ]; then
+    OS=osx
+fi
+
+if [ $OS = "linux" ]; then
+    VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
+fi
 
 #set -o vi
 if [ -e "$HOME/sync/home/scripts/vm.sh" ]; then
@@ -21,7 +30,7 @@ fi
 # prompt
 export PS1='\u@\h \[\033[01;32m\]\W\[\033[0m\]> '
 
-if [ ! -z "$ITERM_PROFILE" ]; then
+if [ $OS = "osx" ]; then
     export CLICOLOR=1
     if [ -f $(brew --prefix)/etc/bash_completion  ]; then
         source $(brew --prefix)/etc/bash_completion
