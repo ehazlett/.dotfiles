@@ -41,8 +41,8 @@ syntax on
 let g:hybrid_use_Xresources = 1
 
 " theme
-colorscheme Tomorrow-Night
-set background=dark
+colorscheme Tomorrow
+set background=light
 
 let g:airline_theme='tomorrow'
 let NERDTreeIgnore = ['\.pyc$']

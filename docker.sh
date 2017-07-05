@@ -6,9 +6,10 @@ DIND_NETWORK_NAME=${DIND_NETWORK_NAME:-"dind"}
 function launch-node() {
     if [ -z "$1" ]; then
         echo "Usage: 0 <node>"
+        exit 1
     fi
     NODE=$1
-    docker network create ${DIND_NETWORK_NAME}
+    docker network create ${DIND_NETWORK_NAME} > /dev/null 2>&1
     docker run \
         --privileged \
         --net ${DIND_NETWORK_NAME} \
