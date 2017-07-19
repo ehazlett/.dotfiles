@@ -1,7 +1,7 @@
 #!/bin/bash
-DOCKER_VERSION=${DOCKER_VERSION:-"17.06.0"}
-DOCKER_DATA_DIR=${DOCKER_DATA_DIR:-"$HOME/.docker"}
-DIND_NETWORK_NAME=${DIND_NETWORK_NAME:-"dind"}
+DOCKER_VERSION=${DOCKER_VERSION:-"17.06.0-ce"}
+DOCKER_VOLUME_PREFIX=${DOCKER_VOLUME_PREFIX:-"docker"}
+NETWORK_NAME=${NETWORK_NAME:-"local"}
 
 function launch-node() {
     if [ -z "$1" ]; then
@@ -9,15 +9,17 @@ function launch-node() {
         exit 1
     fi
     NODE=$1
-    docker network create ${DIND_NETWORK_NAME} > /dev/null 2>&1
+    VOL_NAME=${DOCKER_VOLUME_PREFIX}-${NODE}
+    docker network create ${NETWORK_NAME} > /dev/null 2>&1
+    docker volume create -d local ${VOL_NAME} > /dev/null 2>&1
     docker run \
         --privileged \
-        --net ${DIND_NETWORK_NAME} \
+        --net ${NETWORK_NAME} \
         --name ${NODE} \
         --hostname ${NODE} \
-        -v ${DOCKER_DATA_DIR}-${NODE}:/var/lib/docker \
         --tmpfs /run \
         -v /lib/modules:/lib/modules:ro \
+        -v ${VOL_NAME}:/var/lib/docker \
         -d \
-        ehazlett/dind:${DOCKER_VERSION} -H unix://
+        ehazlett/docker:${DOCKER_VERSION} -H unix:// -s overlay2
 }
