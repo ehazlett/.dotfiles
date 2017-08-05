@@ -53,6 +53,10 @@ else
 fi
 export GOPATH=$HOME/go
 export PATH=~/bin:$PATH:~/go/bin:/usr/local/go/bin:/usr/local/sbin
+# chrome os
+if [ ! -z "$ANDROID_ROOT" ]; then
+    export GOROOT="/data/data/com.termux/usr/lib/go"
+fi
 # android
 export PATH=$PATH:/opt/android-studio/bin:~/Android/Sdk/platform-tools
 export LIBVIRT_DEFAULT_URI=qemu:///system
