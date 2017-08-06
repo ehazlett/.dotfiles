@@ -103,7 +103,7 @@ RUN curl -sSL https://download.docker.com/linux/static/edge/x86_64/docker-${DOCK
 
 # perms
 RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
-    groupadd -g 1001 docker && \
+    groupadd -g 999 docker && \
     usermod -aG docker $CONTAINER_USER && \
     usermod -aG users $CONTAINER_USER
 
