@@ -745,5 +745,26 @@ set_display() {
     feh --bg-scale ~/.wallpaper
 }
 
+dev-container() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: dev-container <NAME>"
+        return
+    fi
+    echo "Creating volume for $NAME"
+    docker volume create -d local $NAME > /dev/null 2>&1
+    echo "Starting container for $NAME"
+    docker run -d \
+        -ti \
+        --name $NAME \
+        --privileged \
+        -v $NAME:/home/hatter \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        --net=host \
+        ehazlett/dev bash
+    echo "$NAME created.  To use, run"
+    echo "  docker exec -ti $NAME bash"
+}
+
 # run the following with each session
 set_kb
