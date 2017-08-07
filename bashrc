@@ -57,17 +57,17 @@ export PATH=~/bin:$PATH:~/go/bin:/usr/local/go/bin:/usr/local/sbin
 export PATH=$PATH:/opt/android-studio/bin:~/Android/Sdk/platform-tools
 export LIBVIRT_DEFAULT_URI=qemu:///system
 # hdpi
-export GDK_SCALE=2
+#export GDK_SCALE=2
 
 if [ -e "$HOME/.nvm" ]; then
     source $HOME/.nvm/nvm.sh
 fi
 
-# custom delete word
-stty werase undef
-bind '"\C-w":backward-kill-word'
-bind '"\C-k":history-search-backward'
-bind '"\C-j":history-search-forward'
+## custom delete word
+#stty werase undef
+#bind '"\C-w":backward-kill-word'
+#bind '"\C-k":history-search-backward'
+#bind '"\C-j":history-search-forward'
 
 set_wifi() {
     if [ -z "$1" ]; then
