@@ -619,12 +619,10 @@ switch_theme() {
     case $color in
         dark)
             cp -f ~/.dotfiles/xfce4-terminal.dark.terminalrc $tmpname
-            sed -i 's/set background=.*/set background=dark/g' ~/.dotfiles/vimrc
             sed -i 's/colorscheme.*/colorscheme Tomorrow-Night/g' ~/.dotfiles/vimrc
             ;;
         light)
             cp -f ~/.dotfiles/xfce4-terminal.terminalrc $tmpname
-            sed -i 's/set background=.*/set background=light/g' ~/.dotfiles/vimrc
             sed -i 's/colorscheme.*/colorscheme Tomorrow/g' ~/.dotfiles/vimrc
             ;;
         *)
