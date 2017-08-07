@@ -53,6 +53,10 @@ else
 fi
 export GOPATH=$HOME/go
 export PATH=~/bin:$PATH:~/go/bin:/usr/local/go/bin:/usr/local/sbin
+# chrome os
+if [ ! -z "$ANDROID_ROOT" ]; then
+    export GOROOT="/data/data/com.termux/usr/lib/go"
+fi
 # android
 export PATH=$PATH:/opt/android-studio/bin:~/Android/Sdk/platform-tools
 export LIBVIRT_DEFAULT_URI=qemu:///system
@@ -85,6 +89,15 @@ set_wifi() {
     sudo wpa_supplicant -B -i$device -c ~/.wpa-$1.conf
     sudo dhclient -r
     sudo dhclient $device
+}
+
+docker-cloud() {
+    SWARM=$1
+    if [ -z "$SWARM" ]; then
+        echo "Usage: docker-cloud <SWARM-NAME>"
+        return
+    fi
+    docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock -e DOCKER_HOST dockercloud/client $SWARM
 }
 
 start_qemu() {
@@ -730,6 +743,27 @@ set_display() {
     i3-msg reload > /dev/null
     i3-msg restart > /dev/null
     feh --bg-scale ~/.wallpaper
+}
+
+dev-container() {
+    NAME=$1
+    if [ -z "$NAME" ]; then
+        echo "Usage: dev-container <NAME>"
+        return
+    fi
+    echo "Creating volume for $NAME"
+    docker volume create -d local $NAME > /dev/null 2>&1
+    echo "Starting container for $NAME"
+    docker run -d \
+        -ti \
+        --name $NAME \
+        --privileged \
+        -v $NAME:/home/hatter \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        --net=host \
+        ehazlett/dev bash
+    echo "$NAME created.  To use, run"
+    echo "  docker exec -ti $NAME bash"
 }
 
 # run the following with each session
