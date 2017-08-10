@@ -6,25 +6,27 @@ UCP_VERSION=${UCP_VERSION:-"latest"}
 UCP_ADMIN_USER=${UCP_ADMIN_USER:-"admin"}
 UCP_ADMIN_PASS=${UCP_ADMIN_PASS:-"dockerucp123"}
 
-function launch-node() {
+function launch-nodes() {
     if [ -z "$1" ]; then
-        echo "Usage: <node>"
+        echo "Usage: launch-nodes <node> [node]"
         return
     fi
-    NODE=$1
-    VOL_NAME=${DOCKER_VOLUME_PREFIX}-${NODE}
-    docker network create ${NETWORK_NAME} > /dev/null 2>&1
-    docker volume create -d local ${VOL_NAME} > /dev/null 2>&1
-    docker run \
-        --privileged \
-        --net ${NETWORK_NAME} \
-        --name ${NODE} \
-        --hostname ${NODE} \
-        --tmpfs /run \
-        -v /lib/modules:/lib/modules:ro \
-        -v ${VOL_NAME}:/var/lib/docker \
-        -d \
-        ehazlett/docker:${DOCKER_VERSION} -H unix:// -s overlay2
+    NODES="$@"
+    for NODE in ${NODES}; do
+        VOL_NAME=${DOCKER_VOLUME_PREFIX}-${NODE}
+        docker network create ${NETWORK_NAME} > /dev/null 2>&1
+        docker volume create -d local ${VOL_NAME} > /dev/null 2>&1
+        docker run \
+            --privileged \
+            --net ${NETWORK_NAME} \
+            --name ${NODE} \
+            --hostname ${NODE} \
+            --tmpfs /run \
+            -v /lib/modules:/lib/modules:ro \
+            -v ${VOL_NAME}:/var/lib/docker \
+            -d \
+            ehazlett/docker:${DOCKER_VERSION} -H unix:// -s overlay2
+    done
 }
 
 function install-ucp() {
@@ -37,4 +39,16 @@ function install-ucp() {
                 --san ucp.local \
                 --disable-tracking \
                 --disable-usage
+}
+
+function remove-nodes() {
+    if [ -z "$1" ]; then
+        echo "Usage: remove-nodes <node> [node]"
+        return
+    fi
+    NODES="$@"
+    for NODE in ${NODES}; do
+        docker rm -fv ${NODE}
+        docker volume rm -f ${DOCKER_VOLUME_PREFIX}-${NODE}
+    done
 }
