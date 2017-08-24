@@ -5,7 +5,9 @@ for CFG in $CONFIGS; do
     ln -sf $(pwd)/$CFG ~/.$CFG
 done
 
-VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
+if [ -e /sys/class/dmi/id/sys_vendor ]; then
+    VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
+fi
 
 # i3
 rm -rf ~/.i3/config
