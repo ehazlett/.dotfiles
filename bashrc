@@ -9,7 +9,9 @@ if [ ! -z "$ITERM_PROFILE" ]; then
 fi
 
 if [ $OS = "linux" ]; then
-    VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
+    if [ -e /sys/class/dmi/id/sys_vendor ]; then
+        VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
+    fi
 fi
 
 #set -o vi
