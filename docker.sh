@@ -5,6 +5,7 @@ NETWORK_NAME=${NETWORK_NAME:-"local"}
 UCP_VERSION=${UCP_VERSION:-"latest"}
 UCP_ADMIN_USER=${UCP_ADMIN_USER:-"admin"}
 UCP_ADMIN_PASS=${UCP_ADMIN_PASS:-"dockerucp123"}
+DOCKER_ARGS=${DOCKER_ARGS:-}
 
 function launch-nodes() {
     if [ -z "$1" ]; then
@@ -25,7 +26,7 @@ function launch-nodes() {
             -v /lib/modules:/lib/modules:ro \
             -v ${VOL_NAME}:/var/lib/docker \
             -d \
-            ehazlett/docker:${DOCKER_VERSION} -H unix:// -s overlay2
+            ehazlett/docker:${DOCKER_VERSION} -H unix:// -s overlay2 ${DOCKER_ARGS}
     done
 }
 
