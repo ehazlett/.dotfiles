@@ -14,14 +14,15 @@ echo "starting provisioning service" > $LOG
 
 # attempt to mount /host
 for i in 0 1 2 3 4; do
-	mount -t 9p -o trans-virtio host /host -oversion=9p2000.L
-	status=$?
-	if [ $status -ne 0 ]; then
-		echo "waiting to mount virtfs" >> $LOG
-		sleep 1
-	else
-		break
-	fi
+    mkdir -p /host
+    mount -t 9p -o trans-virtio host /host -oversion=9p2000.L
+    status=$?
+    if [ $status -ne 0 ]; then
+    	echo "waiting to mount virtfs" >> $LOG
+    	sleep 1
+    else
+    	break
+    fi
 done
 
 
