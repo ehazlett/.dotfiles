@@ -35,13 +35,13 @@ set softtabstop=4
 set expandtab
 set nohlsearch
 set nu
-set cc=80
+"set cc=80
 set tenc=utf8
 syntax on
 let g:hybrid_use_Xresources = 1
 
 " theme
-colorscheme Tomorrow
+colorscheme Tomorrow-Night
 
 let g:airline_theme='tomorrow'
 let NERDTreeIgnore = ['\.pyc$']
