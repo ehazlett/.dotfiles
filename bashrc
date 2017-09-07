@@ -379,7 +379,7 @@ vm-create() {
     SOURCE=$1
     NAME=$2
     if [ -z "$NAME" ]; then
-        echo "Usage: vm-create <source> <name> [cpus] [memory] [disk]"
+        echo "Usage: vm-create <source> <name> [cpus] [memory] [disk-size]"
         return
     fi
     CPUS=$3
@@ -390,22 +390,9 @@ vm-create() {
     if [ -z "$MEM" ]; then
         MEM=512
     fi
-    DISK=$5
-
-    if [ ! -e "$VM_PATH/$NAME.qcow2" ]; then
-        echo " -> cloning $SOURCE"
-        qemu-img convert -O qcow2 $VM_PATH/$SOURCE.qcow2 $VM_PATH/$NAME.qcow2
-    fi
-
-    if [ ! -z "$DISK" ]; then
-        echo " -> resizing $NAME"
-        qemu-img resize $VM_PATH/$NAME.qcow2 $DISK > /dev/null
-    fi
-
-    generate_mac > /dev/null
+    SIZE=$5
 
     # virtfs
-    echo " -> configuring virtfs"
     VIRTFS_PATH=$VM_PATH/$NAME
     mkdir -p $VIRTFS_PATH
     # set hostname in shared path
@@ -417,59 +404,19 @@ vm-create() {
         cat $SSH_KEY > $VIRTFS_PATH/ssh_key
     fi
 
-    echo " -> generating start script"
-    generate_mac > /dev/null
-    cat << EOF > $VM_PATH/$NAME.sh
-#!/usr/bin/env bash
-NAME=$NAME
-CPUS=$CPUS
-MEM=$MEM
-MAC="$MAC"
-VM_PATH=$VM_PATH
-VDE_NAME=$VDE_NAME
+    # clone
+    virt-clone -q -o $SOURCE --auto -n $NAME
 
-CMD="qemu-system-x86_64 -name \$NAME \\
-    -enable-kvm \\
-    -net nic,model=virtio,macaddr=\$MAC \\
-    -drive file=\$VM_PATH/\$NAME.qcow2 \\
-    -m \$MEM \\
-    -monitor unix:\$VM_PATH/\$NAME.monitor,server,nowait \\
-    -smp cpus=\$CPUS \\
-    -virtfs local,path=\$VM_PATH/\$NAME,mount_tag=host,security_model=passthrough \\
-    -vga qxl"
+    DISK=$(virsh domblklist $NAME | grep vda | awk '{ print $2;  }')
+    if [ ! -z "$SIZE" ]; then
+        sudo qemu-img resize $DISK $SIZE > /dev/null
+    fi
 
-if [ -e "/var/run/vde2/\$VDE_NAME.ctl" ]; then
-    CMD="\$CMD -net vde,sock=/var/run/vde2/\$VDE_NAME.ctl"
-else
-    CMD="\$CMD -net vde,sock=/var/run/vde.ctl"
-fi
+    # edit
+    virt-xml --add-device --filesystem source=$VIRTFS_PATH,target=host,type=mount $NAME > /dev/null
 
-if [ -z "\$SHOW_WINDOW" ]; then
-    CMD="\$CMD -nographic"
-fi
-
-if [ -e "\$VM_PATH/\$NAME.save" ]; then
-    SOCK=\$VM_PATH/\$NAME.monitor
-    echo " -> restoring \$NAME"
-    exec \$CMD -incoming "exec:gzip -c -d \$VM_PATH/\$NAME.save" > /dev/null &
-    sleep 1
-    until [ ! -z "\$complete" ]; do
-        status=\$(echo info status | socat - UNIX-CONNECT:\$SOCK)
-        echo \$status | grep -v migrate > /dev/null
-        if [ \$? = 0 ]; then
-            complete=1
-        fi
-        sleep 1
-    done
-
-    echo cont | socat - UNIX-CONNECT:\$SOCK > /dev/null
-    rm \$VM_PATH/\$NAME.save
-else
-    exec \$CMD &
-fi
-EOF
-    chmod +x $VM_PATH/$NAME.sh
-    vm-start $NAME
+    virt-xml --edit --vcpus $CPUS $NAME > /dev/null
+    virt-xml --edit --memory $MEM $NAME > /dev/null
 }
 
 vm-start() {
@@ -479,12 +426,7 @@ vm-start() {
         return
     fi
 
-    if [ ! -e "$VM_PATH/$NAME.sh" ]; then
-        echo "ERR: $NAME does not exist"
-        return
-    fi
-
-    $VM_PATH/$NAME.sh
+    virsh start $NAME
 }
 
 vm-stop() {
@@ -494,13 +436,7 @@ vm-stop() {
         return
     fi
 
-    SOCK=$VM_PATH/$NAME.monitor
-    if [ ! -e "$SOCK" ]; then
-        echo "ERR: $NAME does not have monitor socket"
-        return
-    fi
-
-    echo system_powerdown | socat - UNIX-CONNECT:$SOCK > /dev/null
+    virsh shutdown $NAME
 }
 
 vm-kill() {
@@ -510,36 +446,7 @@ vm-kill() {
         return
     fi
 
-    SOCK=$VM_PATH/$NAME.monitor
-    if [ ! -e "$SOCK" ]; then
-        echo "ERR: $NAME does not have monitor socket"
-        return
-    fi
-
-    echo quit | socat - UNIX-CONNECT:$SOCK > /dev/null
-}
-
-vm-save() {
-    NAME=$1
-    if [ -z "$NAME" ]; then
-        echo "Usage: vm-save <name>"
-        return
-    fi
-
-    if [ ! -e "$VM_PATH/$NAME.monitor" ]; then
-        echo "ERR: $NAME does not have monitor socket"
-        return
-    fi
-
-    echo " -> saving $NAME"
-    SOCK=$VM_PATH/$NAME.monitor
-    echo stop | socat - UNIX-CONNECT:$SOCK > /dev/null
-    echo "migrate_set_speed 4096m" | socat - UNIX-CONNECT:$SOCK > /dev/null
-    echo "migrate \"exec:gzip -1 -c > $VM_PATH/$NAME.save\""  | socat - UNIX-CONNECT:$SOCK > /dev/null
-    echo quit | socat - UNIX-CONNECT:$SOCK > /dev/null
-    until [ ! -e "$SOCK" ]; do
-        sleep 1
-    done
+    virsh destroy $NAME
 }
 
 vm-delete() {
@@ -549,55 +456,57 @@ vm-delete() {
         return
     fi
 
-    vm-kill $NAME > /dev/null
+    $(virsh dumpxml $NAME > /dev/null 2>&1)
+    if [ $? -ne 0 ]; then
+        return
+    fi
 
-    if [ -e "$VM_PATH/$NAME.qcow2" ]; then
-        rm -f $VM_PATH/$NAME.qcow2
+    echo -n "Delete $NAME (VM and all content will be removed)? (y/n): "
+    read CONFIRM
+    if [ "$CONFIRM" != "y" ]; then
+        return
     fi
-    if [ -e "$VM_PATH/$NAME.save" ]; then
-        rm -f $VM_PATH/$NAME.save
-    fi
-    if [ -e "$VM_PATH/$NAME.sh" ]; then
-        rm -f $VM_PATH/$NAME.sh
-    fi
-    if [ -e "$VM_PATH/$NAME" ]; then
-        rm -rf $VM_PATH/$NAME
+
+    virsh destroy $NAME > /dev/null 2>&1
+
+    SNAPSHOTS=$(virsh snapshot-list --name $NAME)
+    readarray -t snaps <<<"$SNAPSHOTS"
+    for snap in "${snaps[@]}";  do
+        # HACK to work around empty line in snapshot list output
+        if [ ! -z "$snap" ]; then
+            virsh snapshot-delete --snapshotname "$snap" $NAME > /dev/null
+        fi
+    done
+
+    DISK=$(virsh domblklist $NAME | grep vda | awk '{ print $2;  }')
+
+    virsh undefine $NAME > /dev/null
+
+    if [ ! -z "$DISK" ] && [ -f $DISK ]; then
+        sudo rm -rf $DISK
     fi
 }
 
 vm-connect() {
     NAME=$1
-    USER=${2:-$USER}
+    USER=${2:-root}
     if [ -z "$NAME" ]; then
         echo "Usage: vm-connect <vm-name>"
         return
     fi
 
-    vm-ip $NAME > /dev/null
-    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$NAME.vm.int
 }
 
 vm-app() {
-    VM=$1
+    NAME=$1
     APP=$2
     if [ -z "$VM" ] || [ -z "$APP" ]; then
-        echo "Usage: vm-app <vm> <app>"
+        echo "Usage: vm-app <vm-name> <app>"
         return
     fi
 
-    vm-ip $VM > /dev/null
-    ssh -X -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$ip -- $APP
-}
-
-vm-ip() {
-    NAME=$1
-    if [ -z "$NAME" ]; then
-        echo "Usage: vm-ip <vm-name>"
-        return
-    fi
-
-    ip=$(nslookup ${NAME} 127.0.0.1 2>/dev/null | grep Address | tail -1 | awk '{ print $2;  }')
-    echo "$ip"
+    ssh -X -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$NAME.vm.int -- $APP
 }
 
 mem-free() {
@@ -688,16 +597,7 @@ vm-update() {
 }
 
 vm-list() {
-    IFS=$'\n' read -rd '' -a vms <<<"$(ps aux | grep qemu-system-x86_64)"
-    printf "%-15s%-10s%-10s\n" "NAME" "CPU" "MEMORY"
-    for vm in "${vms[@]}"; do
-        n=$(echo -n $vm | awk '{ print $13; }')
-        c=$(echo -n $vm | awk '{ print $24; }' | awk -F'=' '{ print $2; }')
-        m=$(echo -n $vm | awk '{ print $20; }')
-        if [ ! -z "$n" ]; then
-            printf "%-15s%-10s%-10s\n" $n $c "$m"
-        fi
-    done
+    virsh list --all
 }
 
 vm-cmd() {
