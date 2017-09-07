@@ -667,5 +667,7 @@ dev-container() {
     echo "  docker exec -ti $NAME bash"
 }
 
+alias alert='notify-send -t 5000 --urgency=low -i "$([ $? = 0  ] && echo terminal || echo error)" "Finished" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
 # run the following with each session
 set_kb
