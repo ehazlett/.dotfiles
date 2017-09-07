@@ -1,0 +1,11 @@
+<network>
+  <name>vm</name>
+  <bridge name='virbr1' stp='on' delay='0'/>
+  <mac address='52:54:00:d4:e2:16'/>
+  <domain name='vm.int' localOnly='yes'/>
+  <ip address='192.168.100.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='192.168.100.128' end='192.168.100.254'/>
+    </dhcp>
+  </ip>
+</network>
