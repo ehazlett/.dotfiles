@@ -491,24 +491,25 @@ vm-delete() {
 
 vm-connect() {
     NAME=$1
-    USER=${2:-root}
+    APP_USER=${APP_USER:-root}
     if [ -z "$NAME" ]; then
         echo "Usage: vm-connect <vm-name>"
         return
     fi
 
-    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$NAME.vm.int
+    ssh -t -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$NAME.vm.int
 }
 
 vm-app() {
     NAME=$1
     APP=$2
+    APP_USER=${APP_USER:-user}
     if [ -z "$NAME" ] || [ -z "$APP" ]; then
         echo "Usage: vm-app <vm-name> <app>"
         return
     fi
 
-    ssh -t -X -o StrictHostKeyChecking=no -o Compression=no -o UserKnownHostsFile=/dev/null user@$NAME.vm.int -- PULSE_SERVER=192.168.100.1 $APP
+    ssh -t -Y -o StrictHostKeyChecking=no -o Compression=no -o UserKnownHostsFile=/dev/null $APP_USER@$NAME.vm.int -- PULSE_SERVER=192.168.100.1 $APP
 }
 
 mem-free() {

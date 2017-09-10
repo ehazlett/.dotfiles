@@ -83,7 +83,7 @@ for user in $USERS; do
         chown -R $user:$user $HOMEDIR
         # set default password
         echo "$user:$user" | chpasswd
-        echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+        echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/vm
     fi
 done
 

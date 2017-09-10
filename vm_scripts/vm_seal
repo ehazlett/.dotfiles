@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for FILE in /etc/hostname /etc/sysconfig/network /etc/.resized /etc/udev/rules.d/70-persistent-net.rules /etc/.vm_provisioned
+for FILE in /etc/hostname /etc/sysconfig/network /etc/.resized /etc/udev/rules.d/70-persistent-net.rules /etc/.vm_provisioned /etc/sudoers.d/vm
 do
     if [ -e "$FILE" ] ; then
         rm $FILE
