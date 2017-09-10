@@ -65,26 +65,27 @@ fi
 mkdir -p /root/.ssh
 cat /host/ssh_key > /root/.ssh/authorized_keys
 
-# user account
-if [ -e "/host/username" ]; then
-	USERNAME=$(cat /host/username)
-        HOMEDIR="/home/$USERNAME"
-        if [ "$USERNAME" != "root" ]; then
-	    echo "adding user: $USERNAME" >> $LOG
-	    if [ ! -z "$USERNAME" ]; then
-	    	useradd -d $HOMEDIR -s /bin/bash -m $USERNAME
-	    	if [ -e "/host/ssh_key" ]; then
-	    		echo "setting ssh key"
-	    		mkdir -p $HOMEDIR/.ssh
-	    		cat /host/ssh_key > $HOMEDIR/.ssh/authorized_keys
-	    	fi
-	    	chown -R $USERNAME:$USERNAME $HOMEDIR
-                    # set default password
-                    echo "$USERNAME:$USERNAME" | chpasswd
-	    	echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-	    fi
+USERS="root $(ls /home/)"
+for user in $USERS; do
+    HOMEDIR="$(eval echo ~$user)"
+    if [ "$user" != "root" ]; then
+        if [ ! -z "$user" ]; then
+            echo "adding user: $user" >> $LOG
+            useradd -d $HOMEDIR -s /bin/bash -m $user
         fi
-fi
+    fi
+    if [ -e "/host/ssh_key" ]; then
+    	echo "setting ssh key"
+    	mkdir -p $HOMEDIR/.ssh
+    	cat /host/ssh_key > $HOMEDIR/.ssh/authorized_keys
+    fi
+    if [ "$user" != "root" ]; then
+        chown -R $user:$user $HOMEDIR
+        # set default password
+        echo "$user:$user" | chpasswd
+        echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    fi
+done
 
 # resize disk
 echo "resizing disk" >> $LOG

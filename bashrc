@@ -417,6 +417,8 @@ vm-create() {
 
     virt-xml --edit --vcpus $CPUS $NAME > /dev/null
     virt-xml --edit --memory $MEM $NAME > /dev/null
+
+    vm-start $NAME
 }
 
 vm-start() {
@@ -501,12 +503,12 @@ vm-connect() {
 vm-app() {
     NAME=$1
     APP=$2
-    if [ -z "$VM" ] || [ -z "$APP" ]; then
+    if [ -z "$NAME" ] || [ -z "$APP" ]; then
         echo "Usage: vm-app <vm-name> <app>"
         return
     fi
 
-    ssh -X -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$NAME.vm.int -- $APP
+    ssh -t -X -o StrictHostKeyChecking=no -o Compression=no -o UserKnownHostsFile=/dev/null user@$NAME.vm.int -- PULSE_SERVER=192.168.100.1 $APP
 }
 
 mem-free() {
