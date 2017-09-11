@@ -497,7 +497,8 @@ vm-connect() {
         return
     fi
 
-    ssh -t -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$NAME.vm.int
+    ssh -t -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $APP_USER@$NAME.vm.int
+    unset APP_USER
 }
 
 vm-app() {
@@ -510,6 +511,7 @@ vm-app() {
     fi
 
     ssh -t -Y -o StrictHostKeyChecking=no -o Compression=no -o UserKnownHostsFile=/dev/null $APP_USER@$NAME.vm.int -- PULSE_SERVER=192.168.100.1 $APP
+    unset APP_USER
 }
 
 mem-free() {

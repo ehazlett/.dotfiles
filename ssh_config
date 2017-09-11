@@ -38,3 +38,7 @@ Host gist.github.com
 
 Host dev
     IdentityFile ~/.keys/home_ehazlett
+
+Host palisade-bitbucket
+    HostName bitbucket.org
+    IdentityFile ~/.keys/madhatter.rsa
