@@ -1,0 +1,4 @@
+bind-interfaces
+except-interface=virbr0,virbr1
+server=/vm.int/192.168.100.1
+
