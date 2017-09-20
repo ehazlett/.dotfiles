@@ -1,0 +1,6 @@
+192.168.1.80    cine.indy
+192.168.1.83    loadbalancer.indy
+192.168.1.85    thorne.indy
+192.168.1.86    gameserver.indy
+192.168.1.87    sheep-00.indy
+192.168.1.88    desktop.indy
