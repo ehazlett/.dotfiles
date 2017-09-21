@@ -27,6 +27,8 @@ else
     ln -sf $(pwd)/i3status.conf.vm ~/.i3status.conf
 fi
 
+ln -sf $(pwd)/gtk.css ~/.config/gtk-3.0/gtk.css
+
 ln -sf $(pwd)/ssh_config ~/.ssh/config
 
 # vim
