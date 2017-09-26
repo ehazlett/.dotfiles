@@ -38,6 +38,7 @@ if [ $OS = "osx" ]; then
         source $(brew --prefix)/etc/bash_completion
     fi
     export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+    export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 else
     # set keyboard repeat rate
     if [ ! -z "$DISPLAY" ]; then
