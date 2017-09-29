@@ -38,6 +38,10 @@ if [ $OS = "osx" ]; then
         source $(brew --prefix)/etc/bash_completion
     fi
     export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+    export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+    eval "`dircolors -b`"
+    alias ls="ls --color=auto"
+    alias tmux="tmux -2"
 else
     # set keyboard repeat rate
     if [ ! -z "$DISPLAY" ]; then
