@@ -1,0 +1,31 @@
+#
+# This file MUST be edited with the 'visudo' command as root.
+#
+# Please consider adding local content in /etc/sudoers.d/ instead of
+# directly modifying this file.
+#
+# See the man page for details on how to write a sudoers file.
+#
+Defaults	env_reset
+Defaults	mail_badpass
+Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Host alias specification
+
+# User alias specification
+
+# Cmnd alias specification
+
+# User privilege specification
+root	ALL=(ALL:ALL) ALL
+
+# Allow members of group sudo to execute any command
+%sudo	ALL=(ALL:ALL) ALL
+
+hatter * = (root) NOPASSWD: /usr/local/bin/screen-backlight, /usr/local/bin/keyboard-backlight, /usr/local/bin/keyboard-i3-switch, /sbin/wpa_supplicant, /sbin/dhclient, /usr/bin/pkill, /usr/bin/tee, /usr/local/bin/steambox, /bin/chvt, /usr/sbin/pm-suspend, /usr/local/bin/runc, /usr/local/bin/containerd, /usr/local/bin/ocitools, /usr/bin/qemu-img, /usr/local/bin/box
+
+steam * = (root) NOPASSWD: /usr/local/bin/screen-backlight, /usr/local/bin/keyboard-i3-switch, /usr/bin/tee, /usr/local/bin/steambox, /bin/chvt
+
+# See sudoers(5) for more information on "#include" directives:
+
+#includedir /etc/sudoers.d
