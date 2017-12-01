@@ -4,6 +4,9 @@ VDE_NAME=vm0
 OS=linux
 export GPG_TTY=$(tty)
 
+DOCKER_IMAGE=${DOCKER_IMAGE:-ehazlett/docker:17.06.2-ce}
+DOCKER_VOLUME_PREFIX=docker-node
+
 if [ ! -z "$ITERM_PROFILE" ]; then
     OS=osx
 fi
@@ -674,6 +677,58 @@ dev-container() {
         ehazlett/dev bash
     echo "$NAME created.  To use, run"
     echo "  docker exec -ti $NAME bash"
+}
+
+start-docker-node() {
+    NODE=$1
+    NETWORK=$2
+    if [ -z "$NODE" ]; then
+        echo "Usage: start-docker-node <name> [network]"
+        return
+    fi
+
+    if [ -z "$NETWORK" ]; then
+        NETWORK=${NODE}
+        docker network create ${NETWORK}
+    fi
+
+    VOL_NAME=${DOCKER_VOLUME_PREFIX}-${NODE}
+    docker volume create -d local ${VOL_NAME}
+    docker run \
+        --privileged \
+        --net ${NETWORK} \
+        --name ${NODE} \
+        --hostname ${NODE} \
+        --tmpfs /run \
+        -v /lib/modules:/lib/modules:ro \
+        -v ${VOL_NAME}:/var/lib/docker \
+        -d \
+        ${DOCKER_IMAGE} -H unix:// -s overlay2 ${DOCKER_ARGS}
+    while true; do
+        RES=$(docker exec -ti ${NODE} docker -v)
+        if [ $? -eq 0 ]; then
+            break
+        fi
+        sleep .5
+    done
+}
+
+stop-docker-node() {
+    NODE=$1
+    NETWORK=$2
+    if [ -z "$NODE" ]; then
+        echo "Usage: stop-docker-node <name> [network]"
+        return
+    fi
+
+    if [ -z "$NETWORK" ]; then
+        NETWORK=${NODE}
+    fi
+
+    VOL_NAME=${DOCKER_VOLUME_PREFIX}-${NODE}
+    docker rm -fv ${NODE}
+    docker volume rm ${VOL_NAME}
+    docker network rm $NETWORK
 }
 
 alias alert='notify-send -t 5000 --urgency=low -i "$([ $? = 0  ] && echo terminal || echo error)" "Finished" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
