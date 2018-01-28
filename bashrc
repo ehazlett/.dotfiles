@@ -11,6 +11,18 @@ if [ ! -z "$ITERM_PROFILE" ]; then
     OS=osx
 fi
 
+RELEASE=$(uname -r)
+if [[ $RELEASE == *"Microsoft"*  ]]; then
+    # bash on windows
+    OS=windows
+    # set default umask to not 777
+    umask 022
+    # use docker for windows on tcp port
+    #export DOCKER_HOST=tcp://127.0.0.1:2375
+    export DOCKER_HOST=tcp://172.31.100.100:2375
+    export DISPLAY=:0
+fi
+
 if [ $OS = "linux" ]; then
     if [ -e /sys/class/dmi/id/sys_vendor ]; then
         VENDOR=$(cat /sys/class/dmi/id/sys_vendor)
@@ -72,10 +84,6 @@ export PATH=$PATH:/opt/android-studio/bin:~/Android/Sdk/platform-tools
 export LIBVIRT_DEFAULT_URI=qemu:///system
 # hdpi
 #export GDK_SCALE=2
-
-if [ -e "$HOME/.nvm" ]; then
-    source $HOME/.nvm/nvm.sh
-fi
 
 ## custom delete word
 #stty werase undef
@@ -671,6 +679,7 @@ dev-container() {
         -ti \
         --name $NAME \
         --privileged \
+        -v /lib/modules:/lib/modules:ro \
         -v $NAME:/home/hatter \
         -v /var/run/docker.sock:/var/run/docker.sock \
         --net=host \
@@ -731,7 +740,14 @@ stop-docker-node() {
     docker network rm $NETWORK
 }
 
+setup-nvm() {
+    if [ -e "$HOME/.nvm" ]; then
+        source $HOME/.nvm/nvm.sh
+    fi
+}
+
 alias alert='notify-send -t 5000 --urgency=low -i "$([ $? = 0  ] && echo terminal || echo error)" "Finished" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # run the following with each session
 set_kb
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

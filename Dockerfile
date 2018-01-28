@@ -54,7 +54,7 @@ RUN git clone https://github.com/vim/vim /tmp/vim
 RUN (cd /tmp/vim && ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge && make install)
 
 # go
-ENV GO_VERSION 1.8.3
+ENV GO_VERSION 1.9.2
 RUN wget https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
     tar -C /usr/local -xvf /tmp/go.tar.gz && rm /tmp/go.tar.gz
 
@@ -103,9 +103,10 @@ RUN curl -sSL https://download.docker.com/linux/static/edge/x86_64/docker-${DOCK
 
 # perms
 RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
-    groupadd -g 999 docker && \
+    groupadd -g 2000 docker && \
     usermod -aG docker $CONTAINER_USER && \
-    usermod -aG users $CONTAINER_USER
+    usermod -aG users $CONTAINER_USER && \
+    usermod -aG staff $CONTAINER_USER
 
 ENV COMPOSE_VERSION 1.15.0
 
