@@ -746,6 +746,18 @@ setup-nvm() {
     fi
 }
 
+pull-pr-branch() {
+    usage="Usage: pull-pr-branch <upstream> <pr-number> <branch-name>"
+    UPSTREAM=$1
+    ID=$2
+    BRANCH=$3
+    if [ -z "$UPSTREAM" ] || [ -z "$ID" ] || [ -z "$BRANCH" ]; then
+        echo $usage
+        return
+    fi
+    git fetch $UPSTREAM pull/$ID/head:$BRANCH
+}
+
 alias alert='notify-send -t 5000 --urgency=low -i "$([ $? = 0  ] && echo terminal || echo error)" "Finished" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # run the following with each session
