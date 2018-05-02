@@ -7,7 +7,7 @@ call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
 " theme
-"Plugin 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
+Plugin 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdtree'
 Plugin 'kien/ctrlp.vim'
 Plugin 'fatih/vim-go'
@@ -17,6 +17,7 @@ Plugin 'jiangmiao/auto-pairs'
 "Plugin 'vim-airline/vim-airline-themes'
 Plugin 'hashivim/vim-terraform'
 Bundle 'uarun/vim-protobuf'
+Plugin 'mdempsky/gocode', {'rtp': 'vim/'}
 
 call vundle#end()
 
@@ -41,6 +42,7 @@ let g:hybrid_use_Xresources = 1
 " theme
 set t_Co=256
 hi Normal ctermbg=none
+colorscheme Tomorrow
 
 "let g:airline_theme='tomorrow'
 let NERDTreeIgnore = ['\.pyc$']
@@ -80,3 +82,7 @@ let g:terraform_align=1
 au Filetype go nnoremap <leader>v :vsp <CR>:exe "GoDef" <CR>
 au Filetype go nnoremap <leader>s :sp <CR>:exe "GoDef"<CR>
 au Filetype go nnoremap <leader>t :tab split <CR>:exe "GoDef"<CR>
+
+" autocomplete navigation
+inoremap <expr> j ((pumvisible())?("\<C-n>"):("j"))
+inoremap <expr> k ((pumvisible())?("\<C-p>"):("k"))
