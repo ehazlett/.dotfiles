@@ -1,0 +1,2 @@
+*/10 * * * * /home/hatter/.dotfiles/backup.sh
+05 * * * * /home/hatter/.dotfiles/sync_backups.sh
