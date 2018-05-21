@@ -42,7 +42,7 @@ let g:hybrid_use_Xresources = 1
 " theme
 set t_Co=256
 hi Normal ctermbg=none
-colorscheme Tomorrow
+"colorscheme Tomorrow
 
 "let g:airline_theme='tomorrow'
 let NERDTreeIgnore = ['\.pyc$']

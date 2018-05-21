@@ -1,5 +1,5 @@
 #!/bin/bash
-BACKUP_PATH=${BACKUP_PATH:-/mnt/1tb/backup}
+BACKUP_PATH=${BACKUP_PATH:-/var/backup}
 
 HOMEDIR=$(getent passwd $USER | cut -d: -f6)
 DIRS="$HOMEDIR"
@@ -9,24 +9,24 @@ if [ -z "$(which zbackup)" ]; then
     exit 1
 fi
 
-sudo echo "starting backup..."
+BACKUP_DEST=${BACKUP_PATH}/${USER}
+mkdir -p ${BACKUP_DEST}
 
-STATUS=`mount | grep 1tb`
-if [ $? -eq 0 ]; then
-    date=`date "+%Y-%m-%dT%H:%M:%S"`
-    time sudo tar -vc \
-        --exclude .cache \
-        --exclude .dbus \
-        --exclude *.swp \
-        --exclude .config/google-chrome \
-        --exclude .nvm \
-        --exclude Steam \
-        --exclude Android \
-        --exclude media \
-        --exclude vm \
-        $HOMEDIR | sudo zbackup --non-encrypted backup $BACKUP_PATH/backups/backup-$date
-    sudo rm -f $BACKUP_PATH/backups/current
-    sudo ln -sf $BACKUP_PATH/backups/backup-$date $BACKUP_PATH/current
-else
-    echo "backup drive not mounted; skipping"
-fi
+# TODO: check for available disk space
+
+echo "starting backup: ${HOMEDIR} -> ${BACKUP_DEST}..."
+
+date=`date "+%Y-%m-%dT%H:%M:%S"`
+time sudo tar -vc \
+    --exclude .cache \
+    --exclude .dbus \
+    --exclude *.swp \
+    --exclude .config/google-chrome \
+    --exclude .nvm \
+    --exclude Steam \
+    --exclude Android \
+    --exclude media \
+    --exclude vm \
+    $HOMEDIR | sudo zbackup --non-encrypted backup $BACKUP_DEST/backups/backup-$date
+sudo rm -f $BACKUP_DEST/backups/current
+sudo ln -sf $BACKUP_DEST/backups/backup-$date $BACKUP_DEST/backups/current
