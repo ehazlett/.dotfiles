@@ -27,27 +27,26 @@ if [ -f "/home/$USER_NAME/.tmux.conf" ]
 then
     echo "Dotfiles already installed..."
 else
-    cd /home/$USER_NAME
+    su - $USER
+    go get -v golang.org/x/tools/cmd/goimports
+    go get -v github.com/golang/lint/golint
+    go get -v github.com/LK4D4/vndr
+    go get -v github.com/stevvooe/protobuild
+    go get -v github.com/mdempsky/gocode
+
     mkdir -p .ssh
-    mkdir -p .config/fish
+
+    cd .dotfiles
 
     rm -rf /home/$USER_NAME/.vim
-    ln -sf /home/$USER_NAME/.dotfiles/vim /home/$USER_NAME/.vim
-    ln -sf /home/$USER_NAME/.dotfiles/vimrc /home/$USER_NAME/.vimrc
-    ln -sf /home/$USER_NAME/.dotfiles/tmux.conf /home/$USER_NAME/.tmux.conf
-    # my specific settings
-    if [ $USER_NAME == "ehazlett" ]; then
-        ln -sf /home/$USER_NAME/.dotfiles/ssh_config /home/$USER_NAME/.ssh/config
-        ln -sf /home/$USER_NAME/.dotfiles/gitconfig /home/$USER_NAME/.gitconfig
-        ln -sf /home/$USER_NAME/.dotfiles/gitignore_global /home/$USER_NAME/.gitignore_global
-        ln -sf /home/$USER_NAME/.dotfiles/config.fish /home/$USER_NAME/.config/fish/config.fish
-    fi
+    ./setup_links.sh
     # temporarily remove custom scheme to prevent vim launch errors before vundle run
     sed -i 's/^colorscheme.*//g' $HOME/.dotfiles/vimrc
     # vim plugins
     vim +PluginInstall +qall
     # restore vimrc
     cd $HOME/.dotfiles && git checkout vimrc
+    reset
 fi
 
 if [ ! -z "$(which protoc)" ];
