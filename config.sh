@@ -59,7 +59,7 @@ else
     git checkout 3.5.x
     ./autogen.sh
     ./configure
-    make -j4
+    make -j$(cat /proc/cpuinfo  | grep processor | wc -l)
     make install
 fi
 
