@@ -28,14 +28,8 @@ then
     echo "Dotfiles already installed..."
 else
     su - $USER
-    go get -v golang.org/x/tools/cmd/goimports
-    go get -v github.com/golang/lint/golint
-    go get -v github.com/LK4D4/vndr
-    go get -v github.com/stevvooe/protobuild
-    go get -v github.com/mdempsky/gocode
 
     mkdir -p .ssh
-
     cd .dotfiles
 
     rm -rf /home/$USER_NAME/.vim
@@ -47,6 +41,12 @@ else
     # restore vimrc
     cd $HOME/.dotfiles && git checkout vimrc
     reset
+
+    go get -v golang.org/x/tools/cmd/goimports
+    go get -v github.com/golang/lint/golint
+    go get -v github.com/LK4D4/vndr
+    go get -v github.com/stevvooe/protobuild
+    go get -v github.com/mdempsky/gocode
 fi
 
 if [ ! -z "$(which protoc)" ];
