@@ -19,7 +19,7 @@ if [[ $RELEASE == *"Microsoft"*  ]]; then
     umask 022
     # use docker for windows on tcp port
     #export DOCKER_HOST=tcp://127.0.0.1:2375
-    export DOCKER_HOST=tcp://172.31.100.100:2375
+    export DOCKER_HOST=tcp://172.31.1.100:2375
     export DISPLAY=:0
 fi
 
