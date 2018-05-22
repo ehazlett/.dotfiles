@@ -8,7 +8,7 @@ then
     echo "Vim already installed..."
 else
     cd /tmp
-    hg clone https://vim.googlecode.com/hg/ vim
+    git clone https://github.com/vim/vim
     cd vim/src
     ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge
     make
