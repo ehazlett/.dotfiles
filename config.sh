@@ -49,13 +49,17 @@ if [ ! -z "$(which protoc)" ];
 then
     echo "Protobuf already installed..."
 else
-    git clone https://github.com/google/protobuf /tmp/protobuf
-    cd /tmp/protobuf
-    git checkout 3.5.x
-    ./autogen.sh
-    ./configure
-    make -j$(cat /proc/cpuinfo  | grep processor | wc -l)
-    make install
+    if [ -z "${SKIP_PROTOBUF}" ]; then
+        git clone https://github.com/google/protobuf /tmp/protobuf
+        cd /tmp/protobuf
+        git checkout 3.5.x
+        ./autogen.sh
+        ./configure
+        make -j$(cat /proc/cpuinfo  | grep processor | wc -l)
+        make install
+    else
+        echo "skipping protobuf install"
+    fi
 fi
 
 # ip forwarding
