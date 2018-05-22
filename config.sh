@@ -30,10 +30,11 @@ else
     su - $USER
 
     mkdir -p .ssh
-    cd .dotfiles
+    cd $HOME/.dotfiles
 
     rm -rf /home/$USER_NAME/.vim
     ./setup_links.sh
+
     # temporarily remove custom scheme to prevent vim launch errors before vundle run
     sed -i 's/^colorscheme.*//g' $HOME/.dotfiles/vimrc
     # vim plugins
