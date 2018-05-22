@@ -1,47 +1,29 @@
 #!/bin/bash
 set -e
-USER_NAME=${1:-ehazlett}
+USER_NAME=${1:-hatter}
 export HOME=/home/$USER_NAME
-cd /home/$USER_NAME
-if [ -e "/usr/local/bin/fish" ]
-then
-    echo "Fish already installed..."
-else
-    wget http://fishshell.com/files/2.1.1/fish-2.1.1.tar.gz
-    tar -zxf fish-2.1.1.tar.gz && cd fish-2.1.1
-    ./configure --prefix=/usr/local
-    make && make install
-    echo '/usr/local/bin/fish' | tee -a /etc/shells
-    chsh -s /usr/local/bin/fish $USER_NAME
-    rm -rf /home/$USER_NAME/fish-*
-fi 
-
-cd /home/$USER_NAME
 
 if [ -d "/usr/local/bin/vim" ]
 then
     echo "Vim already installed..."
 else
+    cd /tmp
     hg clone https://vim.googlecode.com/hg/ vim
     cd vim/src
     ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge
     make
     make install
-    rm -rf /home/$USER_NAME/vim
 fi
-
-cd /home/$USER_NAME
 
 if [ -d "/usr/local/go/bin/go" ]
 then
     echo "Go already installed..."
-else 
-    wget https://storage.googleapis.com/golang/go1.3.3.linux-amd64.tar.gz -O /tmp/go.tar.gz
+else
+    wget https://storage.googleapis.com/golang/go1.10.1.linux-amd64.tar.gz -O /tmp/go.tar.gz
     tar -C /usr/local -xvf /tmp/go.tar.gz
 fi
-cd /home/$USER_NAME
 
-if [ -f "/home/$USER_NAME/.config/fish/config.fish" ]
+if [ -f "/home/$USER_NAME/.tmux.conf" ]
 then
     echo "Dotfiles already installed..."
 else
@@ -66,17 +48,23 @@ else
     vim +PluginInstall +qall
     # restore vimrc
     cd $HOME/.dotfiles && git checkout vimrc
-    # install nvm
-    cd $HOME && git clone https://github.com/Alex7Kom/nvm-fish.git .nvm
-    echo "test -s /home/dev/.nvm-fish/nvm.fish; and source /home/dev/.nvm-fish/nvm.fish" >> $HOME/.config/fish/config.fish
 fi
-cd /home/$USER_NAME
+
+if [ ! -z "$(which protoc)" ];
+then
+    echo "Protobuf already installed..."
+else
+    git clone https://github.com/google/protobuf /tmp/protobuf
+    cd /tmp/protobuf
+    git checkout 3.5.x
+    ./autogen.sh
+    ./configure.sh
+    make -j4
+    make install
+fi
 
 # ip forwarding
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 
 chown -R $USER_NAME:$USER_NAME /home/$USER_NAME
-groupadd docker
-usermod -G docker -a $USER_NAME
-

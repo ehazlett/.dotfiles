@@ -1,7 +1,7 @@
 #!/bin/bash
 BACKUP_USER=${BACKUP_USER:-admin}
 BACKUP_SERVER=${BACKUP_SERVER:-nas.int}
-BACKUP_DEST=${BACKUP_DEST:-/volume1/backup}
+BACKUP_DEST=${BACKUP_DEST:-/volume1/backup/hatter}
 BACKUP_PATH=${BACKUP_PATH:-/var/backup}
 
 HOMEDIR=$(getent passwd $USER | cut -d: -f6)

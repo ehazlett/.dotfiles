@@ -1,5 +1,5 @@
 #!/bin/bash
-USER_NAME=${1:-ehazlett}
+USER_NAME=${1:-hatter}
 
 if [ -e "/usr/bin/apt-get" ] ; then
 	apt-get update
@@ -11,15 +11,16 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    bzr \
 	    git-core \
 	    make \
-	    python \
-	    python-dev \
-	    python-setuptools \
 	    autoconf \
+            automake \
 	    gawk \
 	    libncurses5-dev \
 	    libssl-dev \
 	    mercurial \
 	    aufs-tools \
+            libtool \
+            unzip \
+            file \
 	    libbz2-dev \
 	    libreadline-dev \
 	    gettext \
@@ -29,14 +30,13 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    sysstat \
 	    curl \
 	    socat \
-	    ctags \
 	    libsqlite3-dev \
 	    libdevmapper-dev \
             fonts-inconsolata \
 	    rng-tools \
 	    s3cmd \
-	    apache2-utils \
-	    libcurl4-openssl-dev
+	    libcurl4-openssl-dev \
+            btrfs-tools
 fi
 
 if [ -e "/usr/bin/yum" ] ; then
@@ -79,4 +79,3 @@ git submodule init
 git submodule update --recursive
 
 /bin/bash config.sh
-
