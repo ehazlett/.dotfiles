@@ -58,7 +58,7 @@ else
     cd /tmp/protobuf
     git checkout 3.5.x
     ./autogen.sh
-    ./configure.sh
+    ./configure
     make -j4
     make install
 fi
