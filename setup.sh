@@ -70,13 +70,17 @@ if [ -e "/usr/bin/yum" ] ; then
 fi
 
 export USER_NAME=$USER_NAME
-export HOME=/home/$USER_NAME
-mkdir -p $HOME
-cd $HOME
+export USER_HOME=/home/$USER_NAME
+
+useradd -d $USER_HOME $USER_NAME
+mkdir -p $USER_HOME
+cd $USER_HOME
 
 git clone https://github.com/ehazlett/.dotfiles
 cd .dotfiles
 git submodule init
 git submodule update --recursive
+
+export HOME=$USER_HOME
 
 /bin/bash config.sh
