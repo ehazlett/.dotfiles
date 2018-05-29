@@ -71,6 +71,7 @@ fi
 
 export USER_NAME=$USER_NAME
 export HOME=/home/$USER_NAME
+mkdir -p $HOME
 cd $HOME
 
 git clone https://github.com/ehazlett/.dotfiles
