@@ -36,7 +36,8 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    rng-tools \
 	    s3cmd \
 	    libcurl4-openssl-dev \
-            btrfs-tools
+            btrfs-tools \
+            pkg-config
 fi
 
 if [ -e "/usr/bin/yum" ] ; then
