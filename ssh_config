@@ -38,7 +38,7 @@ Host gist.github.com
 
 Host dev
     IdentityFile ~/.keys/home_ehazlett
-    Hostname 172.31.1.100
+    Hostname 172.21.0.100
 
 Host palisade-bitbucket
     HostName bitbucket.org
