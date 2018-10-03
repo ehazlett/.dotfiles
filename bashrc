@@ -749,7 +749,7 @@ setup-nvm() {
 buildkit-build() {
     IMG=$1
     if [ -z "$IMG" ]; then
-        echo "Usage: buikdkit <name>"
+        echo "Usage: buikdkit-build <name>"
         return
     fi
     sudo buildctl build --frontend=dockerfile.v0 --local context=. --local dockerfile=. --exporter=image --exporter-opt name=$IMG

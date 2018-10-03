@@ -64,6 +64,8 @@ au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
 
 " yml
 au FileType yml setl sw=2 sts=2 et
+" proto
+au FileType proto setl sw=8 sts=8 et
 
 let g:go_fmt_command = "goimports"
 
