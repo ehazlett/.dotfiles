@@ -19,7 +19,7 @@ if [[ $RELEASE == *"Microsoft"*  ]]; then
     umask 022
     # use docker for windows on tcp port
     #export DOCKER_HOST=tcp://127.0.0.1:2375
-    export DOCKER_HOST=tcp://172.31.1.100:2375
+    export DOCKER_HOST=tcp://192.168.137.100:2375
     export DISPLAY=:0
 fi
 
@@ -770,5 +770,4 @@ pull-pr-branch() {
 alias alert='notify-send -t 5000 --urgency=low -i "$([ $? = 0  ] && echo terminal || echo error)" "Finished" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # run the following with each session
-set_kb
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
