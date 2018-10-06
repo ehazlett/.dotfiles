@@ -13,11 +13,12 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'fatih/vim-go'
 Plugin 'tpope/vim-surround'
 Plugin 'jiangmiao/auto-pairs'
-"Plugin 'vim-airline/vim-airline'
-"Plugin 'vim-airline/vim-airline-themes'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'hashivim/vim-terraform'
 Bundle 'uarun/vim-protobuf'
 Plugin 'mdempsky/gocode', {'rtp': 'vim/'}
+Plugin 'posva/vim-vue'
 
 call vundle#end()
 
@@ -31,7 +32,7 @@ set shell=/bin/bash
 set tabstop=8
 set shiftwidth=8
 set softtabstop=8
-set expandtab
+set noexpandtab
 set nohlsearch
 set nu
 "set cc=80
@@ -66,6 +67,9 @@ au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
 au FileType yml setl sw=2 sts=2 et
 " proto
 au FileType proto setl sw=8 sts=8 et
+" js
+au FileType javascript setl sw=2 sts=2 et
+au FileType vue setl sw=2 sts=2 et
 
 let g:go_fmt_command = "goimports"
 
