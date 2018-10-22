@@ -1,2 +1,2 @@
-*/10 * * * * USER=hatter /home/hatter/.dotfiles/backup.sh > /dev/null
-05 * * * * /home/hatter/.dotfiles/sync_backups.sh
+00 * * * * USER=hatter /home/hatter/.dotfiles/backup.sh > /dev/null
+30 * * * * /home/hatter/.dotfiles/sync_backups.sh
