@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER evan hazlett <ejhazlett@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y \
@@ -54,7 +54,7 @@ RUN git clone https://github.com/vim/vim /tmp/vim
 RUN (cd /tmp/vim && ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge && make install)
 
 # go
-ENV GO_VERSION 1.9.2
+ENV GO_VERSION 1.11.1
 RUN wget https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
     tar -C /usr/local -xvf /tmp/go.tar.gz && rm /tmp/go.tar.gz
 
@@ -88,16 +88,28 @@ ENV PATH /usr/local/go/bin:$GOPATH/bin:$PATH
 # go tools
 RUN go get -v golang.org/x/tools/present && \
     go get -v golang.org/x/tools/cmd/goimports && \
-    go get -v github.com/golang/lint/golint && \
+    go get -v golang.org/x/lint/golint && \
     go get -v github.com/LK4D4/vndr && \
     go get -v github.com/stevvooe/protobuild && \
     go get -v github.com/mdempsky/gocode
+
+# proto
+RUN git clone https://github.com/google/protobuf /tmp/protobuf && \
+    cd /tmp/protobuf && \
+    ./autogen.sh && \
+    ./configure && make install
+RUN go get -v github.com/golang/protobuf/protoc-gen-go
+RUN go get -v github.com/gogo/protobuf/protoc-gen-gofast
+RUN go get -v github.com/gogo/protobuf/proto
+RUN go get -v github.com/gogo/protobuf/gogoproto
+RUN go get -v github.com/gogo/protobuf/protoc-gen-gogo
+RUN go get -v github.com/gogo/protobuf/protoc-gen-gogofast
 
 # nvm
 RUN cd $HOME && git clone https://github.com/creationix/nvm .nvm
 
 # latest docker binary
-ENV DOCKER_VERSION 17.06.0-ce
+ENV DOCKER_VERSION 18.06.1-ce
 RUN curl -sSL https://download.docker.com/linux/static/edge/x86_64/docker-${DOCKER_VERSION}.tgz -o /tmp/docker-latest.tgz && \
     tar zxf /tmp/docker-latest.tgz -C /usr/local/bin --strip 1 && \
     rm -rf /tmp/docker-latest.tgz
@@ -108,12 +120,6 @@ RUN chown -R $CONTAINER_USER:$CONTAINER_USER $HOME && \
     usermod -aG docker $CONTAINER_USER && \
     usermod -aG users $CONTAINER_USER && \
     usermod -aG staff $CONTAINER_USER
-
-ENV COMPOSE_VERSION 1.15.0
-
-# docker tooling
-RUN curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose
 
 VOLUME /home/$CONTAINER_USER
 
