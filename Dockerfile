@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     python-setuptools \
     autoconf \
     gawk \
+    libtool \
     libncurses5-dev \
     libssl-dev \
     mercurial \
