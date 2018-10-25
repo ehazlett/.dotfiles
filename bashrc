@@ -259,6 +259,10 @@ dev() {
     fi
 }
 
+ctrdev() {
+    ctr run -t --runtime io.containerd.runc.v1 --privileged --net-host --mount type=bind,src=/home/hatter,dst=/home/hatter,options=rbind docker.io/ehazlett/dev:latest dev bash
+}
+
 macdev() {
     CMD=${2:-/bin/bash}
     set_title "dev : $1"
