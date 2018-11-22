@@ -13,8 +13,6 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'fatih/vim-go'
 Plugin 'tpope/vim-surround'
 Plugin 'jiangmiao/auto-pairs'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
 Plugin 'hashivim/vim-terraform'
 Bundle 'uarun/vim-protobuf'
 Plugin 'mdempsky/gocode', {'rtp': 'vim/'}

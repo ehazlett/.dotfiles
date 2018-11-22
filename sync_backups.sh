@@ -16,4 +16,4 @@ fi
 
 sudo echo "starting sync -> ${BACKUP_SERVER}..."
 
-sudo rsync -avz --progress --delete ${BACKUP_PATH}/ admin@${BACKUP_SERVER}:${BACKUP_DEST}/
+sudo rsync -avz --progress ${BACKUP_PATH}/ admin@${BACKUP_SERVER}:${BACKUP_DEST}/
