@@ -36,7 +36,8 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    rng-tools \
 	    s3cmd \
 	    libcurl4-openssl-dev \
-            btrfs-tools \
+	    libbtrfs-dev \
+            btrfs-progs \
             pkg-config
 fi
 
@@ -65,7 +66,6 @@ if [ -e "/usr/bin/yum" ] ; then
 		sqlite3-devel \
 		device-mapper-devel \
 		rng-tools \
-		s3cmd \
 		httpd-tools \
 		curl-devel
 fi
