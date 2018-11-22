@@ -34,7 +34,6 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    libdevmapper-dev \
             fonts-inconsolata \
 	    rng-tools \
-	    s3cmd \
 	    libcurl4-openssl-dev \
 	    libbtrfs-dev \
             btrfs-progs \
