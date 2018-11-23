@@ -19,7 +19,7 @@ if [ -d "/usr/local/go/bin/go" ]
 then
     echo "Go already installed..."
 else
-    wget https://storage.googleapis.com/golang/go1.10.1.linux-amd64.tar.gz -O /tmp/go.tar.gz
+    wget https://storage.googleapis.com/golang/go1.11.2.linux-amd64.tar.gz -O /tmp/go.tar.gz
     tar -C /usr/local -xvf /tmp/go.tar.gz
 fi
 
