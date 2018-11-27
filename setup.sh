@@ -35,7 +35,6 @@ if [ -e "/usr/bin/apt-get" ] ; then
             fonts-inconsolata \
 	    rng-tools \
 	    libcurl4-openssl-dev \
-	    libbtrfs-dev \
             btrfs-progs \
             pkg-config
 fi
