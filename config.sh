@@ -67,3 +67,9 @@ echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 
 chown -R $USER_NAME:$USER_NAME /home/$USER_NAME
+groupadd docker
+usermod -aG docker $USER_NAME
+usermod -aG sudo $USER_NAME
+usermod -s /bin/bash $USER_NAME
+echo "Changing password for $USER_NAME"
+passwd $USER_NAME
