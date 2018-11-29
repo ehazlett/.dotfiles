@@ -36,6 +36,7 @@ if [ -e "/usr/bin/apt-get" ] ; then
 	    rng-tools \
 	    libcurl4-openssl-dev \
             btrfs-progs \
+	    libseccomp-dev \
             pkg-config
 fi
 
