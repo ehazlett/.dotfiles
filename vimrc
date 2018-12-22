@@ -63,6 +63,8 @@ au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
 
 " yml
 au FileType yml setl sw=2 sts=2 et
+" sh
+au FileType sh setl sw=4 sts=4 et
 " proto
 au FileType proto setl sw=8 sts=8 et
 " js

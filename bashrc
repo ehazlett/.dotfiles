@@ -4,7 +4,7 @@ VDE_NAME=vm0
 OS=linux
 export GPG_TTY=$(tty)
 
-DOCKER_IMAGE=${DOCKER_IMAGE:-ehazlett/docker:17.06.2-ce}
+DOCKER_IMAGE=${DOCKER_IMAGE:-ehazlett/docker:18.09.0}
 DOCKER_VOLUME_PREFIX=docker-node
 
 if [ ! -z "$ITERM_PROFILE" ]; then
