@@ -25,14 +25,19 @@ else
 fi
 
 # Protobuf
-if [ -f "/usr/local/bin/protoc" ]; then
-    echo "Protobuf support already installed..."
-else
-    echo " -> Installing Protobuf support"
-    curl -sSL https://github.com/google/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip -o /tmp/protoc.zip
-    pushd /usr/local
-    unzip /tmp/protoc.zip
-    popd
+if [ -z "$SKIP_PROTOBUF" ]; then
+    if [ -f "/usr/local/bin/protoc" ]; then
+        echo "Protobuf support already installed..."
+    else
+        echo " -> Installing Protobuf support"
+	git clone https://github.com/google/protobuf /tmp/protobuf
+        cd /tmp/protobuf
+        git checkout 3.6.x
+        ./autogen.sh
+        ./configure
+        make -j$(cat /proc/cpuinfo  | grep processor | wc -l)
+	make install
+    fi
 fi
 
 # User setup
