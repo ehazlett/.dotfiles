@@ -29,9 +29,8 @@ if [ -d "/usr/local/bin/protoc" ]; then
     echo "Protobuf support already installed..."
 else
     echo " -> Installing Protobuf support"
-    curl -sSL https://storage.googleapis.com/golang/go1.11.4.linux-amd64.tar.gz -o /tmp/go.tar.gz
     curl -sSL https://github.com/google/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip -o /tmp/protoc.tar.gz
-    tar -C /usr/local -xvf /tmp/go.tar.gz
+    tar -C /usr/local -xvf /tmp/protoc.tar.gz
 fi
 
 # User setup
