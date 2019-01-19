@@ -16,7 +16,7 @@ if [ -z "$SKIP_VIM" ]; then
 fi
 
 # Go
-if [ -d "/usr/local/go/bin/go" ]; then
+if [ -f "/usr/local/go/bin/go" ]; then
     echo "Go already installed..."
 else
     echo " -> Installing Go"
@@ -25,7 +25,7 @@ else
 fi
 
 # Protobuf
-if [ -d "/usr/local/bin/protoc" ]; then
+if [ -f "/usr/local/bin/protoc" ]; then
     echo "Protobuf support already installed..."
 else
     echo " -> Installing Protobuf support"
