@@ -1,10 +1,8 @@
 #!/bin/bash
 set -e
-USER_NAME=${1:-hatter}
-export HOME=/home/$USER_NAME
 
-if [ -d "/usr/local/bin/vim" ]
-then
+# VIM
+if [ -d "/usr/local/bin/vim" ] && [ -z "$SKIP_VIM" ]; then
     echo "Vim already installed..."
 else
     cd /tmp
@@ -15,18 +13,27 @@ else
     make install
 fi
 
-if [ -d "/usr/local/go/bin/go" ]
-then
+# Go
+if [ -d "/usr/local/go/bin/go" ] && [ -z "$SKIP_GO" ]; then
     echo "Go already installed..."
 else
-    wget https://storage.googleapis.com/golang/go1.11.2.linux-amd64.tar.gz -O /tmp/go.tar.gz
+    curl -sSL https://storage.googleapis.com/golang/go1.11.4.linux-amd64.tar.gz -o /tmp/go.tar.gz
     tar -C /usr/local -xvf /tmp/go.tar.gz
 fi
 
-if [ -f "/home/$USER_NAME/.tmux.conf" ]
-then
-    echo "Dotfiles already installed..."
+# Protobuf
+if [ -d "/usr/local/bin/protoc" ]; && [ -z "$SKIP_PROTOBUF" ]; then
+    echo "Protobuf support already installed..."
 else
+    curl -sSL https://github.com/google/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip -o /tmp/protoc.tar.gz
+    tar -C /usr/local -xvf /tmp/go.tar.gz
+fi
+
+# User setup
+if [ -z "SKIP_USER" ]; then
+    USER_NAME=${1:-hatter}
+    export HOME=/home/$USER_NAME
+
     su - $USER
 
     mkdir -p .ssh
@@ -43,33 +50,16 @@ else
     cd $HOME/.dotfiles && git checkout vimrc
     reset
 
-fi
-
-if [ ! -z "$(which protoc)" ];
-then
-    echo "Protobuf already installed..."
-else
-    if [ -z "${SKIP_PROTOBUF}" ]; then
-        git clone https://github.com/google/protobuf /tmp/protobuf
-        cd /tmp/protobuf
-        git checkout 3.5.x
-        ./autogen.sh
-        ./configure
-        make -j$(cat /proc/cpuinfo  | grep processor | wc -l)
-        make install
-    else
-        echo "skipping protobuf install"
-    fi
+    chown -R $USER_NAME:$USER_NAME /home/$USER_NAME
+    groupadd docker
+    usermod -aG docker $USER_NAME
+    usermod -aG sudo $USER_NAME
+    usermod -s /bin/bash $USER_NAME
+    echo "Changing password for $USER_NAME"
+    passwd $USER_NAME
 fi
 
 # ip forwarding
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 
-chown -R $USER_NAME:$USER_NAME /home/$USER_NAME
-groupadd docker
-usermod -aG docker $USER_NAME
-usermod -aG sudo $USER_NAME
-usermod -s /bin/bash $USER_NAME
-echo "Changing password for $USER_NAME"
-passwd $USER_NAME
