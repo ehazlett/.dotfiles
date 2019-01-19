@@ -19,6 +19,7 @@ fi
 if [ -d "/usr/local/go/bin/go" ]; then
     echo "Go already installed..."
 else
+    echo " -> Installing Go"
     curl -sSL https://storage.googleapis.com/golang/go1.11.4.linux-amd64.tar.gz -o /tmp/go.tar.gz
     tar -C /usr/local -xvf /tmp/go.tar.gz
 fi
@@ -27,6 +28,8 @@ fi
 if [ -d "/usr/local/bin/protoc" ]; then
     echo "Protobuf support already installed..."
 else
+    echo " -> Installing Protobuf support"
+    curl -sSL https://storage.googleapis.com/golang/go1.11.4.linux-amd64.tar.gz -o /tmp/go.tar.gz
     curl -sSL https://github.com/google/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip -o /tmp/protoc.tar.gz
     tar -C /usr/local -xvf /tmp/go.tar.gz
 fi
@@ -35,6 +38,8 @@ fi
 if [ -z "SKIP_USER" ]; then
     USER_NAME=${1:-hatter}
     export HOME=/home/$USER_NAME
+
+    echo " -> Configuring user $USER_NAME"
 
     su - $USER
 
