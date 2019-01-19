@@ -2,19 +2,21 @@
 set -e
 
 # VIM
-if [ -d "/usr/local/bin/vim" ] && [ -z "$SKIP_VIM" ]; then
-    echo "Vim already installed..."
-else
-    cd /tmp
-    git clone https://github.com/vim/vim
-    cd vim/src
-    ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge
-    make
-    make install
+if [ -z "$SKIP_VIM" ]; then
+    if [ -d "/usr/local/bin/vim" ]; then
+        echo "Vim already installed..."
+    else
+        cd /tmp
+        git clone https://github.com/vim/vim
+        cd vim/src
+        ./configure --prefix=/usr/local --enable-gui=no --without-x --disable-nls --enable-multibyte --with-tlib=ncurses --enable-pythoninterp --with-features=huge
+        make
+        make install
+    fi
 fi
 
 # Go
-if [ -d "/usr/local/go/bin/go" ] && [ -z "$SKIP_GO" ]; then
+if [ -d "/usr/local/go/bin/go" ]; then
     echo "Go already installed..."
 else
     curl -sSL https://storage.googleapis.com/golang/go1.11.4.linux-amd64.tar.gz -o /tmp/go.tar.gz
@@ -22,7 +24,7 @@ else
 fi
 
 # Protobuf
-if [ -d "/usr/local/bin/protoc" ]; && [ -z "$SKIP_PROTOBUF" ]; then
+if [ -d "/usr/local/bin/protoc" ]; then
     echo "Protobuf support already installed..."
 else
     curl -sSL https://github.com/google/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip -o /tmp/protoc.tar.gz
