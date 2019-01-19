@@ -29,8 +29,9 @@ if [ -d "/usr/local/bin/protoc" ]; then
     echo "Protobuf support already installed..."
 else
     echo " -> Installing Protobuf support"
-    curl -sSL https://github.com/google/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip -o /tmp/protoc.tar.gz
-    tar -C /usr/local -xvf /tmp/protoc.tar.gz
+    curl -sSL https://github.com/google/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip -o /tmp/protoc.zip
+    pushd /usr/local
+    unzip /tmp protoc.zip
 fi
 
 # User setup
