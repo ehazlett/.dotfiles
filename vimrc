@@ -17,6 +17,7 @@ Plugin 'hashivim/vim-terraform'
 Bundle 'uarun/vim-protobuf'
 Plugin 'mdempsky/gocode', {'rtp': 'vim/'}
 Plugin 'posva/vim-vue'
+Plugin 'crosbymichael/vim-cfmt'
 
 call vundle#end()
 
@@ -92,3 +93,6 @@ au Filetype go nnoremap <leader>t :tab split <CR>:exe "GoDef"<CR>
 " autocomplete navigation
 inoremap <expr> j ((pumvisible())?("\<C-n>"):("j"))
 inoremap <expr> k ((pumvisible())?("\<C-p>"):("k"))
+
+let g:cfmt_style = '-linux -l120'
+autocmd BufWritePre *.c,*.h Cfmt

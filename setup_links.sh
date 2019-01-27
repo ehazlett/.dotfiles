@@ -1,5 +1,5 @@
 #!/bin/bash
-CONFIGS="bashrc gitconfig gitignore_global vimrc tmux.conf i3status.conf"
+CONFIGS="bashrc gitconfig gitignore_global vimrc tmux.conf i3status.conf inputrc"
 
 for CFG in $CONFIGS; do
     ln -sf $(pwd)/$CFG ~/.$CFG
