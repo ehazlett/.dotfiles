@@ -40,6 +40,10 @@ Host dev
     IdentityFile ~/.keys/home_ehazlett
     Hostname 192.168.100.100
 
+Host sandbox
+    IdentityFile ~/.keys/home_ehazlett
+    Hostname 192.168.100.250
+
 Host palisade-bitbucket
     HostName bitbucket.org
     IdentityFile ~/.keys/madhatter.rsa

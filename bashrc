@@ -20,7 +20,7 @@ if [[ $RELEASE == *"Microsoft"*  ]]; then
     # use docker for windows on tcp port
     #export DOCKER_HOST=tcp://127.0.0.1:2375
     export DOCKER_HOST=tcp://192.168.137.100:2375
-    export DISPLAY=:0
+    export DISPLAY=127.0.0.1:0
 fi
 
 if [ $OS = "linux" ]; then
