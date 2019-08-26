@@ -72,8 +72,8 @@ au FileType proto setl sw=8 sts=8 et
 au FileType javascript setl sw=2 sts=2 et
 au FileType vue setl sw=2 sts=2 et
 
+" go
 let g:go_fmt_command = "goimports"
-
 let g:go_highlight_functions = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_interfaces = 1

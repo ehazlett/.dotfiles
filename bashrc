@@ -19,7 +19,7 @@ if [[ $RELEASE == *"Microsoft"*  ]]; then
     umask 022
     # use docker for windows on tcp port
     #export DOCKER_HOST=tcp://127.0.0.1:2375
-    export DOCKER_HOST=tcp://192.168.137.100:2375
+    #export DOCKER_HOST=tcp://192.168.137.100:2375
     export DISPLAY=127.0.0.1:0
 fi
 
@@ -60,7 +60,7 @@ if [ $OS = "osx" ]; then
 else
     # set keyboard repeat rate
     if [ ! -z "$DISPLAY" ]; then
-        xset r rate 200 40
+        xset r rate 300 40
     fi
 
     eval "`dircolors -b`"
@@ -333,8 +333,8 @@ photobooth() {
 }
 
 generate_mac() {
-    MAC=$(printf '52:54:BE:EF:%02X:%02X\n' $((RANDOM%256)) $((RANDOM%256)))
-    echo $MAC
+    MAC=$(printf '00:ff:%02X:%02X:%02X:%02X\n' $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)))
+    echo $MAC | tr '[:upper:]' '[:lower:]'
 }
 
 chrome() {
