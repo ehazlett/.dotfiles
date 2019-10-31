@@ -1,3 +1,9 @@
 [submodule "vim/bundle/Vundle.vim"]
 	path = vim/bundle/Vundle.vim
 	url = https://github.com/VundleVim/Vundle.vim.git
+[submodule "awesome/widgets"]
+	path = awesome/widgets
+	url = https://github.com/streetturtle/awesome-wm-widgets
+[submodule "arc-icons"]
+	path = arc-icons
+	url = https://github.com/horst3180/arc-icon-theme
