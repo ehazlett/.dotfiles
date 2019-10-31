@@ -45,7 +45,10 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 # prompt
-export PS1='\u@\h \[\033[01;32m\]\W\[\033[0m\]> '
+if [ ! -z "$CHROOT" ]; then
+    EXTRA_PS1="[$CHROOT] "
+fi
+export PS1="$EXTRA_PS1\u@\h \[\033[01;32m\]\W\[\033[0m\]> "
 
 if [ $OS = "osx" ]; then
     export CLICOLOR=1
