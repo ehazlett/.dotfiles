@@ -165,7 +165,7 @@ end
 screen.connect_signal("property::geometry", set_wallpaper)
 
 local battery_widget = require("widgets.battery-widget.battery")
--- local volume_widget = require("widgets.volume-widget.volume")
+local volume_widget = require("widgets.volume-widget.volume")
 local cpu_widget = require("widgets.cpu-widget.cpu-widget")
 local brightness_widget = require("widgets.brightness-widget.brightness")
 
@@ -174,7 +174,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+    awful.tag({ "1", "2", "3", "4" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -217,9 +217,7 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),
 	    cpu_widget(),
-	    --volume_widget({
-	--	    volume_audio_controller = 'alsa_only'
-	 --   }),
+	    volume_widget(),
 	    battery_widget,
 	    brightness_widget({
 		    get_brightness_cmd = 'xbacklight -get',
@@ -251,7 +249,6 @@ globalkeys = gears.table.join(
               {description = "view next", group = "tag"}),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
-
     awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx( 1)
@@ -278,6 +275,12 @@ globalkeys = gears.table.join(
               {description = "focus the previous screen", group = "screen"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
+    awful.key({ modkey,           }, "Tab",
+        function ()
+		awful.util.spawn("sync")
+		awful.util.spawn("xautolock -locknow")
+        end,
+        {description = "lock screen", group = "client"}),
     awful.key({ modkey,           }, "Tab",
         function ()
             awful.client.focus.history.previous()
@@ -576,3 +579,6 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+awful.util.spawn_with_shell('~/.config/awesome/autolock.sh')
+awful.util.spawn_with_shell('feh --bg-scale ~/.background.png')

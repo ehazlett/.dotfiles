@@ -112,15 +112,6 @@ set_wifi() {
     sudo dhclient $device
 }
 
-docker-cloud() {
-    SWARM=$1
-    if [ -z "$SWARM" ]; then
-        echo "Usage: docker-cloud <SWARM-NAME>"
-        return
-    fi
-    docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock -e DOCKER_HOST dockercloud/client $SWARM
-}
-
 start_qemu() {
     NAME=$1
     if [ -z "$NAME" ]; then

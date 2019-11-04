@@ -11,5 +11,7 @@ if [ ! -e "/usr/share/icons/Arc" ]; then
     sudo cp -rf $(pwd)/arc-icons/Arc /usr/share/icons/
 fi
 
-ln -sf $(pwd)/gtk.css ~/.config/gtk-3.0/gtk.css
+mkdir -p ${HOME}/.config/gtk-3.0
+ln -sf $(pwd)/gtk.css ${HOME}/.config/gtk-3.0/gtk.css
 
+sudo cp -f pm-sleep.sh /etc/pm/sleep.d/lock
