@@ -5,5 +5,5 @@ d=$(date +%Y%m%d-%H%M)
 echo $d
 
 for v in $VOLS; do
-    zfs snap $v@$d
+    zfs snap -r $v@$d
 done
