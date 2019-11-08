@@ -7,6 +7,10 @@
     user = ehazlett
 
 [color]
+    diff = auto
+    status = auto
+    branch = auto
+    pager = true
     ui = true
 
 [alias]
