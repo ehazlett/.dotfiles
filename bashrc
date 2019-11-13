@@ -61,11 +61,6 @@ if [ $OS = "osx" ]; then
     alias ls="ls --color=auto"
     alias tmux="tmux -2"
 else
-    # set keyboard repeat rate
-    if [ ! -z "$DISPLAY" ]; then
-        xset r rate 300 40
-    fi
-
     eval "`dircolors -b`"
     alias ls="ls --color=auto"
 fi
