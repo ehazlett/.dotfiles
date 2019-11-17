@@ -10,12 +10,12 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdtree'
 Plugin 'kien/ctrlp.vim'
-Plugin 'fatih/vim-go'
+"Plugin 'fatih/vim-go'
 Plugin 'tpope/vim-surround'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'hashivim/vim-terraform'
 Bundle 'uarun/vim-protobuf'
-Plugin 'mdempsky/gocode', {'rtp': 'vim/'}
+"Plugin 'mdempsky/gocode', {'rtp': 'vim/'}
 Plugin 'posva/vim-vue'
 Plugin 'crosbymichael/vim-cfmt'
 

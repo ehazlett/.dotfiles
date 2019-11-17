@@ -3,6 +3,7 @@ VM_PATH=~/vm
 VDE_NAME=vm0
 OS=linux
 export GPG_TTY=$(tty)
+export TERM=xterm-256color
 
 DOCKER_IMAGE=${DOCKER_IMAGE:-ehazlett/docker:18.09.0}
 DOCKER_VOLUME_PREFIX=docker-node

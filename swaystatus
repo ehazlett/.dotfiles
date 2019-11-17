@@ -15,4 +15,6 @@ $4" 🔇": \
 $4" 🔉"}' |\
 tr -d [])
 
-echo $linux_version "|" $audio_volume "|" $battery_info 🔋 "|" $date_formatted
+ip=$(ip r s | grep default | awk '{ print $9; }')
+
+echo $ip "|" $linux_version "|" $audio_volume "|" $battery_info 🔋 "|" $date_formatted
