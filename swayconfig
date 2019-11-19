@@ -28,7 +28,7 @@ font pango: Cantarell 9
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 output * bg /usr/share/backgrounds/terra/launch.jpg fill
-output eDP-1 scale 2
+output eDP-1 scale 1.5
 #
 # Example configuration:
 #
@@ -84,6 +84,13 @@ input "1739:30382:DLL0704:01_06CB:76AE_Touchpad" {
     natural_scroll disabled
     dwt enabled
 }
+
+input "2:7:SynPS/2_Synaptics_TouchPad" {
+    tap enabled
+    natural_scroll disabled
+    dwt enabled
+}
+
 ### Key bindings
 #
 # Basics:

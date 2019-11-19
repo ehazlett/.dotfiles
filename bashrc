@@ -567,11 +567,24 @@ switch_theme() {
     touch ~/.config/xfce4/terminal/terminalrc
 }
 
+vm-ip() {
+    VM=$1
+    if [ -z "$VM" ]; then
+        echo "Usage: vm-ip <name>"
+        exit 1
+    fi
+    ip=$(virsh domifaddr $VM | grep vnet | head -1 | awk '{ print $4; }' | cut -d'/' -f1)
+    if [ $? -ne 0 ]; then
+        echo "ERR: unable to get ip; please ensure VM is running"
+    fi
+    echo "$ip"
+}
+
 wm-vm() {
     VM=$1
 
     if [ -z "$VM" ]; then
-        echo "Usage: vm-vm <name>"
+        echo "Usage: wm-vm <name>"
         exit 1
     fi
 
