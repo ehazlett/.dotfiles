@@ -18,6 +18,7 @@ Bundle 'uarun/vim-protobuf'
 "Plugin 'mdempsky/gocode', {'rtp': 'vim/'}
 Plugin 'posva/vim-vue'
 Plugin 'crosbymichael/vim-cfmt'
+Plugin 'volgar1x/vim-gocode'
 
 call vundle#end()
 

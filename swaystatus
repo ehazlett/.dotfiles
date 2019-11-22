@@ -1,20 +1,32 @@
+#!/bin/bash
 uptime_formatted=$(uptime | cut -d ',' -f1  | cut -d ' ' -f4,5)
-
 date_formatted=$(date "+%a %F %H:%M")
 
 linux_version=$(uname -r | cut -d '-' -f1)
 
+# batter
 battery_info=$(upower --show-info $(upower --enumerate |\
 grep 'BAT') |\
 egrep "percentage" |\
 awk '{print $2}')
 
+# audio
 audio_volume=$(amixer -M get Master |\
 awk '/Mono.+/ {print $6=="[off]" ?\
 $4" 🔇": \
 $4" 🔉"}' |\
 tr -d [])
 
-ip=$(ip r s | grep default | awk '{ print $9; }')
+load=$(cat /proc/loadavg | awk -F ' ' '{print $2}')
 
-echo $ip "|" $linux_version "|" $audio_volume "|" $battery_info 🔋 "|" $date_formatted
+# network
+ip=$(ip r s | grep default | head -1 | awk '{ print $9; }')
+default_iface=$(ip r s | grep default | head -1 | awk '{ print $5; }')
+# ethernet
+if [[ "$default_iface" == *"eth1"* ]] || [[ "$default_iface" == *"ens"* ]]; then
+	speed=$(ethtool eth1 2>/dev/null | grep -i speed | awk '{ print $2; }')
+else # wifi
+	speed="📶 $(iwlist $default_iface rate | grep Current | awk '{ print $3; }' | cut -d'=' -f2 | cut -d'.' -f1)Mb/s"
+fi
+
+echo -e $ip "|" $speed  "|" $load "|" $linux_version "|" $audio_volume "|" $battery_info 🔋 "|" $date_formatted
