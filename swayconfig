@@ -250,7 +250,7 @@ bindswitch lid:off output eDP-1 enable
 bar {
     position top
 
-    font pango: "Hack" 9
+    font pango: "Cantarell" 9
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.

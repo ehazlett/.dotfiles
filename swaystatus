@@ -20,8 +20,8 @@ tr -d [])
 load=$(cat /proc/loadavg | awk -F ' ' '{print $2}')
 
 # network
-ip=$(ip r s | grep default | head -1 | awk '{ print $9; }')
 default_iface=$(ip r s | grep default | head -1 | awk '{ print $5; }')
+ip=$(ip a s $default_iface | grep -e inet | head -1 | awk '{ print $2; }')
 # ethernet
 if [[ "$default_iface" == *"eth1"* ]] || [[ "$default_iface" == *"ens"* ]]; then
 	speed=$(ethtool eth1 2>/dev/null | grep -i speed | awk '{ print $2; }')
