@@ -11,7 +11,7 @@
     status = auto
     branch = auto
     pager = true
-    ui = true
+	ui = auto
 
 [alias]
     co = checkout

@@ -26,7 +26,7 @@ ip=$(ip a s $default_iface | grep -e inet | head -1 | awk '{ print $2; }')
 if [[ "$default_iface" == *"eth1"* ]] || [[ "$default_iface" == *"ens"* ]]; then
 	speed=$(ethtool eth1 2>/dev/null | grep -i speed | awk '{ print $2; }')
 else # wifi
-	speed="📶 $(iwlist $default_iface rate | grep Current | awk '{ print $3; }' | cut -d'=' -f2 | cut -d'.' -f1)Mb/s"
+	speed="📶 $(iwlist $default_iface rate | grep -v wlan0 | head -1 | awk '{ print $3; }' | cut -d'=' -f2 | cut -d'.' -f1)Mb/s"
 fi
 
 echo -e $ip "|" $speed  "|" $load "|" $linux_version "|" $audio_volume "|" $battery_info 🔋 "|" $date_formatted
