@@ -7,4 +7,5 @@ apk add -U font-noto-emoji \
     slurp \
     gnupg \
     bash-completion \
-    brightnessctl
+    brightnessctl \
+    tmux

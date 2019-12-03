@@ -10,6 +10,12 @@ grep 'BAT') |\
 egrep "percentage" |\
 awk '{print $2}')
 
+battery_state=$(upower --show-info $(upower --enumerate | grep BAT) | grep state | awk '{ print $2; }')
+if [ "$battery_state" = "discharging" ]; then
+    battery_left=$(upower --show-info $(upower --enumerate | grep BAT) | grep "time to empty" | awk '{ print $4, $5; }')
+    battery_info="$battery_info $battery_left"
+fi
+
 # audio
 audio_volume=$(amixer -M get Master |\
 awk '/Mono.+/ {print $6=="[off]" ?\
