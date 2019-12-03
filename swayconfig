@@ -27,7 +27,8 @@ font pango: Cantarell 9
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 output * bg /usr/share/backgrounds/terra/launch.jpg fill
-output eDP-1 scale 1.5
+output eDP-1 scale 1
+output HDMI-A-2 resolution 1920x1080
 #
 # Example configuration:
 #

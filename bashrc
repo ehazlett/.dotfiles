@@ -12,6 +12,12 @@ if [ ! -z "$ITERM_PROFILE" ]; then
     OS=osx
 fi
 
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    mkdir -p /run/user/$(id -u)
+    chmod 700 /run/user/$(id -u)
+    export XDG_RUNTIME_DIR=/run/user/$(id -u)
+fi
+
 RELEASE=$(uname -r)
 if [[ $RELEASE == *"Microsoft"*  ]]; then
     # bash on windows
