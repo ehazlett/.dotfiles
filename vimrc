@@ -10,15 +10,13 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdtree'
 Plugin 'kien/ctrlp.vim'
-"Plugin 'fatih/vim-go'
+Plugin 'fatih/vim-go'
 Plugin 'tpope/vim-surround'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'hashivim/vim-terraform'
 Bundle 'uarun/vim-protobuf'
-"Plugin 'mdempsky/gocode', {'rtp': 'vim/'}
 Plugin 'posva/vim-vue'
 Plugin 'crosbymichael/vim-cfmt'
-Plugin 'volgar1x/vim-gocode'
 
 call vundle#end()
 
@@ -82,6 +80,7 @@ let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
+let g:go_gopls_enabled = 0
 
 " terraform
 let g:terraform_align=1
