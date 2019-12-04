@@ -9,6 +9,10 @@ done
 mkdir -p ~/.config/sway
 ln -sf $(pwd)/swayconfig ~/.config/sway/config
 
+# term
+mkdir -p ~/.config/alacritty
+ln -sf $(pwd)/alacritty.yml ~/.config/alacritty/alacritty.yml
+
 ln -sf $(pwd)/ssh_config ~/.ssh/config
 
 # vim

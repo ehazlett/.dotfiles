@@ -17,11 +17,7 @@ if [ "$battery_state" = "discharging" ]; then
 fi
 
 # audio
-audio_volume=$(amixer -M get Master |\
-awk '/Mono.+/ {print $6=="[off]" ?\
-$4" 🔇": \
-$4" 🔉"}' |\
-tr -d [])
+audio_volume=" 🔉 $(pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1 )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,')%"
 
 load=$(cat /proc/loadavg | awk -F ' ' '{print $2}')
 
