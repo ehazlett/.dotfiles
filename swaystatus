@@ -32,7 +32,8 @@ ip=$(ip a s $default_iface | grep -e inet | head -1 | awk '{ print $2; }')
 if [[ "$default_iface" == *"eth"* ]] || [[ "$default_iface" == *"ens"* ]]; then
 	speed=$(ethtool $default_iface 2>/dev/null | grep -i speed | awk '{ print $2; }')
 else # wifi
-	speed="📶 $(iwlist $default_iface rate | grep -v wlan0 | head -1 | awk '{ print $3; }' | cut -d'=' -f2 | cut -d'.' -f1)Mb/s"
+        # signal
+	speed="📶  $(iwconfig wlan0 | grep "Signal" | awk '{ print $4 }' | cut -d'=' -f2) db"
 fi
 
 echo -e $ip "|" $speed  "|" $load "|" $linux_version "|" $audio_volume "|" $battery_info 🔋 "|" $date_formatted

@@ -79,7 +79,7 @@ export EDITOR=vim
 if [ -e "$HOME/.nix-profile/share/go" ]; then
     export GOROOT=$HOME/.nix-profile/share/go
 else
-    export GOROOT=/usr/local/go
+    export GOROOT=/usr/lib/go
 fi
 export GOPATH=$HOME/go
 export PATH=~/bin:$PATH:~/go/bin:/usr/local/go/bin:/usr/local/sbin
