@@ -28,7 +28,7 @@ font pango: Cantarell 9
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 output * bg /usr/share/backgrounds/terra/launch.jpg fill
-output eDP-1 scale 1
+#output eDP-1 scale 1
 output HDMI-A-2 resolution 1920x1080
 #
 # Example configuration:
@@ -41,12 +41,10 @@ output HDMI-A-2 resolution 1920x1080
 #
 # Example configuration:
 #
-# exec swayidle -w \
-#          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * dpms off"' \
-#               resume 'swaymsg "output * dpms on"' \
-#          before-sleep 'swaylock -f -c 000000'
-#
+exec swayidle -w \
+         timeout 300 'swaylock -f -c 000000' \
+         before-sleep 'swaylock -f -c 000000'
+
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
@@ -230,8 +228,7 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-bindsym $mod+Shift+F1 output eDP-1 scale 2
-bindsym $mod+Shift+F2 output DP-1 pos 0 0; output eDP-1 disable
+bindsym $mod+Shift+F1 output DP-1 pos 0 0; output eDP-1 disable
 
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%

@@ -4,6 +4,7 @@ VDE_NAME=vm0
 OS=linux
 export GPG_TTY=$(tty)
 export TERM=xterm-256color
+export LANG=en_US.UTF-8
 
 DOCKER_IMAGE=${DOCKER_IMAGE:-ehazlett/docker:18.09.0}
 DOCKER_VOLUME_PREFIX=docker-node
