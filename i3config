@@ -35,7 +35,8 @@ client.focused_inactive $color_light_gray $color_light_gray $color_dark_white
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango: Open Sans 10
-font pango: Noto Sans 8
+font pango: Cantarell 10
+
 # Before i3 v4.8, we used to recommend this one as the default:
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # The font above is very space-efficient, that is, it looks good, sharp and
@@ -47,7 +48,7 @@ font pango: Noto Sans 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec alacritty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -148,10 +149,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
@@ -169,7 +170,7 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
+        status_command i3status -c ~/.dotfiles/i3status.conf
         colors {
             focused_workspace $color_light_blue $color_dark_blue $color_light_white
             active_workspace $color_light_blue $color_dark_blue $color_light_white
@@ -185,29 +186,26 @@ bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume @DEFAULT_SINK@ 
 bindsym XF86AudioMute exec /usr/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 # keyboard brightness
-bindsym XF86KbdBrightnessUp exec sudo keyboard-backlight up
-bindsym XF86KbdBrightnessDown exec sudo keyboard-backlight down
+#bindsym XF86KbdBrightnessUp exec sudo keyboard-backlight up
+#bindsym XF86KbdBrightnessDown exec sudo keyboard-backlight down
 
 # backlight brightness
-bindsym XF86MonBrightnessUp exec sudo screen-backlight up
-bindsym XF86MonBrightnessDown exec sudo screen-backlight down
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 
 bindsym $mod+Control+Shift+l exec i3lock -c 000000 -e
 bindsym $mod+Control+Shift+1 exec i3-msg move workspace to output eDP-1
 bindsym $mod+Control+Shift+2 exec i3-msg move workspace to output DP-1
-bindsym $mod+Control+Shift+3 exec i3-msg move workspace to output HDMI-11
-bindsym $mod+Control+Shift+k focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, focus parent, kill
+bindsym $mod+Control+Shift+k focus parent, kill
 
 # res
-exec xrandr --output eDP-1 --mode 1920x1080
-exec xrandr --dpi 120
-exec i3-msg reload
-exec i3-msg restart
+#exec xrandr --output eDP-1 --mode 1920x1080
+#exec xrandr --dpi 120
+#exec i3-msg reload
+#exec i3-msg restart
 
 exec xfce4-power-manager &
-
 exec feh --bg-scale ~/.wallpaper
 
 # touchpad
-exec ~/.dotfiles/touchpad.sh
-
+exec ~/.dotfiles/scripts/touchpad.sh

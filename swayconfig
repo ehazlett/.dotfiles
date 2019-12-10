@@ -232,6 +232,7 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 bindsym $mod+Shift+F1 output DP-1 pos 0 0; output eDP-1 disable
+bindsym $mod+Shift+F12 exec swaymsg "output * dmps on"; pkill -nx swayidle
 
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
