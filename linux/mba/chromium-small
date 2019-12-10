@@ -1,2 +1,0 @@
-#!/bin/bash
-chromium --force-device-scale-factor=.15
