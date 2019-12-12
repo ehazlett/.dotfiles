@@ -55,6 +55,11 @@ if [ -f /usr/share/bash-completion/bash_completion ]; then
     source /usr/share/bash-completion/bash_completion
 fi
 
+# xorg opts
+if [ ! -z "$(which setxkbmap)" ]; then
+    setxkbmap -option ctrl:nocaps
+fi
+
 # prompt
 if [ ! -z "$CHROOT" ]; then
     EXTRA_PS1="[$CHROOT] "

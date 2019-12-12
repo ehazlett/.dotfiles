@@ -185,15 +185,11 @@ bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume @DEFAULT_SINK@ 
 bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume @DEFAULT_SINK@ -- '+5%'
 bindsym XF86AudioMute exec /usr/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-# keyboard brightness
-#bindsym XF86KbdBrightnessUp exec sudo keyboard-backlight up
-#bindsym XF86KbdBrightnessDown exec sudo keyboard-backlight down
-
 # backlight brightness
 bindsym XF86MonBrightnessUp exec brightnessctl set +5%
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 
-bindsym $mod+Control+Shift+l exec i3lock -c 000000 -e
+bindsym $mod+Control+Shift+l exec ~/.dotfiles/linux/lock.sh
 bindsym $mod+Control+Shift+1 exec i3-msg move workspace to output eDP-1
 bindsym $mod+Control+Shift+2 exec i3-msg move workspace to output DP-1
 bindsym $mod+Control+Shift+k focus parent, kill
@@ -204,8 +200,10 @@ bindsym $mod+Control+Shift+k focus parent, kill
 #exec i3-msg reload
 #exec i3-msg restart
 
-exec xfce4-power-manager &
+#exec xfce4-power-manager &
 exec feh --bg-scale ~/.wallpaper
+
+exec xautolock -time 5 -locker ~/.dotfiles/linux/lock.sh &
 
 # touchpad
 exec ~/.dotfiles/scripts/touchpad.sh
