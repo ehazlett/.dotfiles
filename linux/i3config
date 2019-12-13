@@ -203,7 +203,7 @@ bindsym $mod+Control+Shift+k focus parent, kill
 #exec xfce4-power-manager &
 exec feh --bg-scale ~/.wallpaper
 
-exec xautolock -time 5 -locker ~/.dotfiles/linux/lock.sh &
+exec xautolock -time 5 -locker ~/.dotfiles/linux/lock.sh -detectsleep &
 
 # touchpad
 exec ~/.dotfiles/scripts/touchpad.sh
