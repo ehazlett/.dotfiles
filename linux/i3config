@@ -48,7 +48,7 @@ font pango: Cantarell 10
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec gnome-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -190,15 +190,11 @@ bindsym XF86MonBrightnessUp exec brightnessctl set +5%
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 
 bindsym $mod+Control+Shift+l exec ~/.dotfiles/linux/lock.sh
+bindsym $mod+Control+Shift+F1 exec xrandr --output eDP-1 --off --output DP-1 --auto
+bindsym $mod+Control+Shift+F2 exec xrandr --output eDP-1 --auto --output DP-1 --off
 bindsym $mod+Control+Shift+1 exec i3-msg move workspace to output eDP-1
 bindsym $mod+Control+Shift+2 exec i3-msg move workspace to output DP-1
 bindsym $mod+Control+Shift+k focus parent, kill
-
-# res
-#exec xrandr --output eDP-1 --mode 1920x1080
-#exec xrandr --dpi 120
-#exec i3-msg reload
-#exec i3-msg restart
 
 #exec xfce4-power-manager &
 exec feh --bg-scale ~/.wallpaper
@@ -206,4 +202,4 @@ exec feh --bg-scale ~/.wallpaper
 exec xautolock -time 5 -locker ~/.dotfiles/linux/lock.sh -detectsleep &
 
 # touchpad
-exec ~/.dotfiles/scripts/touchpad.sh
+exec ~/.dotfiles/linux/touchpad.sh
