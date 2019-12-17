@@ -14,8 +14,6 @@ if [ ! -z "$ITERM_PROFILE" ]; then
 fi
 
 if [ -z "$XDG_RUNTIME_DIR" ]; then
-    mkdir -p /run/user/$(id -u)
-    chmod 700 /run/user/$(id -u)
     export XDG_RUNTIME_DIR=/run/user/$(id -u)
 fi
 
@@ -56,8 +54,10 @@ if [ -f /usr/share/bash-completion/bash_completion ]; then
 fi
 
 # xorg opts
-if [ ! -z "$(which setxkbmap)" ]; then
-    setxkbmap -option ctrl:nocaps
+if [ ! -z "$DISPLAY" ]; then
+    if [ ! -z "$(which setxkbmap)" ]; then
+        setxkbmap -option ctrl:nocaps
+    fi
 fi
 
 # prompt
