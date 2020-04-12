@@ -9,7 +9,7 @@ export LANG=en_US.UTF-8
 DOCKER_IMAGE=${DOCKER_IMAGE:-ehazlett/docker:18.09.0}
 DOCKER_VOLUME_PREFIX=docker-node
 
-if [ ! -z "$ITERM_PROFILE" ]; then
+if [ "$(uname -s)"="Darwin" ]; then
     OS=osx
 fi
 
@@ -796,3 +796,5 @@ alias alert='notify-send -t 5000 --urgency=low -i "$([ $? = 0  ] && echo termina
 
 # run the following with each session
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"

@@ -11,7 +11,7 @@
     status = auto
     branch = auto
     pager = true
-	ui = auto
+    ui = auto
 
 [alias]
     co = checkout
@@ -21,5 +21,3 @@
 
 [push]
     default = current
-[core]
-    excludesfile = /home/hatter/.gitignore_global
