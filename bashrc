@@ -792,6 +792,17 @@ pull-pr-branch() {
     git fetch $UPSTREAM pull/$ID/head:$BRANCH
 }
 
+get-vm-ip() {
+    VM=$1
+    if [ -z "$VM" ]; then
+        echo "usage: get-vm-ip <VM>"
+        return
+    fi
+    prlctl exec "$VM" ip a s | grep 'eth\|enp' | grep inet | awk '{ print $2; }' | cut -d'/' -f1
+}
+
+alias ssh-home="ssh -i ~/.keys/home_ehazlett"
+
 alias alert='notify-send -t 5000 --urgency=low -i "$([ $? = 0  ] && echo terminal || echo error)" "Finished" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # run the following with each session
