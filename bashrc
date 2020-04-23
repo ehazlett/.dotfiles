@@ -1,17 +1,13 @@
 # .bashrc
 VM_PATH=~/vm
 VDE_NAME=vm0
-OS=linux
+OS=$(uname -s)
 export GPG_TTY=$(tty)
 export TERM=xterm-256color
 export LANG=en_US.UTF-8
 
 DOCKER_IMAGE=${DOCKER_IMAGE:-ehazlett/docker:18.09.0}
 DOCKER_VOLUME_PREFIX=docker-node
-
-if [ "$(uname -s)"="Darwin" ]; then
-    OS=osx
-fi
 
 if [ -z "$XDG_RUNTIME_DIR" ]; then
     export XDG_RUNTIME_DIR=/run/user/$(id -u)
@@ -66,7 +62,7 @@ if [ ! -z "$CHROOT" ]; then
 fi
 export PS1="$EXTRA_PS1\u@\h \[\033[01;32m\]\W\[\033[0m\]> "
 
-if [ $OS = "osx" ]; then
+if [ "$OS" == "Darwin" ]; then
     export CLICOLOR=1
     if [ -f $(brew --prefix)/etc/bash_completion  ]; then
         source $(brew --prefix)/etc/bash_completion
@@ -791,17 +787,6 @@ pull-pr-branch() {
     fi
     git fetch $UPSTREAM pull/$ID/head:$BRANCH
 }
-
-get-vm-ip() {
-    VM=$1
-    if [ -z "$VM" ]; then
-        echo "usage: get-vm-ip <VM>"
-        return
-    fi
-    prlctl exec "$VM" ip a s | grep 'eth\|enp' | grep inet | awk '{ print $2; }' | cut -d'/' -f1
-}
-
-alias ssh-home="ssh -i ~/.keys/home_ehazlett"
 
 alias alert='notify-send -t 5000 --urgency=low -i "$([ $? = 0  ] && echo terminal || echo error)" "Finished" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
